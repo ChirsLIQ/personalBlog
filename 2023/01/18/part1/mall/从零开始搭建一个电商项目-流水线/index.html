@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>从零开始搭建一个电商项目-流水线（九） |  C</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="C" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-part1/mall/从零开始搭建一个电商项目-流水线"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  从零开始搭建一个电商项目-流水线（九）
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/01/18/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E6%B5%81%E6%B0%B4%E7%BA%BF/" class="article-date">
+  <time datetime="2023-01-19T04:40:00.000Z" itemprop="datePublished">2023-01-18</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%9E%8E%E8%83%A1%E9%97%B9/">瞎胡闹</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">2.9k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">12 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <ol>
+<li><p>前言</p>
+<p>我们部署项目的事情，之前是要运维人员手动传包到服务器，然后备份、运行。如果是微服务的话，手动要重复很多次。流水线自动化部署可以简化手动部署的流程，大大缩短部署时间。本次搭建的流水线部署是由K8s+Docker+Jenkins。流水线插件尚未安装成功，由于电脑内存不够用，插眼后续有机会在安装。<span id="more"></span></p>
+</li>
+<li><p>搭建</p>
+</li>
+</ol>
+<ul>
+<li><p>创建三台虚拟机，内存大于2G，磁盘大于30G，Cpu4核。我这里之前已经搭建过三个虚拟机，如果不知道如何搭建的，请问度娘。</p>
+</li>
+<li><p>关闭 selinux  （全部执行）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sed -i &#x27;s/enforcing/disabled/&#x27; /etc/selinux/config </span><br><span class="line">setenforce 0  </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>关闭swap（全部执行）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">swapoff -a 临时</span><br><span class="line">sed -ri &#x27;s/.*swap.*/#&amp;/&#x27; /etc/fstab 永久 </span><br><span class="line">free -g 验证，swap 必须为 0；  </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改Host（全部执行）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/hosts  #添加以下内容，根据自身的ip设置</span><br><span class="line"></span><br><span class="line">192.168.202.130 k8smaster</span><br><span class="line">192.168.202.131 k8s-node1</span><br><span class="line">192.168.202.132 k8s-node2 </span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">hostnamectl set-hostname ：指定新的 hostname</span> </span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">su 切换过来</span> </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将桥接的 IPv4 流量传递到 iptables 的链  （全部执行）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; /etc/sysctl.d/k8s.conf &lt;&lt; EOF </span><br><span class="line">net.bridge.bridge-nf-call-ip6tables = 1 </span><br><span class="line">net.bridge.bridge-nf-call-iptables = 1</span><br><span class="line">EOF </span><br><span class="line"></span><br><span class="line">sysctl --system  #立刻生效</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>若遇到只读文件系统</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount -o remount rw /  </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装 docker </p>
+<ul>
+<li><p>卸载本机的docker</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">yum remove docker \</span><br><span class="line">                  docker-client \</span><br><span class="line">                  docker-client-latest \</span><br><span class="line">                  docker-common \</span><br><span class="line">                  docker-latest \</span><br><span class="line">                  docker-latest-logrotate \</span><br><span class="line">                  docker-logrotate \</span><br><span class="line">                  docker-engine</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>添加yum镜像源</p>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum-config-manager \</span><br><span class="line">    --add-repo \</span><br><span class="line">    http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>安装docker（建议别用）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install docker-ce docker-ce-cli containerd.io  #建议不要用这个，安装制定版本的docker</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装制定版本的docker</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">yum list docker-ce --showduplicates | sort -r   #列出可以安装的docker列表</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">然后通过以下命令进行安装  建议 19.03.4，需要与k8s版本兼容</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">yum install docker-ce-&lt;VERSION_STRING&gt; docker-ce-cli-&lt;VERSION_STRING&gt; containerd.io</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">通过其完整的软件包名称安装特定版本，该软件包名称是软件包名称（docker-ce）加上版本字符串（第二列），从第一个冒号（:）一直到第一个连字符，并用连字符（-）分隔。例如：docker-ce-18.09.1。</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置镜像源</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vi  /etc/docker/daemon.json</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">添加以下内容</span></span><br><span class="line">&#123;</span><br><span class="line">&quot;registry-mirrors&quot;: [&quot;https://ukdgcz5v.mirror.aliyuncs.com&quot;]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">systemctl daemon-reload #立即生效</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动docker</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start docker </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>测试 hello-world 镜像，是否安装成功</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run hello-world</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>卸载</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum remove docker-ce   #第一种方法</span><br><span class="line"></span><br><span class="line">yum list installed | grep docker-ce  #第二种</span><br><span class="line">yum -y remove  # 安装包</span><br><span class="line">rm -rf /var/lib/docker #删除镜像</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除镜像</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rm -rf /var/lib/docker</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>可能遇到的问题，若出现再重启电脑之后，docker无法正常启动，则停掉容器在重启。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop containerd &amp;&amp; systemctl start containerd &amp;&amp; systemctl start docker.service</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>补充</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker container prune   #删除启动失败的容器</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装 kubeadm（安装K8S集群的工具），kubelet（管理Pod）  ， kubectl  （可以发送命令给集群）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum list|grep kube   # 可以查看有哪些版本可以下载</span><br><span class="line">yum install -y kubelet-1.17.3 kubeadm-1.17.3 kubectl-1.17.3  </span><br><span class="line">systemctl enable kubelet </span><br><span class="line">systemctl start kubelet  </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>master节点初始化</p>
+<p>注意：需要下载相应镜像，我们可以先pull下来，init的时候默认的镜像地址是 k8s.gcr.io 国内无法访问，也可以修改镜像地址为阿里云：<br> registry.aliyuncs.com&#x2F;google_containers  （没试过）<br>先pull相应的镜像镜像（可以写一个shell脚本）</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/kube-apiserver:v1.17.3</span><br><span class="line">docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/kube-proxy:v1.17.3</span><br><span class="line">docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/kube-controller-manager:v1.17.3</span><br><span class="line">docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/kube-scheduler:v1.17.3</span><br><span class="line">docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/coredns:1.6.5</span><br><span class="line">docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/etcd:3.4.3-0</span><br><span class="line">docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/pause:3.1</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>使用kubeadm 进行初始化</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubeadm init  --apiserver-advertise-address=192.168.202.130  \</span><br><span class="line">--image-repository registry.cn-hangzhou.aliyuncs.com/google_containers \  </span><br><span class="line">--kubernetes-version v1.17.3 --service-cidr=10.96.0.0/16  --pod-network-cidr=10.244.0.0/16 </span><br></pre></td></tr></table></figure>
+<p>注意：<br>第一行的api的地址必须为master节点主机的地址，<br>第二行设置镜像，需要设置成初始化之前 pull 的那个镜像，到时候初始化的时候，会找到此镜像前缀的镜像。<br>第三行就是 kub的版本，以及要和pull的镜像本部一致， 下面就是service的地址，pod的地址</p>
+</li>
+<li><p>等待执行，执行完成先不要关闭控制台，需要执行控制台显示的命令（一定要看控制台）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p $HOME/.kube</span><br><span class="line">sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config</span><br><span class="line">sudo chown $(id -u):$(id -g) $HOME/.kube/config</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装网络插件 cni</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"> 注意：这个配置文件可能访问不到，需要翻墙。</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看集群 的命名空间 kube-system 的节点，是否都处于running</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">watch kubectl get pod -n kube-system -o wide #实时 监听节点状态  </span><br><span class="line"></span><br><span class="line">kubectl get pods –A  #获取所有的pod</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>加入到集群，还是控制台上显示的命令（需要在子节点上执行）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubeadm join 192.168.202.130:6443 --token qgppem.4wqaw804dga9un6i \</span><br><span class="line">--discovery-token-ca-cert-hash sha256:900d6b4e8173a650c9d7488a19c8ab4aabd2081edceaecb849bd7e1265720dfe</span><br></pre></td></tr></table></figure>
+<p>注意，若Token过期，则使用以下命令再次生成</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubeadm token create --print-join-command  </span><br><span class="line">kubeadm token create --ttl 0 --print-join-command  </span><br></pre></td></tr></table></figure>
+<p>注意：可能网络节点CNI启动不起来，可以使用docker ps -a 去查看容器启动情况，其实所有的k8s集群搭建，都是需要创建docker容器的，我当时的解决办法：<br>下载的文件：cni-plugins-linux-amd64-v0.8.6.tgz<br>网上搜 cni 插件（会是一个tar.gz 文件），到时候使用wget命令下载，解压放到  &#x2F;opt&#x2F;cni&#x2F;bin，等会网络会自动处于running</p>
+</li>
+<li><p>安装图形化界面（我这里没有安装默认的  dashboard  ，而是安装了 Kubesphere，还是需要等到所有的pod处于running，如果不算running要解决掉，其实这些pod就是docker下载下来的镜像  ）</p>
+<p>网址：<a target="_blank" rel="noopener" href="https://kubesphere.io/">https://kubesphere.io/</a>，我这里安装的是 2.1.1</p>
+<ul>
+<li><p>安装前置条件（master）</p>
+<p>网址 <a target="_blank" rel="noopener" href="https://v2-1.docs.kubesphere.io/docs/zh-CN/installation/prerequisites/">https://v2-1.docs.kubesphere.io/docs/zh-CN/installation/prerequisites/</a><br>要求：<br>Kubernetes版本： 1.15.x ≤ K8s version ≤ 1.17.x<br>Helm版本： 2.10.0 ≤ Helm Version ＜ 3.0.0（我使用的 2.16.2）</p>
+</li>
+<li><p>安装helm</p>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget -O helm.tar.gz https://get.helm.sh/helm-v2.16.2-linux-amd64.tar.gz  #载安装包</span><br><span class="line">tar -zxvf helm.tar.gz</span><br><span class="line">mv linux-amd64/helm /usr/local/bin/helm</span><br><span class="line">helm  #命令查看， 安装是否完成</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建权限（master 执行） 创建helm-rbac.yaml</li>
+</ul>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1 </span><br><span class="line">kind: ServiceAccount </span><br><span class="line">metadata: 	</span><br><span class="line">	name: tiller </span><br><span class="line">	namespace: kube-system</span><br><span class="line">--- </span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1 </span><br><span class="line">kind: ClusterRoleBinding </span><br><span class="line">metadata: </span><br><span class="line">	name: tiller </span><br><span class="line">roleRef:</span><br><span class="line">	apiGroup: rbac.authorization.k8s.io </span><br><span class="line">	kind: ClusterRole </span><br><span class="line">	name: cluster-admin </span><br><span class="line">subjects: </span><br><span class="line">	- kind: ServiceAccount </span><br><span class="line">  	  name: tiller </span><br><span class="line">      namespace: kube-system </span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f helm-rbac.yaml   #（可以使用 kubectl  delete -f 卸载）</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>安装Tiller(master)</li>
+</ul>
+<p> 添加helm的镜像：（二选一）（jessestuart&#x2F;tiller:v2.16.3其实可以通过 docker pull先下载下来）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">helm repo add stable https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts</span><br><span class="line">helm repo add stable http://mirror.azure.cn/kubernetes/charts）</span><br><span class="line">helm repo update </span><br><span class="line">helm init --service-account=tiller --tiller-image=jessestuart/tiller:v2.16.3 --history-max 300  </span><br></pre></td></tr></table></figure>
+<p>kubectl get pods –A  查看节点状态，是否处于 running<br>kubectl logs -n kube-system kube-flannel-ds-amd64-4wh2x(安装的pod) 可以查看日志</p>
+<ul>
+<li>安装	OpenEBS（master，建议安装NTFS当做存储插件，因为我安装了OpendEBS出现节点异常的情况）<ol>
+<li><p>查看是否有污点 </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl describe node k8s-master | grep Taint  #（k8s-master 主节点的主机名）</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">会显示  Taints:    node-role.kubernetes.io/master:NoSchedule   则代表有</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>去掉污点</p>
+</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl taint nodes k8s-master node-role.kubernetes.io/master:NoSchedule-</span><br></pre></td></tr></table></figure>
+
+<pre><code>  3. 开始安装
+</code></pre>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://openebs.github.io/charts/openebs-operator-1.5.0.yaml</span><br><span class="line">kubectl get sc  #查看是否安装成功（需要running）</span><br></pre></td></tr></table></figure>
+
+<pre><code>  4. 设置默认的 StorageClass：
+</code></pre>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl patch storageclass openebs-hostpath -p &#x27;&#123;&quot;metadata&quot;: &#123;&quot;annotations&quot;:&#123;&quot;storageclass.kubernetes.io/is-default-    class&quot;:&quot;true&quot;&#125;&#125;&#125;&#x27;</span><br></pre></td></tr></table></figure>
+
+<pre><code>  5. 查看是否安装成功  
+</code></pre>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pod -n openebs</span><br></pre></td></tr></table></figure>
+
+<pre><code>  6. 添加污点（注意红色部分，可以先不执行这一步，因为执行这一步Pod节点运行状态会异常）
+</code></pre>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl taint nodes k8s-master node-role.kubernetes.io/master=:NoSchedule </span><br></pre></td></tr></table></figure>
+<p>注意这里，先别添加污点，官方文档这样写的，但是实践之后，不能正确安装Kubesphere，所以安装完成之后再去添加污点，在这卡了很久。</p>
+<ul>
+<li>开始最小化安装Kubesphere<ul>
+<li><p>使用yaml进行安装</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://raw.githubusercontent.com/kubesphere/ks-installer/v2.1.1/kubesphere-minimal.yaml</span><br></pre></td></tr></table></figure>
+<p>若以上命令执行不成功，可以先访问地址，创建对应的本地文件，复制内容，到本地执行</p>
+</li>
+<li><p>查看安装进度  （可能报错，因为需要创建下载的容器，容器创建好之后就可以执行以下命令）</p>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl logs -n kubesphere-system $(kubectl get pod -n kubesphere-system -l app=ks-install -o jsonpath=&#x27;&#123;.items[0].metadata.name&#125;&#x27;) -f</span><br></pre></td></tr></table></figure>
+<p>kubectl get pod -A 查看 KubeSphere  相关的命名控制是否都处于 running，记得设置污点<br>然后就可以通过账号密码访问了（安装完成后控制台会有路径，换成虚拟机的Ip访问即可）</p>
+<ul>
+<li>拔插式的添加  DevOps <ul>
+<li>使用命令 kubectl edit cm -n kubesphere-system ks-installer 修改文件，打开devops</li>
+</ul>
+</li>
+</ul>
+<p>目前安装的流水线无法正常运行，因为我本地内存不够，所以暂时搁置到了这里，等后续有机会继续安装。如果大家内存够，访问浏览器的地址，就能创建DevOps的项目</p>
+<ol start="3">
+<li>流水线流程<ol>
+<li>传统K8S集群部署</li>
+</ol>
+<ul>
+<li>编写Dockerfile文件，将项目打包成镜像。然后登录镜像仓库，使用docker push命令将镜像上传到镜像仓库，推荐使用阿里云镜像仓库，这样推送下载都快。</li>
+<li>编写Deploy文件，手动执行将应用部署到K8s集群。</li>
+<li>编写Service文件，手动执行文件暴露访问接口。</li>
+<li>外部访问或内部调用。</li>
+</ul>
+<ol start="2">
+<li>流水线一站式部署</li>
+</ol>
+<ul>
+<li>在每个微服务的目录中添加Dockerfile文件，用于打包镜像。</li>
+<li>在每个微服务的目录中添加K8S的部署文件，配置deploy、service内容。</li>
+<li>编写Jenkins的配置文件<ul>
+<li>首先从gitee拉取代码配置</li>
+<li>Sonar代码质量分析</li>
+<li>Docker 的build以及push，将镜像打包放到仓库中</li>
+<li>部署应用到K8s集群</li>
+<li>发布版本，将部署的镜像打包到仓库，用于记录版本信息。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p>踩坑日记<br>安装 kubesphere的时候一定要确保 存储类型 才可以安装，多使用 describe 查看原因<br><strong>问题一：kubesphere 插件方式安装 devops的时候，出现 ks-jenkins has no deployed releases</strong><br>解决：<br>使用  helm list -a 查看安装的 release<br>使用  helm install stable&#x2F;jenkins –name ks-jenkins 安装，会显示已经存在<br>使用  helm del –purge XXX 删除安装包<br>helm repo list  查看镜像，记得要安装镜像</p>
+<p><strong>问题二：若出现 ks-jenkins 容器启动失败，</strong><br>解决：<br>kubectl edit cm -n kubesphere-system ks-installer 命令，修改插件安装的配置文件，先 false 掉 devops<br>删除 helm 的 ks-jenkins 包<br>kubectl edit cm -n kubesphere-system ks-installer命令，在Ture 回来<br>使用  kubectl logs -n kubesphere-system $(kubectl get pod -n kubesphere-system -l app&#x3D;ks-install -o jsonpath&#x3D;’{.items[0].metadata.name}’) -f  查看 安装进度</p>
+<p><strong>问题三：如何删除不需要的组件?（xxx   改成你的命名空间  pod pvc namespace都可以用此方法删除，建议 pvc-&gt;pod-&gt;ns）</strong><br> 解决：<br>kubectl delete    ns xxx    </p>
+<p>kubectl delete ns xxx –force –grace-period&#x3D;0  </p>
+<p>前两个会出现无法删除的情况，阻塞住，则使用以下方法：<br>kubectl get namespace  xxx  -o json &gt;  xxx .json<br>获取JSON文件，然后将 spec 里面的  finalizers 下的 kubernetes 删除就好<br>然后执行<br>kubectl replace –raw “&#x2F;api&#x2F;v1&#x2F;namespaces&#x2F; xxx &#x2F;finalize” -f .&#x2F; xxx .json  </p>
+<p><strong>问题四：kubesphere重新安装可能出现让你删除安装包的问题</strong><br>解决：<br>helm del –purge openebs 移除 并重新下载</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2023/01/18/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E6%B5%81%E6%B0%B4%E7%BA%BF/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/03/01/part1/source/Spring/Spring%E7%9A%84refresh%E6%96%B9%E6%B3%95/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Spring的refresh方法
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/01/17/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E7%A7%92%E6%9D%80/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">从零开始搭建一个电商项目-秒杀（八）</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2026
+        <i class="ri-heart-fill heart_icon"></i> John Doe
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="C"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" target="_blank" rel="noopener" href="http://shenyu-vip.lofter.com">摄影</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

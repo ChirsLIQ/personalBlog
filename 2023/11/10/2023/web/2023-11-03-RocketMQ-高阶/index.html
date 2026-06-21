@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>RocketMQ高阶 |  C</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="C" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-2023/web/2023-11-03-RocketMQ-高阶"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  RocketMQ高阶
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/11/10/2023/web/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/" class="article-date">
+  <time datetime="2023-11-11T07:00:00.000Z" itemprop="datePublished">2023-11-10</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Web%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/">Web的那些事</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">2.9k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">13 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>上一篇<strong>RocketMQ进阶</strong>，记录了消息RocketMQ的特性，举了一些实例。接下来我们记录一下，如何搭建RocketMQ的集群。</p>
+<p><a target="_blank" rel="noopener" href="https://wysiwyg.work/2023/11/02/2023/web/2023-11-02-RocketMQ-%E8%BF%9B%E9%98%B6/">https://wysiwyg.work/2023/11/02/2023/web/2023-11-02-RocketMQ-%E8%BF%9B%E9%98%B6/</a></p>
+<h2 id="RocketMQ部署方式"><a href="#RocketMQ部署方式" class="headerlink" title="RocketMQ部署方式"></a>RocketMQ部署方式</h2><h3 id="单Master"><a href="#单Master" class="headerlink" title="单Master"></a>单Master</h3><p>只有一个Broker，一旦重启或者宕机，对外就无法提供服务，建议线上不要使用。</p>
+<h3 id="多Master"><a href="#多Master" class="headerlink" title="多Master"></a>多Master</h3><p>一个集群没有Slave，都是Master。可以是2个或3个节点。</p>
+<ul>
+<li><p>优点：配置简单，相比于单节点，可以同时保存并处理更多消息，提高并发。</p>
+</li>
+<li><p>缺点：一个节点宕机之后，此节点的消息在恢复之前无法被消费。</p>
+</li>
+</ul>
+<h3 id="多Master多Slave异步复制"><a href="#多Master多Slave异步复制" class="headerlink" title="多Master多Slave异步复制"></a>多Master多Slave异步复制</h3><p>每个Master有一个Slave，有多对Master-Slave。HA采用异步复制，主备消息不同步，呈现最终一致性。</p>
+<ul>
+<li><p>优点：当Master节点宕机之后，消费者可以在Slave上继续消费消息，切换操作不需要人工干预。性能同多Master模式几乎一样</p>
+</li>
+<li><p>缺点：在Master节点宕机之后会有消息丢失。</p>
+</li>
+</ul>
+<h3 id="多Master多Slav同步双写"><a href="#多Master多Slav同步双写" class="headerlink" title="多Master多Slav同步双写"></a>多Master多Slav同步双写</h3><p>每个Master有一个Slave，有多对Master-Slave。采用同步复制，主从数据一致。</p>
+<ul>
+<li>优点：数据与服务都无单点故障，Master宕机情况下，消息无延迟，服务可用性与数据可用性都非常高；</li>
+<li>缺点：性能比异步复制模式略低（大约低10%左右），发送单个消息的RT会略高，且目前版本在主节点宕机后，备机不能自动切换为主机。</li>
+</ul>
+<h3 id="自动主从切换（5-0版本）"><a href="#自动主从切换（5-0版本）" class="headerlink" title="自动主从切换（5.0版本）"></a>自动主从切换（5.0版本）</h3><p>相比于主从模式，添加了基于 Raft 的一致性模块（DLedger Controller），当Master节点宕机之后，可以自主实现主从切换。</p>
+<h2 id="搭建集群"><a href="#搭建集群" class="headerlink" title="搭建集群"></a>搭建集群</h2><h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><p>centos版本：7.0  java版本：1.8.0_332  RocketMQ版本：5.0</p>
+<p>虚拟机A：192.168.202.129  虚拟机B：192.168.202.130</p>
+<h3 id="安装RocketMQ"><a href="#安装RocketMQ" class="headerlink" title="安装RocketMQ"></a>安装RocketMQ</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://archive.apache.org/dist/rocketmq/5.0.0/rocketmq-all-5.0.0-bin-release.zip</span><br><span class="line">unzip rocketmq-all-5.0.0-bin-release.zip</span><br></pre></td></tr></table></figure>
+
+<p>在conf下面提供了几种集群方式的配日志文件实例：</p>
+<p><strong>2m-noslave</strong>：双master节点</p>
+<p><strong>2m-2s-sync</strong>：双master双slave同步双写模式</p>
+<p><strong>2m-2s-async</strong>：双master双slave异步复制模式</p>
+<h3 id="准备NameServer"><a href="#准备NameServer" class="headerlink" title="准备NameServer"></a>准备NameServer</h3><p>NameServer之间是无状态的，首先启动NameServer</p>
+<p>创建启动脚本<strong>namesrv.start</strong>，然后执行脚本即可启动。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/mqnamesrv &gt;namesrv.log 2&gt;&amp;1 &amp;  #重定向 错误、标准输出到 namesrv.log，并 &amp; 后台启动</span><br></pre></td></tr></table></figure>
+
+<p>PS：修改<strong>conf&#x2F;logback_namesrv.xml</strong>文件的<file>标签内容，也可修改日志保存内容</p>
+<p>关闭NameServer命令：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/mqshutdown namesrv</span><br></pre></td></tr></table></figure>
+
+<h3 id="部署方式"><a href="#部署方式" class="headerlink" title="部署方式"></a>部署方式</h3><h4 id="多Master-1"><a href="#多Master-1" class="headerlink" title="多Master"></a><strong>多Master</strong></h4><table>
+<thead>
+<tr>
+<th align="center">192.168.202.129</th>
+<th align="center">NameServer</th>
+<th align="center">Broker-Master-a</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">192.168.202.130</td>
+<td align="center">NameServer</td>
+<td align="center">Broker-Master-b</td>
+</tr>
+</tbody></table>
+<p>修改&#x2F;conf&#x2F;2m-noslave 下的 <strong>broker-a.properties</strong>、<strong>broker-b.properties</strong></p>
+<p><strong>broker-a.properties</strong>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">brokerClusterName=DefaultCluster</span><br><span class="line">brokerName=broker-a  </span><br><span class="line">brokerId=0   <span class="comment"># master=0 slave&gt;0</span></span><br><span class="line">deleteWhen=04</span><br><span class="line">fileReservedTime=48</span><br><span class="line">brokerRole=ASYNC_MASTER   <span class="comment">#异步复制</span></span><br><span class="line">flushDiskType=ASYNC_FLUSH  <span class="comment">#异步刷盘  消息通过异步的方式保存到服务器磁盘</span></span><br><span class="line">listenPort=10980</span><br><span class="line">namesrvAddr=192.168.202.129:9876;192.168.202.130:9876  <span class="comment">#nameServer地址，多个用;隔开</span></span><br><span class="line">storePathRootDir=/home/chirs/rocketmq/store/master-a</span><br><span class="line">storePathCommitLog=/home/chirs/rocketmq/store/master-a/commitlog  <span class="comment">#commitlog保存路径</span></span><br><span class="line">storePathIndex=/home/chirs/rocketmq/store/master-a/index  <span class="comment">#索引</span></span><br><span class="line">storePathConsumeQueue=/home/chirs/rocketmq/store/master-a/consumequeue  <span class="comment">#队列</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>broker-b.properties</strong>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">brokerClusterName=DefaultCluster</span><br><span class="line">brokerName=broker-b</span><br><span class="line">brokerId=0</span><br><span class="line">deleteWhen=04</span><br><span class="line">fileReservedTime=48</span><br><span class="line">brokerRole=ASYNC_MASTER</span><br><span class="line">flushDiskType=ASYNC_FLUSH</span><br><span class="line">listenPort=10981</span><br><span class="line">namesrvAddr=192.168.202.129:9876;192.168.202.130:9876</span><br><span class="line">storePathRootDir=/home/chirs/rocketmq/store/master-b</span><br><span class="line">storePathCommitLog=/home/chirs/rocketmq/store/master-b/commitlog   </span><br><span class="line">storePathIndex=/home/chirs/rocketmq/store/master-b/index</span><br><span class="line">storePathConsumeQueue=/home/chirs/rocketmq/store/master-b/consumequeue</span><br></pre></td></tr></table></figure>
+
+<p>复制129MQ文件到130</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -r ./rocketmq-all-5.0.0-bin-release root@192.168.202.130:/home/chirs/rocketmq/</span><br></pre></td></tr></table></figure>
+
+<p>启动NameServer</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./namesrv.start</span><br></pre></td></tr></table></figure>
+
+<p>启动Broker</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nohup bin/mqbroker -c conf/2m-noslave/broker-a.properties &amp;  #129 </span><br><span class="line">nohup bin/mqbroker -c conf/2m-noslave/broker-b.properties &amp;  #130  也可以启动broker-a，跟129命令一样</span><br></pre></td></tr></table></figure>
+
+<p>关闭Broker</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/mqshutdown broker</span><br></pre></td></tr></table></figure>
+
+<p>查看启动进程</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master rocketmq-all-5.0.0-bin-release]# jps</span><br><span class="line">5073 BrokerStartup</span><br><span class="line">4547 NamesrvStartup</span><br><span class="line">5081 Jps</span><br></pre></td></tr></table></figure>
+
+<p>使用控制台查看集群信息</p>
+<p><img src="/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231105214537995.png" alt="image-20231105214537995"></p>
+<h4 id="多Master多Slave异步复制-1"><a href="#多Master多Slave异步复制-1" class="headerlink" title="多Master多Slave异步复制"></a><strong>多Master多Slave异步复制</strong></h4><table>
+<thead>
+<tr>
+<th align="center">192.168.202.129</th>
+<th align="center">NameServer</th>
+<th align="center">Broker-Master-a</th>
+<th align="center">Broker-Slave-b</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">192.168.202.130</td>
+<td align="center">NameServer</td>
+<td align="center">Broker-Slave-a</td>
+<td align="center">Broker-Master-b</td>
+</tr>
+</tbody></table>
+<p>修改<strong>conf&#x2F;2m-2s-async</strong> 下的 <strong>broker-a.properties</strong>、<strong>broker-a-s.properties</strong>、<strong>broker-b.properties</strong>、<strong>broker-b-s.properties</strong></p>
+<p><strong>broker-a.properties</strong>和<strong>broker-b.properties</strong>跟多master内容一致</p>
+<p><strong>broker-a-s.properties</strong>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">brokerClusterName=DefaultCluster</span><br><span class="line">brokerName=broker-a</span><br><span class="line">brokerId=1</span><br><span class="line">deleteWhen=04</span><br><span class="line">fileReservedTime=48</span><br><span class="line">brokerRole=SLAVE</span><br><span class="line">flushDiskType=ASYNC_FLUSH</span><br><span class="line"></span><br><span class="line">listenPort=10990</span><br><span class="line">namesrvAddr=192.168.202.129:9876;192.168.202.130:9876</span><br><span class="line">storePathRootDir=/home/chirs/rocketmq/store/slave-a</span><br><span class="line">storePathCommitLog=/home/chirs/rocketmq/store/slave-a/commitlog</span><br><span class="line">storePathIndex=/home/chirs/rocketmq/store/slave-a/index</span><br><span class="line">storePathConsumeQueue=/home/chirs/rocketmq/store/slave-a/consumequeue</span><br></pre></td></tr></table></figure>
+
+<p><strong>broker-b-s.properties</strong>:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">brokerClusterName=DefaultCluster</span><br><span class="line">brokerName=broker-b</span><br><span class="line">brokerId=1</span><br><span class="line">deleteWhen=04</span><br><span class="line">fileReservedTime=48</span><br><span class="line">brokerRole=SLAVE</span><br><span class="line">flushDiskType=ASYNC_FLUSH</span><br><span class="line"></span><br><span class="line">listenPort=10991</span><br><span class="line">namesrvAddr=192.168.202.129:9876;192.168.202.130:9876</span><br><span class="line">storePathRootDir=/home/chirs/rocketmq/store/slave-b</span><br><span class="line">storePathCommitLog=/home/chirs/rocketmq/store/slave-b/commitlog </span><br><span class="line">storePathIndex=/home/chirs/rocketmq/store/slave-b/index</span><br><span class="line">storePathConsumeQueue=/home/chirs/rocketmq/store/slave-b/consumequeue</span><br></pre></td></tr></table></figure>
+
+<p>复制一下最新配置信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -r ./rocketmq-all-5.0.0-bin-release root@192.168.202.130:/home/chirs/rocketmq/</span><br></pre></td></tr></table></figure>
+
+<p>启动Broker</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nohup bin/mqbroker -c conf/2m-2s-async/broker-a.properties &gt;master-a.log 2&gt;&amp;1 &amp;  #129 </span><br><span class="line">nohup bin/mqbroker -c conf/2m-2s-async/broker-b-s.properties &gt;slave-b-s.log 2&gt;&amp;1 &amp;  #129</span><br><span class="line">nohup bin/mqbroker -c conf/2m-2s-async/broker-b.properties &gt;master-b.log 2&gt;&amp;1 &amp;  #130  </span><br><span class="line">nohup bin/mqbroker -c conf/2m-2s-async/broker-a-s.properties &gt;slave-a-s.log 2&gt;&amp;1 &amp;  #130  </span><br></pre></td></tr></table></figure>
+
+<p>可能出现问题：</p>
+<p><img src="/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231105220523168.png" alt="image-20231105220523168"></p>
+<p><strong>runbroker.sh</strong> 修改Broker   （<strong>runserver.sh</strong> 修改nameServer）</p>
+<p>修改 JAVA_OPT</p>
+<p><img src="/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231105221715272.png" alt="image-20231105221715272"></p>
+<p>控制台查看集群</p>
+<p><img src="/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231105221852409.png" alt="image-20231105221852409"></p>
+<h4 id="主从自动切换-Controller架构"><a href="#主从自动切换-Controller架构" class="headerlink" title="主从自动切换(Controller架构)"></a><strong>主从自动切换(Controller架构)</strong></h4><table>
+<thead>
+<tr>
+<th align="center">192.168.202.129</th>
+<th align="center">NameServer</th>
+<th align="center">Controller-n0</th>
+<th align="center">Broker-Master</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">192.168.202.130</td>
+<td align="center">NameServer</td>
+<td align="center">Controller-n1</td>
+<td align="center">Broker-Slave</td>
+</tr>
+<tr>
+<td align="center">192.168.202.131</td>
+<td align="center">NameServer</td>
+<td align="center">Controller-n2</td>
+<td align="center">Broker-Slave</td>
+</tr>
+</tbody></table>
+<h5 id="Controller配置"><a href="#Controller配置" class="headerlink" title="Controller配置"></a><strong>Controller配置</strong></h5><h6 id="配置文件说明"><a href="#配置文件说明" class="headerlink" title="配置文件说明"></a>配置文件说明</h6><p><strong>&#x2F;conf&#x2F;controller&#x2F;cluster-3n-independent</strong>：单独部署（<strong>采用单独部署方式</strong>）</p>
+<p><strong>&#x2F;conf&#x2F;controller&#x2F;cluster-3n-namesrv-plugin</strong>：嵌入nameserver</p>
+<h6 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a><strong>参数说明</strong></h6><ul>
+<li>enableControllerInNamesrv：Nameserver中是否开启controller，默认false。</li>
+<li>controllerDLegerGroup：DLedger Raft Group的名字，同一个DLedger Raft Group保持一致即可。</li>
+<li>controllerDLegerPeers：DLedger Group 内各节点的端口信息，同一个 Group 内的各个节点配置必须要保证一致。</li>
+<li>controllerDLegerSelfId：节点 id，必须属于 controllerDLegerPeers 中的一个；同 Group 内各个节点要唯一。</li>
+<li>controllerStorePath：controller日志存储位置。controller是有状态的，controller重启或宕机需要依靠日志来恢复数据，该目录非常重要，不可以轻易删除。</li>
+<li>enableElectUncleanMaster：是否可以从SyncStateSet以外选举Master，若为true，可能会选取数据落后的副本作为Master而丢失消息，默认为false。</li>
+<li>notifyBrokerRoleChanged：当broker副本组上角色发生变化时是否主动通知，默认为true。</li>
+<li>scanNotActiveBrokerInterval：扫描 Broker是否存活的时间间隔。</li>
+</ul>
+<h6 id="开始配置"><a href="#开始配置" class="headerlink" title="开始配置"></a>开始配置</h6><p>进入**&#x2F;conf&#x2F;controller&#x2F;cluster-3n-independent**</p>
+<p><strong>controller-n0.conf：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">controllerDLegerGroup = controllerCluster</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">DLedger Group 内各节点的端口信息，同一个 Group 内的各个节点配置必须要保证一致。</span></span><br><span class="line">controllerDLegerPeers = n0-192.168.202.129:19878;n1-192.168.202.130:19878;n2-192.168.202.129:19878</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">必须唯一，跟随controllerDLegerPeers每个IP前面的标识，可以n10</span></span><br><span class="line">controllerDLegerSelfId = n0</span><br><span class="line">controllerStorePath = /home/chirs/rocketmq/store/controller-cluster</span><br><span class="line">enableElectUncleanMaster = false</span><br><span class="line">notifyBrokerRoleChanged = true</span><br></pre></td></tr></table></figure>
+
+<p><strong>controller-n1.conf:</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">controllerDLegerGroup = controllerCluster</span><br><span class="line">controllerDLegerPeers = n0-192.168.202.129:19878;n1-192.168.202.130:19878;n2-192.168.202.129:19878</span><br><span class="line">controllerDLegerSelfId = n1</span><br><span class="line">controllerStorePath = /home/chirs/rocketmq/store/controller-cluster</span><br><span class="line">enableElectUncleanMaster = false</span><br><span class="line">notifyBrokerRoleChanged = true</span><br></pre></td></tr></table></figure>
+
+<p><strong>controller-n2.conf:</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">controllerDLegerGroup = controllerCluster</span><br><span class="line">controllerDLegerPeers = n0-192.168.202.129:19878;n1-192.168.202.130:19878;n2-192.168.202.129:19878</span><br><span class="line">controllerDLegerSelfId = n2</span><br><span class="line">controllerStorePath = /home/chirs/rocketmq/store/controller-cluster</span><br><span class="line">enableElectUncleanMaster = false</span><br><span class="line">notifyBrokerRoleChanged = true</span><br></pre></td></tr></table></figure>
+
+<h5 id="Broker-Controller配置"><a href="#Broker-Controller配置" class="headerlink" title="Broker Controller配置"></a><strong>Broker Controller配置</strong></h5><h6 id="配置文件说明-1"><a href="#配置文件说明-1" class="headerlink" title="配置文件说明"></a>配置文件说明</h6><p>可以基于主从配置进行修改，我这里直接创建了新的配置文件，重新配置，采用<strong>一主两从</strong>。</p>
+<p>路径：<strong>conf&#x2F;controller&#x2F;cluster-3n-independent&#x2F;</strong></p>
+<p><strong>broker-a.conf</strong>：主节点 ； <strong>broker-s1.conf</strong>：从节点；<strong>broker-s2.conf</strong>：从节点</p>
+<h6 id="参数说明-1"><a href="#参数说明-1" class="headerlink" title="参数说明"></a>参数说明</h6><ul>
+<li>enableControllerMode：Broker controller模式的总开关，只有该值为true，controller模式才会打开。默认为false。</li>
+<li>controllerAddr：controller的地址，两种方式填写。<ul>
+<li>直接填写多个Controller IP地址，多个controller中间用分号隔开，例如<code>controllerAddr = 127.0.0.1:9877;127.0.0.1:9878;127.0.0.1:9879</code>。注意由于Broker需要向所有controller发送心跳，因此请填上所有的controller地址。</li>
+<li>填写域名，然后设置fetchControllerAddrByDnsLookup为true，则Broker去自动解析域名后面的多个真实controller地址。</li>
+</ul>
+</li>
+<li>fetchControllerAddrByDnsLookup：controllerAddr填写域名时，如果设置该参数为true，会自动获取所有controller的地址。默认为false。</li>
+<li>controllerHeartBeatTimeoutMills：Broker和controller之间心跳超时时间，心跳超过该时间判断Broker不在线。</li>
+<li>syncBrokerMetadataPeriod：向controller同步Broker副本信息的时间间隔。默认5000（5s）。</li>
+<li>checkSyncStateSetPeriod：检查SyncStateSet的时间间隔，检查SyncStateSet可能会shrink SyncState。默认5000（5s）。</li>
+<li>syncControllerMetadataPeriod：同步controller元数据的时间间隔，主要是获取active controller的地址。默认10000（10s）。</li>
+<li>haMaxTimeSlaveNotCatchup：表示slave没有跟上Master的最大时间间隔，若在SyncStateSet中的slave超过该时间间隔会将其从SyncStateSet移除。默认为15000（15s）。</li>
+<li>storePathEpochFile：存储epoch（时代）文件的位置。epoch文件非常重要，不可以随意删除。默认在store目录下。</li>
+<li>allAckInSyncStateSet：若该值为true，则一条消息需要复制到SyncStateSet中的每一个副本才会向客户端返回成功，可以保证消息不丢失。默认为false。</li>
+<li>syncFromLastFile：若slave是空盘启动，是否从最后一个文件进行复制。默认为false。</li>
+<li>asyncLearner：若该值为true，则该副本不会进入SyncStateSet，也就是不会被选举成Master，而是一直作为一个learner副本进行异步复制。默认为false。</li>
+<li>inSyncReplicas：需保持同步的副本组数量，默认为1，allAckInSyncStateSet&#x3D;true时该参数无效。</li>
+<li>minInSyncReplicas：最小需保持同步的副本组数量，若SyncStateSet中副本个数小于minInSyncReplicas则putMessage直接返回PutMessageStatus.IN_SYNC_REPLICAS_NOT_ENOUGH，默认为1。</li>
+</ul>
+<h6 id="开始配置-1"><a href="#开始配置-1" class="headerlink" title="开始配置"></a>开始配置</h6><p><strong>broker-a.conf：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">brokerClusterName=controllerCluster</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">broker需要一致</span></span><br><span class="line">brokerName=broker-a</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">&lt;=0 master ;&gt;0 slave</span></span><br><span class="line">brokerId=0</span><br><span class="line">deleteWhen=04</span><br><span class="line">fileReservedTime=48</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">节点之间异步复制数据</span></span><br><span class="line">brokerRole=ASYNC_MASTER</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">操作系统异步刷盘</span></span><br><span class="line">flushDiskType=ASYNC_FLUSH</span><br><span class="line"></span><br><span class="line">listenPort=10980</span><br><span class="line">namesrvAddr=192.168.202.129:9876;192.168.202.130:9876</span><br><span class="line">storePathRootDir=/home/chirs/rocketmq/store/dledger-broker/master-a</span><br><span class="line">storePathCommitLog=/home/chirs/rocketmq/store/dledger-broker/master-a/commitlog</span><br><span class="line">storePathIndex=/home/chirs/rocketmq/store/dledger-broker/master-a/index</span><br><span class="line">storePathConsumeQueue=/home/chirs/rocketmq/store/dledger-broker/master-a/consumequeue</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">开始controller模式</span></span><br><span class="line">enableControllerMode=true</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">controller的地址</span></span><br><span class="line">controllerAddr=192.168.202.129:19878;192.168.202.130:19878;192.168.202.129:19878</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">allAckInSyncStateSet=ture 开启此配置，只有等到所有节点都消息都复制完成，可以保证消息不丢失。（当然异步也会丢失数据）</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>broker-s1.conf：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">brokerClusterName=controllerCluster</span><br><span class="line">brokerName=broker-a</span><br><span class="line">brokerId=1</span><br><span class="line">deleteWhen=04</span><br><span class="line">fileReservedTime=48</span><br><span class="line">brokerRole=SLAVE</span><br><span class="line">flushDiskType=ASYNC_FLUSH</span><br><span class="line"></span><br><span class="line">listenPort=10981</span><br><span class="line">namesrvAddr=192.168.202.129:9876;192.168.202.130:9876</span><br><span class="line">storePathRootDir=/home/chirs/rocketmq/store/dledger-broker/slave-a</span><br><span class="line">storePathCommitLog=/home/chirs/rocketmq/store/dledger-broker/slave-a/commitlog</span><br><span class="line">storePathIndex=/home/chirs/rocketmq/store/dledger-broker/slave-a/index</span><br><span class="line">storePathConsumeQueue=/home/chirs/rocketmq/store/dledger-broker/slave-a/consumequeue</span><br><span class="line"></span><br><span class="line">enableControllerMode=true</span><br><span class="line">controllerAddr=192.168.202.129:19878;192.168.202.130:19878;192.168.202.129:19878</span><br></pre></td></tr></table></figure>
+
+<p><strong>broker-s2.conf：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">brokerClusterName=controllerCluster</span><br><span class="line">brokerName=broker-a</span><br><span class="line">brokerId=1</span><br><span class="line">deleteWhen=04</span><br><span class="line">fileReservedTime=48</span><br><span class="line">brokerRole=SLAVE</span><br><span class="line">flushDiskType=ASYNC_FLUSH</span><br><span class="line"></span><br><span class="line">listenPort=10981</span><br><span class="line">namesrvAddr=192.168.202.129:9876;192.168.202.130:9876</span><br><span class="line">storePathRootDir=/home/chirs/rocketmq/store/dledger-broker/slave-b</span><br><span class="line">storePathCommitLog=/home/chirs/rocketmq/store/dledger-broker/slave-b/commitlog</span><br><span class="line">storePathIndex=/home/chirs/rocketmq/store/dledger-broker/slave-b/index</span><br><span class="line">storePathConsumeQueue=/home/chirs/rocketmq/store/dledger-broker/slave-b/consumequeue</span><br><span class="line"></span><br><span class="line">enableControllerMode=true</span><br><span class="line">controllerAddr=192.168.202.129:19878;192.168.202.130:19878;192.168.202.129:19878</span><br></pre></td></tr></table></figure>
+
+<h5 id="启动集群！"><a href="#启动集群！" class="headerlink" title="启动集群！"></a>启动集群！</h5><p><strong>复制129的MQ文件到130、131：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scp -r ./rocketmq-all-5.0.0-bin-release root@192.168.202.130:/home/chirs/rocketmq/</span><br><span class="line">scp -r ./rocketmq-all-5.0.0-bin-release root@192.168.202.131:/home/chirs/rocketmq/</span><br></pre></td></tr></table></figure>
+
+<p>各节点启动NameServer,上面有不重复了</p>
+<p><strong>启动Controller：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">129</span></span><br><span class="line">nohup ./bin/mqcontroller -c /home/chirs/rocketmq/rocketmq-all-5.0.0-bin-release/conf/controller/cluster-3n-independent/controller-n0.conf &gt;independent_controller.log  2&gt;&amp;1 &amp;   </span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">130</span></span><br><span class="line">nohup ./bin/mqcontroller -c /home/chirs/rocketmq/rocketmq-all-5.0.0-bin-release/conf/controller/cluster-3n-independent/controller-n1.conf &gt;independent_controller.log  2&gt;&amp;1 &amp;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">131</span></span><br><span class="line">nohup ./bin/mqcontroller -c /home/chirs/rocketmq/rocketmq-all-5.0.0-bin-release/conf/controller/cluster-3n-independent/controller-n2.conf &gt;independent_controller.log  2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+<p><strong>启动Broker：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">129</span></span><br><span class="line">nohup ./bin/mqbroker -c /home/chirs/rocketmq/rocketmq-all-5.0.0-bin-release/conf/controller/cluster-3n-independent/broker-a.conf &gt;dledger_broker.log  2&gt;&amp;1 &amp;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">130</span></span><br><span class="line">nohup ./bin/mqbroker -c /home/chirs/rocketmq/rocketmq-all-5.0.0-bin-release/conf/controller/cluster-3n-independent/broker-s1.conf &gt;dledger_broker.log  2&gt;&amp;1 &amp;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">131</span></span><br><span class="line">nohup ./bin/mqbroker -c /home/chirs/rocketmq/rocketmq-all-5.0.0-bin-release/conf/controller/cluster-3n-independent/broker-s2.conf &gt;dledger_broker.log  2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+<p><strong>查看是否启动</strong></p>
+<p><img src="/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231109233721406.png" alt="image-20231109233721406"></p>
+<p><strong>控制台查看集群信息</strong></p>
+<p><img src="/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231110214932933.png" alt="image-20231110214932933"></p>
+<p><strong>关闭Master，验证是否可以自动切换</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">129节点执行</span></span><br><span class="line">./bin/mqshutdown broker</span><br></pre></td></tr></table></figure>
+
+<p><strong>控制台再次查看集群信息</strong></p>
+<p>131节点重新变为Master</p>
+<p><img src="/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231110215601834.png" alt="image-20231110215601834"></p>
+<p>启动129节点的Broker，再次查看控制台，129节点变成了Slave</p>
+<p><img src="/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231110215737295.png" alt="image-20231110215737295"></p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2023/11/10/2023/web/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/11/14/2023/linux/2023-11-11-Linux%E7%AE%80%E4%BB%8B/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Linux简介
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/11/02/2023/web/2023-11-02-RocketMQ-%E8%BF%9B%E9%98%B6/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">RocketMQ进阶</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2026
+        <i class="ri-heart-fill heart_icon"></i> John Doe
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="C"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" target="_blank" rel="noopener" href="http://shenyu-vip.lofter.com">摄影</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

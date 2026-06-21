@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>过滤器模式 |  C</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="C" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-part1/design_pattern/filter/filter_pattern"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  过滤器模式
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2021/06/06/part1/design_pattern/filter/filter_pattern/" class="article-date">
+  <time datetime="2021-06-07T01:41:00.000Z" itemprop="datePublished">2021-06-06</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">1.8k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">7 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <ol>
+<li><p><strong>起因</strong></p>
+<p>&emsp;&emsp;由于最近工作在对接第三方车险，这个项目是上个同事做的，还有部分功能没有开发完成，之后由我接盘。我只想说…</p>
+<p>“哟，你接了谁的盘”，小A在我背后突然说到。<span id="more"></span></p>
+<p>“你啥时候到我后面来的，别偷看别人写东西”，我有点生气的说到。</p>
+<p>“得了，还准备关心你一下你。哎，年轻人啊，别随便接盘”。 </p>
+<p>“不是你想的那个接盘啊…”</p>
+<p>“得，懂得都懂，不说了，耗子尾汁啊”，小A屁颠屁颠的走了。</p>
+<p>“这个小A，一天不知道在想啥，又打断我思路，哎哎哎，回归正题”。</p>
+<p>&emsp;&emsp;说到接盘，起初我并不知道这个项目的坑有多大。在我一步步熟悉之后，好大的坑！</p>
+<p>&emsp;&emsp;不止要对接一个第三方，有两个！一个是获取车辆的基本信息，包括车主的信息（听说是一家爬虫公司爬的数据），这也不难理解，用户体验好嘛，谁喜欢填那么多信息。奇葩的是，需要用到另一家公司爬来的数据，去另一家保险公司（他们是一家保险经纪公司）投保。说到这，你肯定会说，这不是挺正常嘛。别急，听我细细道来。其实正式环境还好，但是测试环境的话，真的是把我折磨到疯。</p>
+<p>&emsp;&emsp;测试接口的时候，需要从保险经纪公司要数据，这些数据都是新的数据，爬虫的那家公司根本就没有。所以有个问题，车主和车辆的基本信息带不出来。其实我感觉还好，只要测通接口就可以了。但是测试那边不行啊，我必须页面操作啊，你页面操作都不行，那肯定是bug啊。哎，只能找两家公司都有的数据了，功夫不负有心人，经过几天的努力和慢慢的摸索终于弄懂了两家的公司的数据是如何关联起来的（其实花的时间不多，最浪费时间的是找到这样的数据），也找到了一部分测试数据。</p>
+<p>&emsp;&emsp;第二天一大早，第一时间就打开电脑开始测试昨天找的那些数据，报错！报错！报错！纳尼！这啥烂项目！顿时陷入了沉思。究竟哪错了，我想了半天，然后顺着代码的流程再走了一遍，突然发现代码中有一处过滤，筛选匹配的车型。我啪的一下就站起来了，很快啊。今天我们来说说设计模式的过滤器模式吧！</p>
+<p>&emsp;&emsp;“你这神经病吧，有你这样切入主题的?”，小A看着傻子说到。</p>
+<p>&emsp;&emsp;“关你屁事，哎不对，为啥哪里都有你啊”。</p>
+</li>
+<li><p><strong>过滤器模式介绍</strong></p>
+<p>&emsp;&emsp;过滤器模式，听名字就能懂的是啥意思了。你要问我，为啥这么多设计模式，你第一个讲这个？亲身经历嘛。</p>
+<p>&emsp;&emsp;这种模式允许开发人员使用不同的标准来过滤一组对象，通过一系列的允许解耦的方式把它们连接起来。该模式数据结构性模式（官方客套）。</p>
+</li>
+<li><p><strong>实战</strong></p>
+<p>&emsp;&emsp;拿个对接车险举个例子吧。第一步我们需要根据车牌找出车辆的信息（理应有车主信息，这里省略），然后根据车辆信息，获取保险经纪公司对应的车型数据，选中其中的一条数据（你的车型），进而继续其它的流程。比较简单，总共有两个实现类，总体结构如下图。</p>
+<p><img src="/filter_pattern/BaseInfo-1623247639074.png" alt="BaseInfo"></p>
+<p>看代码：</p>
+<p>创建信息接口<code>Info.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.chirs.blog.designpatterns.filter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Info</span> &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>基于信息接口创建车辆基本信息<code>BaseInfo.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.chirs.blog.designpatterns.filter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BaseInfo</span> <span class="keyword">implements</span> <span class="title class_">Info</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">BaseInfo</span><span class="params">(String licensePlate, String frameNumber)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.licensePlate = licensePlate;</span><br><span class="line">        <span class="built_in">this</span>.frameNumber = frameNumber;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//车牌号</span></span><br><span class="line">    <span class="keyword">private</span> String licensePlate;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//车架号/vin</span></span><br><span class="line">    <span class="keyword">private</span> String frameNumber;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>基于信息接口创建车型信息<code>ModelInfo.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.chirs.blog.designpatterns.filter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ModelInfo</span> <span class="keyword">implements</span> <span class="title class_">Info</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ModelInfo</span><span class="params">(String brandName, String reCode, String insureYear)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.brandName = brandName;</span><br><span class="line">        <span class="built_in">this</span>.reCode = reCode;</span><br><span class="line">        <span class="built_in">this</span>.insureYear = insureYear;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//车型名称</span></span><br><span class="line">    <span class="keyword">private</span> String brandName;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//车型代码</span></span><br><span class="line">    <span class="keyword">private</span> String reCode;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//年款</span></span><br><span class="line">    <span class="keyword">private</span> String insureYear;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建一个过滤器接口<code>Filter.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.chirs.blog.designpatterns.filter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Filter</span>&lt;T <span class="keyword">extends</span> <span class="title class_">Info</span>&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span>  List&lt;T&gt; <span class="title function_">infoFilter</span><span class="params">(List&lt;T&gt; infos)</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>基于过滤器接口创建车辆基本信息过滤类<code>LicensePlateFilter.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.chirs.blog.designpatterns.filter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.stream.Collectors;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 根据车牌筛选数据</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LicensePlateFilter</span> <span class="keyword">implements</span> <span class="title class_">Filter</span>&lt;BaseInfo&gt;  &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;BaseInfo&gt; <span class="title function_">infoFilter</span><span class="params">(List&lt;BaseInfo&gt; infos)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> infos.stream().filter(info -&gt; <span class="string">&quot;陕A88888&quot;</span>.equals(info.getLicensePlate()))</span><br><span class="line">                .collect(Collectors.toList());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>基于过滤器接口创建车型信息过滤类<code>LicensePlateFilter.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.chirs.blog.designpatterns.filter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.stream.Collectors;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ModelFilter</span> <span class="keyword">implements</span> <span class="title class_">Filter</span>&lt;ModelInfo&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;ModelInfo&gt; <span class="title function_">infoFilter</span><span class="params">(List&lt;ModelInfo&gt; infos)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> infos.stream().filter(info -&gt; <span class="string">&quot;rc7777&quot;</span>.equals(info.getReCode()))</span><br><span class="line">                .collect(Collectors.toList());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建demo类<code>FilterDemo.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.chirs.blog.designpatterns.filter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FilterDemo</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        List&lt;BaseInfo&gt; carInfoList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        carInfoList.add(<span class="keyword">new</span> <span class="title class_">BaseInfo</span>(<span class="string">&quot;陕B8887&quot;</span>, <span class="string">&quot;fn8887&quot;</span>));</span><br><span class="line">        carInfoList.add(<span class="keyword">new</span> <span class="title class_">BaseInfo</span>(<span class="string">&quot;陕B8888&quot;</span>, <span class="string">&quot;fn8888&quot;</span>));</span><br><span class="line">        carInfoList.add(<span class="keyword">new</span> <span class="title class_">BaseInfo</span>(<span class="string">&quot;陕B8889&quot;</span>, <span class="string">&quot;fn8889&quot;</span>));</span><br><span class="line">        carInfoList.add(<span class="keyword">new</span> <span class="title class_">BaseInfo</span>(<span class="string">&quot;陕B88810&quot;</span>, <span class="string">&quot;fn88810&quot;</span>));</span><br><span class="line">        carInfoList.add(<span class="keyword">new</span> <span class="title class_">BaseInfo</span>(<span class="string">&quot;陕A88888&quot;</span>, <span class="string">&quot;fn88811&quot;</span>));</span><br><span class="line">        </span><br><span class="line">        List&lt;ModelInfo&gt; modelInfos = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        modelInfos.add(<span class="keyword">new</span> <span class="title class_">ModelInfo</span>(<span class="string">&quot;法拉利&quot;</span>, <span class="string">&quot;rc8887&quot;</span>, <span class="string">&quot;2018/7&quot;</span>));</span><br><span class="line">        modelInfos.add(<span class="keyword">new</span> <span class="title class_">ModelInfo</span>(<span class="string">&quot;兰博基尼&quot;</span>, <span class="string">&quot;rc8888&quot;</span>, <span class="string">&quot;2019/7&quot;</span>));</span><br><span class="line">        modelInfos.add(<span class="keyword">new</span> <span class="title class_">ModelInfo</span>(<span class="string">&quot;阿斯顿马丁&quot;</span>, <span class="string">&quot;rc8889&quot;</span>, <span class="string">&quot;2020/7&quot;</span>));</span><br><span class="line">        modelInfos.add(<span class="keyword">new</span> <span class="title class_">ModelInfo</span>(<span class="string">&quot;梅克塞斯&quot;</span>, <span class="string">&quot;rc88810&quot;</span>, <span class="string">&quot;2021/7&quot;</span>));</span><br><span class="line">        modelInfos.add(<span class="keyword">new</span> <span class="title class_">ModelInfo</span>(<span class="string">&quot;QQ&quot;</span>, <span class="string">&quot;rc7777&quot;</span>, <span class="string">&quot;2022/7&quot;</span>));</span><br><span class="line">        </span><br><span class="line">        Filter&lt;BaseInfo&gt; licensePlateFilter = <span class="keyword">new</span> <span class="title class_">LicensePlateFilter</span>();</span><br><span class="line">        Filter&lt;ModelInfo&gt; modelFilter = <span class="keyword">new</span> <span class="title class_">ModelFilter</span>();</span><br><span class="line">        </span><br><span class="line">        System.out.print(<span class="string">&quot;数据库中车辆的基本信息 &quot;</span>);</span><br><span class="line">        System.out.print(Arrays.toString(carInfoList.toArray()) + <span class="string">&quot;\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">        System.out.print(<span class="string">&quot;数据库中车辆的车型信息 &quot;</span>);</span><br><span class="line">        System.out.print(Arrays.toString(modelInfos.toArray()) + <span class="string">&quot;\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">        System.out.print(<span class="string">&quot;筛选出的车牌信息 &quot;</span>);</span><br><span class="line">        List&lt;BaseInfo&gt; baseInfos = licensePlateFilter.infoFilter(carInfoList);</span><br><span class="line">        System.out.print(Arrays.toString(baseInfos.toArray()) + <span class="string">&quot;\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">        System.out.print(<span class="string">&quot;筛选出的车型信息 &quot;</span>);</span><br><span class="line">        List&lt;ModelInfo&gt; modelInfos1 = modelFilter.infoFilter(modelInfos);</span><br><span class="line">        System.out.print(Arrays.toString(modelInfos1.toArray()) + <span class="string">&quot;\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果来咯：</p>
+<blockquote>
+<p>数据库中车辆的基本信息 [BaseInfo(licensePlate&#x3D;陕B8887, frameNumber&#x3D;fn8887), BaseInfo(licensePlate&#x3D;陕B8888, frameNumber&#x3D;fn8888), BaseInfo(licensePlate&#x3D;陕B8889, frameNumber&#x3D;fn8889), BaseInfo(licensePlate&#x3D;陕B88810, frameNumber&#x3D;fn88810), BaseInfo(licensePlate&#x3D;陕A88888, frameNumber&#x3D;fn88811)]<br>数据库中车辆的车型信息 [ModelInfo(brandName&#x3D;法拉利, reCode&#x3D;rc8887, insureYear&#x3D;2018&#x2F;7), ModelInfo(brandName&#x3D;兰博基尼, reCode&#x3D;rc8888, insureYear&#x3D;2019&#x2F;7), ModelInfo(brandName&#x3D;阿斯顿马丁, reCode&#x3D;rc8889, insureYear&#x3D;2020&#x2F;7), ModelInfo(brandName&#x3D;梅克塞斯, reCode&#x3D;rc88810, insureYear&#x3D;2021&#x2F;7), ModelInfo(brandName&#x3D;QQ, reCode&#x3D;rc7777, insureYear&#x3D;2022&#x2F;7)]<br>筛选出的车牌信息 [BaseInfo(licensePlate&#x3D;陕A88888, frameNumber&#x3D;fn88811)]<br>筛选出的车型信息 [ModelInfo(brandName&#x3D;QQ, reCode&#x3D;rc7777, insureYear&#x3D;2022&#x2F;7)]</p>
+</blockquote>
+</li>
+</ol>
+<p>好了上面就是我所了解的过滤器模式，最近项目中有碰到过类似场景。所有总结一下，有误之处，望指正。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2021/06/06/part1/design_pattern/filter/filter_pattern/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2021/11/07/part1/other/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%92%8C%E7%89%A9%E7%90%86%E6%9C%BA%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            虚拟机和物理机使用NAT方式连接
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2021/03/24/part1/complie/compile1/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">用C语言介绍运行时内存结构</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2026
+        <i class="ri-heart-fill heart_icon"></i> John Doe
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="C"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" target="_blank" rel="noopener" href="http://shenyu-vip.lofter.com">摄影</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

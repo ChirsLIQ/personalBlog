@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Spring的refresh方法-优雅初始化_销毁Bean方式番外篇(6 |  C</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="C" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-part1/source/Spring/Spring的refresh方法-优雅初始化_销毁Bean方式番外篇"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Spring的refresh方法-优雅初始化_销毁Bean方式番外篇(6
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/03/07/part1/source/Spring/Spring%E7%9A%84refresh%E6%96%B9%E6%B3%95-%E4%BC%98%E9%9B%85%E5%88%9D%E5%A7%8B%E5%8C%96_%E9%94%80%E6%AF%81Bean%E6%96%B9%E5%BC%8F%E7%95%AA%E5%A4%96%E7%AF%87/" class="article-date">
+  <time datetime="2023-03-08T04:00:00.000Z" itemprop="datePublished">2023-03-07</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BA%90%E7%A0%81/">源码</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">1.5k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">7 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p><strong>所有的内容都是基于 <a target="_blank" rel="noopener" href="https://gitee.com/chris_777/spring-boot2.1.3">https://gitee.com/chris_777&#x2F;spring-boot2.1.3</a> springboot 源码</strong><br><strong>main函数入口org.springframework.boot.tests.hibernate52.Hibernate52Application.main</strong></p>
+<p>Spring为我们提供了许多接口，方便我们嵌入自己的业务逻辑。今天记录一下，Spring如何优雅的对Bean进行初始化或者销毁。</p>
+</br>
+
+<ul>
+<li><strong>@PostConstruct&#x2F;@PreDestroy注解</strong></li>
+<li><strong>init-method&#x2F;destroy-method</strong></li>
+<li><strong>InitializingBean&#x2F;DisposableBean</strong></li>
+<li><strong>ContextRefreshedEvent&#x2F;ContextClosedEvent</strong></li>
+<li><strong>LifecycleProcessor</strong></li>
+</ul>
+</br>
+
+<p>咱们先看一下，Spring是如何去管理Bean的初始化以及销毁的。由于Bean的初始化源码比较分散，而销毁的源码是在一起的，我们先看一下Spring如何销毁的源码（只针对destroy方法）。</p>
+</br>
+
+<ol>
+<li><strong>Spring是如何管理Bean的销毁的</strong></li>
+</ol>
+<p>doCreateBean方法里面的 registerDisposableBeanIfNecessary 方法，此时该Bean已经初始化完成。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">registerDisposableBeanIfNecessary</span><span class="params">(String beanName, Object bean, RootBeanDefinition mbd)</span> &#123;</span><br><span class="line">		<span class="type">AccessControlContext</span> <span class="variable">acc</span> <span class="operator">=</span> (System.getSecurityManager() != <span class="literal">null</span> ? getAccessControlContext() : <span class="literal">null</span>);</span><br><span class="line">		<span class="comment">//判断改Bean是否为 Disposable Bean</span></span><br><span class="line">        <span class="comment">//里面的逻辑是  </span></span><br><span class="line">        <span class="comment">//1.判断是否有destroy方法</span></span><br><span class="line">        <span class="comment">//2.属于DisposableBean类型 或 AutoCloseable类型</span></span><br><span class="line">        <span class="comment">//4.DestructionAwareBeanPostProcessorBean处理器</span></span><br><span class="line">    	<span class="keyword">if</span> (!mbd.isPrototype() &amp;&amp; requiresDestruction(bean, mbd)) &#123;</span><br><span class="line">            <span class="comment">//单例</span></span><br><span class="line">			<span class="keyword">if</span> (mbd.isSingleton()) &#123;</span><br><span class="line">				<span class="comment">// Register a DisposableBean implementation that performs all destruction</span></span><br><span class="line">				<span class="comment">// work for the given bean: DestructionAwareBeanPostProcessors,</span></span><br><span class="line">				<span class="comment">// DisposableBean interface, custom destroy method.</span></span><br><span class="line">                <span class="comment">//创建 DisposableBeanAdapter适配器，将bean保存到disposableBeans集合中</span></span><br><span class="line">				registerDisposableBean(beanName,</span><br><span class="line">						<span class="keyword">new</span> <span class="title class_">DisposableBeanAdapter</span>(bean, beanName, mbd, getBeanPostProcessors(), acc));</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span> &#123;</span><br><span class="line">				<span class="comment">// A bean with a custom scope...</span></span><br><span class="line">				<span class="type">Scope</span> <span class="variable">scope</span> <span class="operator">=</span> <span class="built_in">this</span>.scopes.get(mbd.getScope());</span><br><span class="line">				<span class="keyword">if</span> (scope == <span class="literal">null</span>) &#123;</span><br><span class="line">					<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;No Scope registered for scope name &#x27;&quot;</span> + mbd.getScope() + <span class="string">&quot;&#x27;&quot;</span>);</span><br><span class="line">				&#125;</span><br><span class="line">                <span class="comment">//注册回调</span></span><br><span class="line">				scope.registerDestructionCallback(beanName,</span><br><span class="line">						<span class="keyword">new</span> <span class="title class_">DisposableBeanAdapter</span>(bean, beanName, mbd, getBeanPostProcessors(), acc));</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><strong>如何销毁</strong></li>
+</ol>
+<p>初始化的时候，由于传入的是一个DisposableBeanAdapter对象，所以调用的也是该对象的DisposableBeanAdapter的destroy方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">destroy</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (!CollectionUtils.isEmpty(<span class="built_in">this</span>.beanPostProcessors)) &#123;</span><br><span class="line">            <span class="comment">//获取自己的(根据接口中的一个方法返回true或false判断)BeanPostProcessors执行器，调用postProcessBeforeDestruction方法</span></span><br><span class="line">            <span class="comment">//这里就会执行 @PreDestroy 注解的逻辑</span></span><br><span class="line">			<span class="keyword">for</span> (DestructionAwareBeanPostProcessor processor : <span class="built_in">this</span>.beanPostProcessors) &#123;</span><br><span class="line">				processor.postProcessBeforeDestruction(<span class="built_in">this</span>.bean, <span class="built_in">this</span>.beanName);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (<span class="built_in">this</span>.invokeDisposableBean) &#123;</span><br><span class="line">			<span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">				logger.trace(<span class="string">&quot;Invoking destroy() on bean with name &#x27;&quot;</span> + <span class="built_in">this</span>.beanName + <span class="string">&quot;&#x27;&quot;</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">//调用destroy方法</span></span><br><span class="line">				<span class="keyword">if</span> (System.getSecurityManager() != <span class="literal">null</span>) &#123;</span><br><span class="line">					AccessController.doPrivileged((PrivilegedExceptionAction&lt;Object&gt;) () -&gt; &#123;</span><br><span class="line">						((DisposableBean) <span class="built_in">this</span>.bean).destroy();</span><br><span class="line">						<span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">					&#125;, <span class="built_in">this</span>.acc);</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">else</span> &#123;</span><br><span class="line">					((DisposableBean) <span class="built_in">this</span>.bean).destroy();</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">catch</span> (Throwable ex) &#123;</span><br><span class="line">				<span class="type">String</span> <span class="variable">msg</span> <span class="operator">=</span> <span class="string">&quot;Invocation of destroy method failed on bean with name &#x27;&quot;</span> + <span class="built_in">this</span>.beanName + <span class="string">&quot;&#x27;&quot;</span>;</span><br><span class="line">				<span class="keyword">if</span> (logger.isDebugEnabled()) &#123;</span><br><span class="line">					logger.info(msg, ex);</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">else</span> &#123;</span><br><span class="line">					logger.info(msg + <span class="string">&quot;: &quot;</span> + ex);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">    	<span class="comment">//调用改Bean的destroy方法</span></span><br><span class="line">		<span class="keyword">if</span> (<span class="built_in">this</span>.destroyMethod != <span class="literal">null</span>) &#123;</span><br><span class="line">			invokeCustomDestroyMethod(<span class="built_in">this</span>.destroyMethod);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">this</span>.destroyMethodName != <span class="literal">null</span>) &#123;</span><br><span class="line">			<span class="type">Method</span> <span class="variable">methodToCall</span> <span class="operator">=</span> determineDestroyMethod(<span class="built_in">this</span>.destroyMethodName);</span><br><span class="line">			<span class="keyword">if</span> (methodToCall != <span class="literal">null</span>) &#123;</span><br><span class="line">				invokeCustomDestroyMethod(methodToCall);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><strong>@PostConstruct&#x2F;@PreDestroy注解</strong></li>
+</ol>
+<p>CommonAnnotationBeanPostProcessor类（InitDestroyAnnotationBeanPostProcessor类的子类），在初始化时会初始化这两个注解。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">CommonAnnotationBeanPostProcessor</span><span class="params">()</span> &#123;</span><br><span class="line">    setOrder(Ordered.LOWEST_PRECEDENCE - <span class="number">3</span>);</span><br><span class="line">    setInitAnnotationType(PostConstruct.class);</span><br><span class="line">    setDestroyAnnotationType(PreDestroy.class);</span><br><span class="line">    ignoreResourceType(<span class="string">&quot;javax.xml.ws.WebServiceContext&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</br>
+
+<p>解析注解的逻辑在InitDestroyAnnotationBeanPostProcessor父类中，与 Spring的refresh方法-BeanPostProcessor番外篇（2 中@Autowired注解处理方式一致。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> LifecycleMetadata <span class="title function_">buildLifecycleMetadata</span><span class="params">(<span class="keyword">final</span> Class&lt;?&gt; clazz)</span> &#123;</span><br><span class="line">    List&lt;LifecycleElement&gt; initMethods = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    List&lt;LifecycleElement&gt; destroyMethods = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    Class&lt;?&gt; targetClass = clazz;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">        <span class="keyword">final</span> List&lt;LifecycleElement&gt; currInitMethods = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        <span class="keyword">final</span> List&lt;LifecycleElement&gt; currDestroyMethods = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        ReflectionUtils.doWithLocalMethods(targetClass, method -&gt; &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">this</span>.initAnnotationType != <span class="literal">null</span> &amp;&amp; method.isAnnotationPresent(<span class="built_in">this</span>.initAnnotationType)) &#123;</span><br><span class="line">                <span class="type">LifecycleElement</span> <span class="variable">element</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">LifecycleElement</span>(method);</span><br><span class="line">                currInitMethods.add(element);</span><br><span class="line">                <span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">                    logger.trace(<span class="string">&quot;Found init method on class [&quot;</span> + clazz.getName() + <span class="string">&quot;]: &quot;</span> + method);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">this</span>.destroyAnnotationType != <span class="literal">null</span> &amp;&amp; method.isAnnotationPresent(<span class="built_in">this</span>.destroyAnnotationType)) &#123;</span><br><span class="line">                currDestroyMethods.add(<span class="keyword">new</span> <span class="title class_">LifecycleElement</span>(method));</span><br><span class="line">                <span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">                    logger.trace(<span class="string">&quot;Found destroy method on class [&quot;</span> + clazz.getName() + <span class="string">&quot;]: &quot;</span> + method);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        initMethods.addAll(<span class="number">0</span>, currInitMethods);</span><br><span class="line">        destroyMethods.addAll(currDestroyMethods);</span><br><span class="line">        targetClass = targetClass.getSuperclass();</span><br><span class="line">    &#125;</span><br><span class="line">        <span class="keyword">while</span> (targetClass != <span class="literal">null</span> &amp;&amp; targetClass != Object.class);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">LifecycleMetadata</span>(clazz, initMethods, destroyMethods);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</br>
+
+<p>@PostConstruct标注的方法，会在执行初始化方法的时候调用Bean处理器时触发。<br>@PreDestroy注解，已经在文章开始统一说明。</p>
+<ol start="2">
+<li><strong>init-method&#x2F;destroy-method</strong></li>
+</ol>
+<p>在Bean进行初始化的时候，会调用Bean的Init方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">invokeCustomInitMethod</span><span class="params">(String beanName, <span class="keyword">final</span> Object bean, RootBeanDefinition mbd)</span></span><br><span class="line">    <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">    <span class="comment">//获取bean的init方法</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">initMethodName</span> <span class="operator">=</span> mbd.getInitMethodName();</span><br><span class="line">    Assert.state(initMethodName != <span class="literal">null</span>, <span class="string">&quot;No init method set&quot;</span>);</span><br><span class="line">    <span class="keyword">final</span> <span class="type">Method</span> <span class="variable">initMethod</span> <span class="operator">=</span> (mbd.isNonPublicAccessAllowed() ?</span><br><span class="line">                               BeanUtils.findMethod(bean.getClass(), initMethodName) :</span><br><span class="line">                               ClassUtils.getMethodIfAvailable(bean.getClass(), initMethodName));</span><br><span class="line"></span><br><span class="line">    <span class="comment">//.......省略代码</span></span><br><span class="line">    <span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">        logger.trace(<span class="string">&quot;Invoking init method  &#x27;&quot;</span> + initMethodName + <span class="string">&quot;&#x27; on bean with name &#x27;&quot;</span> + beanName + <span class="string">&quot;&#x27;&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//调用init方法</span></span><br><span class="line">    <span class="keyword">if</span> (System.getSecurityManager() != <span class="literal">null</span>) &#123;</span><br><span class="line">        AccessController.doPrivileged((PrivilegedAction&lt;Object&gt;) () -&gt; &#123;</span><br><span class="line">            ReflectionUtils.makeAccessible(initMethod);</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            AccessController.doPrivileged((PrivilegedExceptionAction&lt;Object&gt;) () -&gt;</span><br><span class="line">                                           initMethod.invoke(bean), getAccessControlContext());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (PrivilegedActionException pae) &#123;</span><br><span class="line">            <span class="type">InvocationTargetException</span> <span class="variable">ex</span> <span class="operator">=</span> (InvocationTargetException) pae.getException();</span><br><span class="line">            <span class="keyword">throw</span> ex.getTargetException();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            ReflectionUtils.makeAccessible(initMethod);</span><br><span class="line">            initMethod.invoke(bean);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (InvocationTargetException ex) &#123;</span><br><span class="line">            <span class="keyword">throw</span> ex.getTargetException();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>destroy-method，已经在文章开始统一说明。</p>
+<ol start="3">
+<li><strong>InitializingBean&#x2F;DisposableBean</strong></li>
+</ol>
+<p>InitializingBean实现方式，请参考 Spring的refresh方法-InitializingBean番外篇(4<br>DisposableBean文章，已经在文章开始统一说明。</p>
+<ol start="4">
+<li><strong>ContextRefreshedEvent&#x2F;ContextClosedEvent</strong></li>
+</ol>
+<p>Spring会在每个相应阶段结束之后，发布对应的事件。ContextRefreshedEvent事件会在所有非懒加载对象初始化完成之后触发的事件。<br>参考 Spring的refresh方法-ApplicationListener番外篇（4<br>org.springframework.context.support.AbstractApplicationContext#publishEvent(org.springframework.context.ApplicationEvent)</p>
+</br>
+
+<p>发布刷新完成事件<br>publishEvent(new ContextRefreshedEvent(this));</p>
+</br>
+
+<p>代码位置<br>org.springframework.context.support.AbstractApplicationContext#finishRefresh</p>
+</br>
+
+<p>发布关闭事件<br>publishEvent(new ContextClosedEvent(this))</p>
+</br>
+
+<p>代码位置<br>org.springframework.context.support.AbstractApplicationContext#doClose</p>
+</br>
+
+<ol start="5">
+<li><strong>LifecycleProcessor</strong></li>
+</ol>
+<p>Spring会在结束刷新的时候，注册一个Bean的名字为lifecycleProcessor的对象，我们可以依靠改对象，来完成我们初始化或者销毁对象的操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">LifecycleProcessor</span> <span class="keyword">extends</span> <span class="title class_">Lifecycle</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">* 刷新完成触发</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">onRefresh</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">* 关闭时触发</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">onClose</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</br>
+
+<p>我们来实践一下，正常情况下，会依次输出：<br><strong>onLifecycleProcessorRefresh&gt;&gt;&gt;&gt;&gt;&gt;&gt;</strong><br><strong>onLifecycleProcessorClose&gt;&gt;&gt;&gt;&gt;&gt;&gt;</strong></p>
+</br>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component(&quot;lifecycleProcessor&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyLifecycleProcessorTest</span> <span class="keyword">implements</span> <span class="title class_">LifecycleProcessor</span>,ApplicationContextAware &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> ApplicationContext applicationContext;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onRefresh</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="type">ManualRegisterBean</span> <span class="variable">manualRegisterBean</span> <span class="operator">=</span> (ManualRegisterBean) applicationContext.getBean(ManualRegisterBean.class.getName());</span><br><span class="line">		manualRegisterBean.onLifecycleProcessorRefresh();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onClose</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="type">ManualRegisterBean</span> <span class="variable">manualRegisterBean</span> <span class="operator">=</span> (ManualRegisterBean) applicationContext.getBean(ManualRegisterBean.class.getName());</span><br><span class="line">		manualRegisterBean.onLifecycleProcessorClose();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">start</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">stop</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isRunning</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * org.springframework.context.support.ApplicationContextAwareProcessor#postProcessBeforeInitialization(java.lang.Object, java.lang.String)</span></span><br><span class="line"><span class="comment">	 * 会在执行初始化方法的时候，通过Bean处理器进行注入</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> applicationContext</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@throws</span> BeansException</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setApplicationContext</span><span class="params">(ApplicationContext applicationContext)</span> <span class="keyword">throws</span> BeansException &#123;</span><br><span class="line">		<span class="built_in">this</span>.applicationContext=applicationContext;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Chris</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ManualRegisterBean</span> &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onContextRefreshedEvent</span><span class="params">()</span> &#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;ContextRefreshedEvent&gt;&gt;&gt;&gt;&gt;&gt;&gt;&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onAfterSingletonsInstantiated</span><span class="params">()</span> &#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;afterSingletonsInstantiated&gt;&gt;&gt;&gt;&gt;&gt;&gt;&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onLifecycleProcessorRefresh</span><span class="params">()</span> &#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;onLifecycleProcessorRefresh&gt;&gt;&gt;&gt;&gt;&gt;&gt;&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onLifecycleProcessorClose</span><span class="params">()</span> &#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;onLifecycleProcessorClose&gt;&gt;&gt;&gt;&gt;&gt;&gt;&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2023/03/07/part1/source/Spring/Spring%E7%9A%84refresh%E6%96%B9%E6%B3%95-%E4%BC%98%E9%9B%85%E5%88%9D%E5%A7%8B%E5%8C%96_%E9%94%80%E6%AF%81Bean%E6%96%B9%E5%BC%8F%E7%95%AA%E5%A4%96%E7%AF%87/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/07/19/2023/web/2023-07-19-%E5%B0%86%E4%B8%80%E4%B8%AA%E7%9B%AE%E5%BD%95%E4%B8%8B%E6%89%80%E6%9C%89TXT%E6%96%87%E6%A1%A3%E5%86%85%E7%9A%84%E5%8D%95%E8%AF%8D%E5%87%BA%E7%8E%B0%E9%A2%91%E6%AC%A1%E5%80%92%E5%BA%8F%E8%BE%93%E5%87%BA%E5%88%B0%E6%96%87%E4%BB%B6/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            将一个目录下所有TXT文档内的单词出现频次倒序输出到文件
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/03/06/part1/source/Spring/Spring%E7%9A%84refresh%E6%96%B9%E6%B3%95-SmartInitializingSingleton%E7%95%AA%E5%A4%96%E7%AF%87/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Spring的refresh方法-SmartInitializingSingleton番外篇(5</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2026
+        <i class="ri-heart-fill heart_icon"></i> John Doe
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="C"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" target="_blank" rel="noopener" href="http://shenyu-vip.lofter.com">摄影</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

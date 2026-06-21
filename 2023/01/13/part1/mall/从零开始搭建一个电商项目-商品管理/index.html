@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>从零开始搭建一个电商项目-商品管理（四） |  C</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="C" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-part1/mall/从零开始搭建一个电商项目-商品管理"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  从零开始搭建一个电商项目-商品管理（四）
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/01/13/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/" class="article-date">
+  <time datetime="2023-01-14T04:15:00.000Z" itemprop="datePublished">2023-01-13</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%9E%8E%E8%83%A1%E9%97%B9/">瞎胡闹</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">890</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">3 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p><strong>前期准备</strong></p>
+<p>​		第二篇文章里面有gitee的项目地址。<br>​		首先修改前端项目中 static&#x2F;config&#x2F;index.js 文件，修改后端访问地址。端口是网关服务的	</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//   /api 是网关层转发的特定前缀</span></span><br><span class="line"><span class="variable language_">window</span>.<span class="property">SITE_CONFIG</span>[<span class="string">&#x27;baseUrl&#x27;</span>] = <span class="string">&#x27;http://localhost:8200/api&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>​		 修改各个后端配置文件中的中间件访问IP地址改成自己的.<br>​		 nacos、es、rabbitmq、mysql、redis.这些地址都是已知的需要改。<br>​		 sentinel、zipkin、seata 后续会提及。<br>​		 尤其需要注意到config包里面有写死的访问地址（后续可以改成配置文件），比如<br>​		 com.chris.easymallproduct.config.RedissonConfig product模块 需要修改redis的访问地址<br>         com.chris.common.config.MinioConfig 修改Minio的访问地址<span id="more"></span></p>
+<p>​         可以利用启动报错慢慢修改。然后启动前后端项目，使用admin&#x2F;admin 登录</p>
+<pre><code>     执行数据库创建脚本 [https://gitee.com/chris_777/easymall/blob/develop/sql](https://gitee.com/chris_777/easymall/blob/develop/sql/sys_menus.sql)
+      在执行创建菜单脚本 https://gitee.com/chris_777/easymall/blob/develop/sql/sys_menus.sql
+      执行三级分类脚本https://gitee.com/chris_777/easymall/blob/develop/sql/pms_category.sql
+</code></pre>
+<ol>
+<li><p>分类维护</p>
+<p>导入三级分类的脚本之后，访问分类维护菜单，会显示导入的三级分类数据。配有增、删、改的功能。</p>
+<p><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/1670762076741-74f6d0a2-0911-4dd2-9677-ccad65f93ae8.png" alt="image.png"></p>
+</li>
+<li><p>品牌管理</p>
+<p>我们针对手机这个产品去管理它的品牌，目前手机品牌挺多的，如华为、小米、中兴等。品牌就是用来在购买商品的时候知道这个产品是属于哪个厂商的。<br>品牌新增功能，品牌名以及品牌的logo地址等信息</p>
+<p><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/1670762386832-42c309d2-2fb3-4c06-9e6b-462a5168c788.png" alt="image.png"></p>
+<p>关联分类，新增的品牌属于哪个分类。<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/1670762468322-a59c0d7f-61cc-477e-9a6f-f54e4d16f609.png" alt="image.png"></p>
+</li>
+<li><p>属性分组</p>
+<p>维护规格属性一对多的关系。如手机分类有 基本信息 的主体名，基本信息又包括 机身颜色、机身尺寸、机身重量等。如图3所示。<br>关联功能用于关联主体与规格参数之间对应的关系。<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/1670763346247-ac3f5c39-937d-486c-a9da-d3d49bf619e6.png" alt="image.png"><br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/1670763346247-ac3f5c39-937d-486c-a9da-d3d49bf619e6.png" alt="image.png"><br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/1670763394645-662f9c90-fc55-4272-9e74-4baded276468.png" alt="image.png"></p>
+</li>
+<li><p>规格参数</p>
+<p>维护SPU的规格参数信息。可以新增规格参数，<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/1670763297367-d3f5b2d1-5b4c-4f21-ab36-22519eecc88c.png" alt="image.png"><br>可检索：用户可以在首页搜索到<br>快速展示：可以在 商品介绍 中进行展示<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/1670763709360-a51206f9-6801-414d-8614-0396238515d5.png" alt="image.png"></p>
+</li>
+<li><p>销售属性</p>
+<p>维护SKU的基本参数信息，如颜色、内存等信息。<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/1670763965838-8bca59b0-9a06-4690-8f7a-494dc59a6061.png" alt="image.png"></p>
+</li>
+<li><p>创建商品</p>
+<p>进入商品系统-&gt;商品维护-&gt;发布商品菜单，开始创建商品基本信息。<br>商品介绍：商品介绍中的图片<br>商品图集：SKU的图片<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/1670764329844-c3c47852-be6b-48bb-b5ec-6ccd184ed681.png" alt="image.png"></p>
+<p>创建规格参数，选择之前增加的规格参数。</p>
+<p><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/1670764503254-9f7dbed7-25b7-460b-afaf-70ac3e8653b5.png" alt="image.png"><br>创建销售属性。<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/1670765265794-e1452f65-8827-438c-a7b1-b49e041274c0.png" alt="image.png"><br>设置SKU信息，结果为销售属性的笛卡尔积<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/1670765290936-9928f2d2-e793-4257-af05-58fc67e3e2fd.png" alt="image.png"><br>查看创建的SPU信息<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/1670764979945-928d1400-d816-4dbb-91fb-2c0bc5e69974.png" alt="image.png"><br>查看SKU信息<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/1670765345477-e41da6da-3b2e-431f-ab0b-ce4d433abd11.png" alt="image.png"></p>
+</li>
+<li><p>仓库管理</p>
+<p>维护仓库的信息，用来 逻辑保存商品<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/1670765879646-3b290a8d-b206-4f47-9c37-01b47f65f1a7.png" alt="image.png"><br>商品采集。实际中我们需要对商品进行采集，并且入库，主要流程如下图所示<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/1670766955350-c8c874ef-5261-42f2-a260-899727d80b78.png" alt="image.png"><br>人工创建采购单。这里的采购商品可以优化成下拉框，批量生产采购需求。合并时需要选择创建的采购单<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/1670767046193-ec400b30-7f5f-4896-909e-28c8c2655b33.png" alt="image.png"><br>批量手动生成采购单<img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/1670767097458-f74f9da3-48ec-4b5e-8ddb-2432bef69394.png" alt="image.png"><br>创建采购单<img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/1670767280253-7b5d7ef5-a153-44db-99ef-695594e05c3a.png" alt="image.png"><br>选择需要合并到哪个采购单中，其中编号3为创建的采购单的主键，可优化<img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/1670767187160-01f0ddb2-62e1-49da-8d8b-c43fa50a77ea.png" alt="image.png"><br>分配采购人员。这里的采购人员需要在系统管理菜单里面维护<img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/1670767348046-2cce675d-5330-4cf6-a273-707864ec412d.png" alt="image.png"><br>领取采购单，需要在APP上新增功能，这里只是模拟。 localhost:8104&#x2F;easymallware&#x2F;purchase&#x2F;received<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/1670767420586-11a6e2e0-f1a5-45bf-bbe8-94fbcb4081e0.png" alt="image.png"><br>完成采购，其中3为采购单ID，6、7为采购项<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/1670767702685-048ecd87-321a-408f-afb1-5f7c09872f36.png" alt="image.png"><br>完成采购<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/1670767774797-7166115a-bd5a-479b-9aff-7ca4e20ad499.png" alt="image.png"></p>
+</li>
+</ol>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2023/01/13/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/01/14/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E6%A3%80%E7%B4%A2/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            从零开始搭建一个电商项目-商品检索（五）
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/01/12/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E7%94%B5%E5%95%86%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">从零开始搭建一个电商项目-电商的一些基本概念（三）</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2026
+        <i class="ri-heart-fill heart_icon"></i> John Doe
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="C"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" target="_blank" rel="noopener" href="http://shenyu-vip.lofter.com">摄影</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>
