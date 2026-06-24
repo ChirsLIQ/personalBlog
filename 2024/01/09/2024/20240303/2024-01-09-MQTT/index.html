@@ -16,13 +16,13 @@
       
       <link rel="shortcut icon" href="/favicon.ico" />
        
-<link rel="stylesheet" href="/dist/main.css">
+<link rel="stylesheet" href="/personalBlog/dist/main.css">
 
       
-<link rel="stylesheet" href="/css/fonts/remixicon.css">
+<link rel="stylesheet" href="/personalBlog/css/fonts/remixicon.css">
 
       
-<link rel="stylesheet" href="/css/custom.css">
+<link rel="stylesheet" href="/personalBlog/css/custom.css">
  
       <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
        
@@ -41,7 +41,7 @@
           font-size: 1.6rem;
         }
       </style>
-    <link rel="alternate" href="/atom.xml" title="C" type="application/atom+xml">
+    <link rel="alternate" href="/personalBlog/atom.xml" title="C" type="application/atom+xml">
 </head>
   </html>
 </html>
@@ -73,11 +73,11 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2024/01/09/2024/20240303/2024-01-09-MQTT/" class="article-date">
+      <a href="/personalBlog/2024/01/09/2024/20240303/2024-01-09-MQTT/" class="article-date">
   <time datetime="2024-01-10T00:00:00.000Z" itemprop="datePublished">2024-01-09</time>
 </a> 
   <div class="article-category">
-    <a class="article-category-link" href="/categories/MQTT/">MQTT</a>
+    <a class="article-category-link" href="/personalBlog/categories/MQTT/">MQTT</a>
   </div>
   
 <div class="word_count">
@@ -110,7 +110,7 @@
     <div class="article-entry" itemprop="articleBody">
        
   <h2 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h2><p>MQTT（Message Queuing Telemetry Transport，消息队列遥测传输协议），是一种基于发布&#x2F;订阅（publish&#x2F;subscribe）模式的”轻量级”通讯协议，该协议构建于TCP&#x2F;IP协议上，由IBM在1999年发布。MQTT最大的优点在于，可以用极少的代码和带宽，为远程连接的设备提供可靠的消息服务。作为一种低开销、低带宽占用的即时通讯协议，在物联网、小型设备和移动应用等方面有着比较广泛的应用。</p>
-<p><img src="/2024-01-09-MQTT/mqtt.png" alt="mqtt"></p>
+<p><img src="/personalBlog/2024-01-09-MQTT/mqtt.png" alt="mqtt"></p>
 <h2 id="设计规范"><a href="#设计规范" class="headerlink" title="设计规范"></a>设计规范</h2><p>由于物联网的环境是非常特别的，所以MQTT遵循以下设计原则：</p>
 <ol>
 <li>精简，不添加可有可无的功能</li>
@@ -147,7 +147,7 @@
 <li>发送端接收到PUBREC之后，发送PUBREC，表示此次发送结束</li>
 <li>Broker收到PUBREC，返回PUBCOMP给发送端，表示结束了，我知道了。</li>
 </ol>
-<p><img src="/2024-01-09-MQTT/mqtt_QoS.png" alt="mqtt_QoS"></p>
+<p><img src="/personalBlog/2024-01-09-MQTT/mqtt_QoS.png" alt="mqtt_QoS"></p>
 </li>
 <li><p>小型传输，费用小(固定长度的头部为2字节)，协议交换最小化，减少网络流量</p>
 </li>
@@ -195,7 +195,7 @@
 <li>可变头，存在于部分MQTT数据包中，数据包的类型决定了数据包中是否有可变头。</li>
 <li>消息体，存在于部分的MQTT数据包中，也就是实际的内容。</li>
 </ul>
-<h3 id="固定头"><a href="#固定头" class="headerlink" title="固定头"></a>固定头</h3><p><img src="/2024-01-09-MQTT/mqtt1.png" alt="mqtt1"></p>
+<h3 id="固定头"><a href="#固定头" class="headerlink" title="固定头"></a>固定头</h3><p><img src="/personalBlog/2024-01-09-MQTT/mqtt1.png" alt="mqtt1"></p>
 <h4 id="数据包类型"><a href="#数据包类型" class="headerlink" title="数据包类型"></a>数据包类型</h4><p>7-4bits：表示也就是报文类型，总共4位，无符号号值。</p>
 <table>
 <thead>
@@ -613,16 +613,16 @@
 <h3 id="演示结果"><a href="#演示结果" class="headerlink" title="演示结果"></a>演示结果</h3><p>启动应用，登录EQMX控制台。</p>
 <p>可发现总连接数、在线连接数为1。此时订阅端已连接。</p>
 <p>主题数、订阅数也都为1。</p>
-<p><img src="/2024-01-09-MQTT/image-20240129223434655.png" alt="image-20240129223434655"></p>
+<p><img src="/personalBlog/2024-01-09-MQTT/image-20240129223434655.png" alt="image-20240129223434655"></p>
 <p>访问：<a target="_blank" rel="noopener" href="http://localhost:8080/mqttSend?message=%E4%BD%A0%E5%A5%BD">http://localhost:8080/mqttSend?message=%E4%BD%A0%E5%A5%BD</a></p>
 <p>触发了发送消息、发送消息确认事件</p>
 <p>接收消息并进行了处理</p>
-<p><img src="/2024-01-09-MQTT/image-20240129223611314.png" alt="image-20240129223611314"></p>
+<p><img src="/personalBlog/2024-01-09-MQTT/image-20240129223611314.png" alt="image-20240129223611314"></p>
 <p>打开控制台，连接数+1</p>
-<p><img src="/2024-01-09-MQTT/image-20240129223933724.png" alt="image-20240129223933724"></p>
-<p><img src="/2024-01-09-MQTT/image-20240129223952932.png" alt="image-20240129223952932"></p>
+<p><img src="/personalBlog/2024-01-09-MQTT/image-20240129223933724.png" alt="image-20240129223933724"></p>
+<p><img src="/personalBlog/2024-01-09-MQTT/image-20240129223952932.png" alt="image-20240129223952932"></p>
 <p>添加主题监控，可以观察消息的流转条数</p>
-<p><img src="/2024-01-09-MQTT/image-20240129224323429.png" alt="image-20240129224323429"></p>
+<p><img src="/personalBlog/2024-01-09-MQTT/image-20240129224323429.png" alt="image-20240129224323429"></p>
 <h2 id="订阅多个MQTT服务器"><a href="#订阅多个MQTT服务器" class="headerlink" title="订阅多个MQTT服务器"></a>订阅多个MQTT服务器</h2><h3 id="实体类"><a href="#实体类" class="headerlink" title="实体类"></a>实体类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.chirs.mqtt.mqttcore.multiple;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MqttInfo</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Map&lt;Long, MqttTestController.MqttBrokerConfig&gt; mqttClientMap;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        mqttClientMap = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;Long, MqttTestController.MqttBrokerConfig&gt;() &#123;&#123;</span><br><span class="line">            MqttTestController.<span class="type">MqttBrokerConfig</span> <span class="variable">mqttBrokerConfig</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MqttTestController</span>.MqttBrokerConfig();</span><br><span class="line">            mqttBrokerConfig.setHost(<span class="string">&quot;tcp://192.168.202.129:1883&quot;</span>);</span><br><span class="line">            mqttBrokerConfig.setUsername(<span class="string">&quot;admin&quot;</span>);</span><br><span class="line">            mqttBrokerConfig.setPassword(<span class="string">&quot;c123456789&quot;</span>);</span><br><span class="line">            put(<span class="number">1L</span>, mqttBrokerConfig);</span><br><span class="line">        &#125;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String clientId;</span><br><span class="line">    <span class="keyword">private</span> String topic;</span><br><span class="line">    <span class="keyword">private</span> Long serverId;</span><br><span class="line">    <span class="keyword">private</span> String msg;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.chirs.mqtt.mqttcore.multiple;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MqttTransferDTO</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String fromClientId;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String msg;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -635,11 +635,11 @@
 
 <h3 id="页面操作"><a href="#页面操作" class="headerlink" title="页面操作"></a>页面操作</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.chirs.mqtt.mqttcore.multiple;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSONObject;</span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"><span class="keyword">import</span> org.eclipse.paho.client.mqttv3.MqttClient;</span><br><span class="line"><span class="keyword">import</span> org.eclipse.paho.client.mqttv3.MqttException;</span><br><span class="line"><span class="keyword">import</span> org.springframework.util.Assert;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestBody;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestParam;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MqttTestController</span> &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/subscribe/connect&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">insertSubscriberInfoAndConnect</span><span class="params">(<span class="meta">@RequestBody</span> MqttInfo subscribeMqttInfo)</span> <span class="keyword">throws</span> MqttException &#123;</span><br><span class="line">        <span class="comment">//效验参数有效性</span></span><br><span class="line">        <span class="comment">//valid(subscribeMqttInfo);</span></span><br><span class="line">        <span class="comment">//将数据保存到数据库</span></span><br><span class="line">        <span class="comment">//save(subscribeMqttInfo)</span></span><br><span class="line">        <span class="built_in">this</span>.initAndConnect(subscribeMqttInfo);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">200</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/publish/connect&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">insertPublisherInfoAndConnect</span><span class="params">(<span class="meta">@RequestBody</span> MqttInfo publishMqttInfo)</span> <span class="keyword">throws</span> MqttException &#123;</span><br><span class="line">        <span class="comment">//效验参数有效性</span></span><br><span class="line">        <span class="comment">//valid(publishMqttInfo);</span></span><br><span class="line">        <span class="comment">//将数据保存到数据库</span></span><br><span class="line">        <span class="comment">//save(publishMqttInfo)</span></span><br><span class="line">        <span class="built_in">this</span>.initAndConnect(publishMqttInfo);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">200</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/subscribe&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">subscribe</span><span class="params">(<span class="meta">@RequestParam(&quot;topic&quot;)</span> String topic,</span></span><br><span class="line"><span class="params">                         <span class="meta">@RequestParam(&quot;clientId&quot;)</span> String clientId)</span> <span class="keyword">throws</span> MqttException &#123;</span><br><span class="line">        <span class="type">MqttClientConnect</span> <span class="variable">clientConnect</span> <span class="operator">=</span> MqttClientConnect.mqttClients.get(clientId);</span><br><span class="line">        Assert.notNull(clientConnect,<span class="string">&quot;错误&quot;</span>);</span><br><span class="line">        clientConnect.sub(topic, <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">200</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/publish&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">publish</span><span class="params">(<span class="meta">@RequestParam(&quot;topic&quot;)</span> String topic,</span></span><br><span class="line"><span class="params">                       <span class="meta">@RequestParam(&quot;msg&quot;)</span> String msg,</span></span><br><span class="line"><span class="params">                       <span class="meta">@RequestParam(&quot;clientId&quot;)</span> String clientId)</span> <span class="keyword">throws</span> MqttException &#123;</span><br><span class="line">        <span class="type">MqttClientConnect</span> <span class="variable">clientConnect</span> <span class="operator">=</span> MqttClientConnect.mqttClients.get(clientId);</span><br><span class="line">        Assert.notNull(clientConnect,<span class="string">&quot;错误&quot;</span>);</span><br><span class="line">        <span class="type">MqttTransferDTO</span> <span class="variable">dto</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MqttTransferDTO</span>();</span><br><span class="line">        dto.setFromClientId(clientId);</span><br><span class="line">        dto.setMsg(msg);</span><br><span class="line">        clientConnect.pub(topic, JSONObject.toJSONString(dto));</span><br><span class="line">        <span class="keyword">return</span> <span class="number">200</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/delete&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">delete</span><span class="params">(<span class="meta">@RequestParam(&quot;clientId&quot;)</span> String clientId)</span> <span class="keyword">throws</span> MqttException &#123;</span><br><span class="line">        <span class="comment">//删除数据库中的数据</span></span><br><span class="line">        <span class="comment">//deleteDBData(clientId);</span></span><br><span class="line">        <span class="built_in">this</span>.disconnect(clientId);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">200</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/disconnect&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">disconnect</span><span class="params">(<span class="meta">@RequestParam(&quot;clientId&quot;)</span> String clientId)</span> <span class="keyword">throws</span> MqttException &#123;</span><br><span class="line">        <span class="type">MqttClientConnect</span> <span class="variable">clientConnect</span> <span class="operator">=</span> MqttClientConnect.mqttClients.get(clientId);</span><br><span class="line">        Assert.notNull(clientConnect,<span class="string">&quot;错误&quot;</span>);</span><br><span class="line">        clientConnect.close();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">200</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">initAndConnect</span><span class="params">(<span class="meta">@RequestBody</span> MqttInfo publishMqttInfo)</span> <span class="keyword">throws</span> MqttException &#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">MqttBrokerConfig</span> <span class="variable">mqttBrokerConfig</span> <span class="operator">=</span> MqttInfo.mqttClientMap.get(publishMqttInfo.getServerId());</span><br><span class="line">        <span class="type">String</span> <span class="variable">clientId</span> <span class="operator">=</span> publishMqttInfo.getClientId();</span><br><span class="line">        <span class="type">MqttClientConnect</span> <span class="variable">clientConnect</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MqttClientConnect</span>();</span><br><span class="line">        clientConnect.setMqttClientId(clientId);</span><br><span class="line">        clientConnect.setMqttClient(mqttBrokerConfig.getHost(),</span><br><span class="line">                                    clientId,</span><br><span class="line">                                    mqttBrokerConfig.getUsername(),</span><br><span class="line">                                    mqttBrokerConfig.getPassword(),</span><br><span class="line">                                    <span class="literal">true</span>,</span><br><span class="line">                                    <span class="keyword">new</span> <span class="title class_">MqttClientCallback</span>(clientId));</span><br><span class="line">        MqttClientConnect.mqttClients.put(clientId, clientConnect);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Data</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">MqttBrokerConfig</span> &#123;</span><br><span class="line">        <span class="keyword">private</span> String password;</span><br><span class="line">        <span class="keyword">private</span> String username;</span><br><span class="line">        <span class="keyword">private</span> String host;</span><br><span class="line">        <span class="keyword">private</span> Long serverId;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><h4 id="创建订阅者并连接MQTT服务器"><a href="#创建订阅者并连接MQTT服务器" class="headerlink" title="创建订阅者并连接MQTT服务器"></a>创建订阅者并连接MQTT服务器</h4><p><img src="/2024-01-09-MQTT/image-20240303165343765.png" alt="image-20240303165343765"></p>
-<h4 id="创建发布者并连接MQTT服务器"><a href="#创建发布者并连接MQTT服务器" class="headerlink" title="创建发布者并连接MQTT服务器"></a>创建发布者并连接MQTT服务器</h4><p><img src="/2024-01-09-MQTT/image-20240303165511117.png" alt="image-20240303165511117"></p>
-<h4 id="订阅"><a href="#订阅" class="headerlink" title="订阅"></a>订阅</h4><p><img src="/2024-01-09-MQTT/image-20240303165540095.png" alt="image-20240303165540095"></p>
-<h4 id="发布两次消息"><a href="#发布两次消息" class="headerlink" title="发布两次消息"></a>发布两次消息</h4><p><img src="/2024-01-09-MQTT/image-20240303165600294.png" alt="image-20240303165600294"></p>
-<h4 id="控制台"><a href="#控制台" class="headerlink" title="控制台"></a>控制台</h4><p><img src="/2024-01-09-MQTT/image-20240303165623962.png" alt="image-20240303165623962"></p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><h4 id="创建订阅者并连接MQTT服务器"><a href="#创建订阅者并连接MQTT服务器" class="headerlink" title="创建订阅者并连接MQTT服务器"></a>创建订阅者并连接MQTT服务器</h4><p><img src="/personalBlog/2024-01-09-MQTT/image-20240303165343765.png" alt="image-20240303165343765"></p>
+<h4 id="创建发布者并连接MQTT服务器"><a href="#创建发布者并连接MQTT服务器" class="headerlink" title="创建发布者并连接MQTT服务器"></a>创建发布者并连接MQTT服务器</h4><p><img src="/personalBlog/2024-01-09-MQTT/image-20240303165511117.png" alt="image-20240303165511117"></p>
+<h4 id="订阅"><a href="#订阅" class="headerlink" title="订阅"></a>订阅</h4><p><img src="/personalBlog/2024-01-09-MQTT/image-20240303165540095.png" alt="image-20240303165540095"></p>
+<h4 id="发布两次消息"><a href="#发布两次消息" class="headerlink" title="发布两次消息"></a>发布两次消息</h4><p><img src="/personalBlog/2024-01-09-MQTT/image-20240303165600294.png" alt="image-20240303165600294"></p>
+<h4 id="控制台"><a href="#控制台" class="headerlink" title="控制台"></a>控制台</h4><p><img src="/personalBlog/2024-01-09-MQTT/image-20240303165623962.png" alt="image-20240303165623962"></p>
  
       <!-- reward -->
       
@@ -710,12 +710,12 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2024/01/09/2024/20240303/2024-01-09-MQTT/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://chirsliq.github.io/personalBlog/2024/01/09/2024/20240303/2024-01-09-MQTT/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>  
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/personalBlog/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
 
     </footer>
   </div>
@@ -723,7 +723,7 @@
    
   <nav class="article-nav">
     
-      <a href="/2024/03/03/2024/202404/Jenkins/" class="article-nav-link">
+      <a href="/personalBlog/2024/03/03/2024/202404/Jenkins/" class="article-nav-link">
         <strong class="article-nav-caption">上一篇</strong>
         <div class="article-nav-title">
           
@@ -733,7 +733,7 @@
       </a>
     
     
-      <a href="/2023/12/17/2023/web/2023-12-17-Netty%E6%A1%86%E6%9E%B6/" class="article-nav-link">
+      <a href="/personalBlog/2023/12/17/2023/web/2023-12-17-Netty%E6%A1%86%E6%9E%B6/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
         <div class="article-nav-title">Netty框架</div>
       </a>
@@ -812,29 +812,29 @@
 <nav class="navbar">
   
   <div class="logo">
-    <a href="/"><img src="/images/ayer-side.svg" alt="C"></a>
+    <a href="/personalBlog/"><img src="/images/ayer-side.svg" alt="C"></a>
   </div>
   
   <ul class="nav nav-main">
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/">主页</a>
+      <a class="nav-item-link" href="/personalBlog/">主页</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/archives">归档</a>
+      <a class="nav-item-link" href="/personalBlog/archives">归档</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/categories">分类</a>
+      <a class="nav-item-link" href="/personalBlog/categories">分类</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/tags">标签</a>
+      <a class="nav-item-link" href="/personalBlog/tags">标签</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+      <a class="nav-item-link" href="/personalBlog/tags/%E6%97%85%E8%A1%8C/">旅行</a>
     </li>
     
     <li class="nav-item">
@@ -842,11 +842,11 @@
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/friends">友链</a>
+      <a class="nav-item-link" href="/personalBlog/friends">友链</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/2019/about">关于我</a>
+      <a class="nav-item-link" href="/personalBlog/2019/about">关于我</a>
     </li>
     
   </ul>
@@ -860,7 +860,7 @@
       </a>
       
       
-      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+      <a class="nav-item-link" target="_blank" href="/personalBlog/atom.xml" title="RSS Feed">
         <i class="ri-rss-line"></i>
       </a>
       
@@ -883,26 +883,26 @@
   <div class="reward-box">
     
     <div class="reward-item">
-      <img class="reward-img" src="/images/alipay.jpg">
+      <img class="reward-img" src="/personalBlog/images/alipay.jpg">
       <span class="reward-type">支付宝</span>
     </div>
     
     
     <div class="reward-item">
-      <img class="reward-img" src="/images/wechat.jpg">
+      <img class="reward-img" src="/personalBlog/images/wechat.jpg">
       <span class="reward-type">微信</span>
     </div>
     
   </div>
 </div>
     
-<script src="/js/jquery-3.6.0.min.js"></script>
+<script src="/personalBlog/js/jquery-3.6.0.min.js"></script>
  
-<script src="/js/lazyload.min.js"></script>
+<script src="/personalBlog/js/lazyload.min.js"></script>
 
 <!-- Tocbot -->
  
-<script src="/js/tocbot.min.js"></script>
+<script src="/personalBlog/js/tocbot.min.js"></script>
 
 <script>
   tocbot.init({
@@ -925,7 +925,7 @@
 />
 <script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
 
-<script src="/dist/main.js"></script>
+<script src="/personalBlog/dist/main.js"></script>
 
 <!-- ImageViewer -->
  <!-- Root element of PhotoSwipe. Must have class pswp. -->
@@ -1040,7 +1040,7 @@
 
 <!-- busuanzi  -->
  
-<script src="/js/busuanzi-2.3.pure.min.js"></script>
+<script src="/personalBlog/js/busuanzi-2.3.pure.min.js"></script>
  
 <!-- ClickLove -->
 
@@ -1050,7 +1050,7 @@
 
 <!-- CodeCopy -->
  
-<link rel="stylesheet" href="/css/clipboard.css">
+<link rel="stylesheet" href="/personalBlog/css/clipboard.css">
  <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
 <script>
   function wait(callback, seconds) {

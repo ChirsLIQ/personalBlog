@@ -16,13 +16,13 @@
       
       <link rel="shortcut icon" href="/favicon.ico" />
        
-<link rel="stylesheet" href="/dist/main.css">
+<link rel="stylesheet" href="/personalBlog/dist/main.css">
 
       
-<link rel="stylesheet" href="/css/fonts/remixicon.css">
+<link rel="stylesheet" href="/personalBlog/css/fonts/remixicon.css">
 
       
-<link rel="stylesheet" href="/css/custom.css">
+<link rel="stylesheet" href="/personalBlog/css/custom.css">
  
       <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
        
@@ -41,7 +41,7 @@
           font-size: 1.6rem;
         }
       </style>
-    <link rel="alternate" href="/atom.xml" title="C" type="application/atom+xml">
+    <link rel="alternate" href="/personalBlog/atom.xml" title="C" type="application/atom+xml">
 </head>
   </html>
 </html>
@@ -73,11 +73,11 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/09/04/2023/web/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/" class="article-date">
+      <a href="/personalBlog/2023/09/04/2023/web/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/" class="article-date">
   <time datetime="2023-09-05T05:00:00.000Z" itemprop="datePublished">2023-09-04</time>
 </a> 
   <div class="article-category">
-    <a class="article-category-link" href="/categories/Web%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/">Web的那些事</a>
+    <a class="article-category-link" href="/personalBlog/categories/Web%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/">Web的那些事</a>
   </div>
   
 <div class="word_count">
@@ -115,20 +115,20 @@
 <ul>
 <li><strong>下载</strong></li>
 </ul>
-<p>官方下载地址：<a target="_blank" rel="noopener" href="https://help.sonatype.com/repomanager3/product-information/download">https://help.sonatype.com/repomanager3/product-information/download</a><br>Windows下载zip包即可，下载完成之后解压，进入到bin目录，执行  <strong>nexus.exe&#x2F;run</strong> 启动Nexus<br><img src="/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693834152188-026644e8-cd95-43d8-b648-6fb82e3fac0f.png" alt="1693834152188-026644e8-cd95-43d8-b648-6fb82e3fac0f"><br>访问 <a target="_blank" rel="noopener" href="http://localhost:8081/">localhost:8081&#x2F;</a> ，若想修改启动端口等参数，可以修改etc&#x2F;nexus-default.properties 文件<br>首先需要输入账号密码， 账号admin，密码在 sonatype-work&#x2F;nexus3 目录的<strong>admin.password</strong>文件查看，登录进去修改密码即可。</p>
+<p>官方下载地址：<a target="_blank" rel="noopener" href="https://help.sonatype.com/repomanager3/product-information/download">https://help.sonatype.com/repomanager3/product-information/download</a><br>Windows下载zip包即可，下载完成之后解压，进入到bin目录，执行  <strong>nexus.exe&#x2F;run</strong> 启动Nexus<br><img src="/personalBlog/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693834152188-026644e8-cd95-43d8-b648-6fb82e3fac0f.png" alt="1693834152188-026644e8-cd95-43d8-b648-6fb82e3fac0f"><br>访问 <a target="_blank" rel="noopener" href="http://localhost:8081/">localhost:8081&#x2F;</a> ，若想修改启动端口等参数，可以修改etc&#x2F;nexus-default.properties 文件<br>首先需要输入账号密码， 账号admin，密码在 sonatype-work&#x2F;nexus3 目录的<strong>admin.password</strong>文件查看，登录进去修改密码即可。</p>
 <ul>
 <li><strong>Nexus仓库说明</strong></li>
 </ul>
-<p><img src="/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693834654282-c2169c19-af9d-462d-bd1f-9f80b698b3ee.png" alt="image.png"></p>
+<p><img src="/personalBlog/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693834654282-c2169c19-af9d-462d-bd1f-9f80b698b3ee.png" alt="image.png"></p>
 <p><strong>maven-central</strong>：maven中央库，当本地库、远程库没有的jar包，会去这里下载，一般国内需要配置阿里云镜像地址 <a target="_blank" rel="noopener" href="http://maven.aliyun.com/nexus/content/groups/public/">http://maven.aliyun.com/nexus/content/groups/public/</a><br><strong>maven-releases</strong>：私有库发行版的jar包仓库，就是线上正式使用的<br><strong>maven-snapshots</strong>：私有库开发版的jar宝仓库，一般开发中使用的<br><strong>maven-public</strong>：在本地<strong>settings.xml</strong>文件需要配置的地址</p>
 <p>三种类型：<strong>proxy、group、hosted</strong><br><strong>proxy：访问Maven中央仓库的代理配置，用于去配置的maven中央仓库找jar包</strong><br><strong>hosted：一般我们的私有jar包会保存到此类型的仓库中</strong><br><strong>group：可以通过此类型的地址，访问我们设置的私有仓库</strong></p>
 <ul>
 <li><strong>尝试创建仓库</strong></li>
 </ul>
-<p>创建 <strong>proxy</strong>类型的仓库，用于去中央仓库下载jar包<br><img src="/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693836348282-c069a21f-9e6a-4f9c-8b91-6ce7cab9b939.png" alt="image.png"><br><img src="/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693836372317-045d7c50-1397-4fdd-83cb-abb92e079524.png" alt="image.png"></p>
-<p>输入仓库的名字，以及maven中央仓库地址，这里我们使用阿里云中央仓库镜像地址<br><a target="_blank" rel="noopener" href="http://maven.aliyun.com/nexus/content/groups/public/">http://maven.aliyun.com/nexus/content/groups/public/</a>，点击保存<br><img src="/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693836482486-e57a0d50-2440-43f3-8dd4-8f46422282d7.png" alt="image.png"></p>
-<p>创建 <strong>hosted</strong>类型的仓库，保存从maven中央仓库，以及项目分发的jar包<br><img src="/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693836662229-90a7d06c-19d6-440f-9e80-83351e50e4e1.png" alt="image.png"><br><img src="/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693837091992-60aaaf43-83b5-48e9-a3ec-9654f778698f.png" alt="image.png"></p>
-<p>创建<strong>group</strong>类型仓库，用来访问仓库<br><img src="/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693837157467-0601b603-29d4-48e4-8b79-caf3ca89a043.png" alt="image.png"><br><img src="/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693837333070-7c810155-a82b-4b5b-a040-cfa0b1b1488c.png" alt="image.png"></p>
+<p>创建 <strong>proxy</strong>类型的仓库，用于去中央仓库下载jar包<br><img src="/personalBlog/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693836348282-c069a21f-9e6a-4f9c-8b91-6ce7cab9b939.png" alt="image.png"><br><img src="/personalBlog/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693836372317-045d7c50-1397-4fdd-83cb-abb92e079524.png" alt="image.png"></p>
+<p>输入仓库的名字，以及maven中央仓库地址，这里我们使用阿里云中央仓库镜像地址<br><a target="_blank" rel="noopener" href="http://maven.aliyun.com/nexus/content/groups/public/">http://maven.aliyun.com/nexus/content/groups/public/</a>，点击保存<br><img src="/personalBlog/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693836482486-e57a0d50-2440-43f3-8dd4-8f46422282d7.png" alt="image.png"></p>
+<p>创建 <strong>hosted</strong>类型的仓库，保存从maven中央仓库，以及项目分发的jar包<br><img src="/personalBlog/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693836662229-90a7d06c-19d6-440f-9e80-83351e50e4e1.png" alt="image.png"><br><img src="/personalBlog/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693837091992-60aaaf43-83b5-48e9-a3ec-9654f778698f.png" alt="image.png"></p>
+<p>创建<strong>group</strong>类型仓库，用来访问仓库<br><img src="/personalBlog/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693837157467-0601b603-29d4-48e4-8b79-caf3ca89a043.png" alt="image.png"><br><img src="/personalBlog/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693837333070-7c810155-a82b-4b5b-a040-cfa0b1b1488c.png" alt="image.png"></p>
 </li>
 <li><p><strong>修改配置</strong></p>
 <p>修改maven的配置文件，来连接我们创建的私有仓库<br>打开settings.xml文件，通过修改<strong>mirror</strong>方式（也可以通过profiles标签）连接我们的仓库，url是创建的group类型的仓库地址，通过页面的copy按钮可以获取到</p>
@@ -143,7 +143,7 @@
 <p><strong>3.mvn –encrypt-password  “需要加密的密码”，此命令生成的密码，就是server标签的password值。</strong></p>
 </li>
 <li><p><strong>启动测试</strong></p>
-<p>使用 <strong>maven clean install</strong>命令测试，出现以下日志就代表自己搭建成功咯<br><img src="/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693838610616-2bcb3dda-24bc-4bd3-9942-c9c862cd4840.png" alt="image.png"></p>
+<p>使用 <strong>maven clean install</strong>命令测试，出现以下日志就代表自己搭建成功咯<br><img src="/personalBlog/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693838610616-2bcb3dda-24bc-4bd3-9942-c9c862cd4840.png" alt="image.png"></p>
 </li>
 </ol>
  
@@ -216,12 +216,12 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2023/09/04/2023/web/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://chirsliq.github.io/personalBlog/2023/09/04/2023/web/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>  
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/personalBlog/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
 
     </footer>
   </div>
@@ -229,7 +229,7 @@
    
   <nav class="article-nav">
     
-      <a href="/2023/10/14/2023/web/Dubbo%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" class="article-nav-link">
+      <a href="/personalBlog/2023/10/14/2023/web/Dubbo%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" class="article-nav-link">
         <strong class="article-nav-caption">上一篇</strong>
         <div class="article-nav-title">
           
@@ -239,7 +239,7 @@
       </a>
     
     
-      <a href="/2023/08/23/2023/web/20230823-Java%E7%9A%84SPI%E6%9C%BA%E5%88%B6/" class="article-nav-link">
+      <a href="/personalBlog/2023/08/23/2023/web/20230823-Java%E7%9A%84SPI%E6%9C%BA%E5%88%B6/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
         <div class="article-nav-title">Java的SPI机制</div>
       </a>
@@ -318,29 +318,29 @@
 <nav class="navbar">
   
   <div class="logo">
-    <a href="/"><img src="/images/ayer-side.svg" alt="C"></a>
+    <a href="/personalBlog/"><img src="/images/ayer-side.svg" alt="C"></a>
   </div>
   
   <ul class="nav nav-main">
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/">主页</a>
+      <a class="nav-item-link" href="/personalBlog/">主页</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/archives">归档</a>
+      <a class="nav-item-link" href="/personalBlog/archives">归档</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/categories">分类</a>
+      <a class="nav-item-link" href="/personalBlog/categories">分类</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/tags">标签</a>
+      <a class="nav-item-link" href="/personalBlog/tags">标签</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+      <a class="nav-item-link" href="/personalBlog/tags/%E6%97%85%E8%A1%8C/">旅行</a>
     </li>
     
     <li class="nav-item">
@@ -348,11 +348,11 @@
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/friends">友链</a>
+      <a class="nav-item-link" href="/personalBlog/friends">友链</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/2019/about">关于我</a>
+      <a class="nav-item-link" href="/personalBlog/2019/about">关于我</a>
     </li>
     
   </ul>
@@ -366,7 +366,7 @@
       </a>
       
       
-      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+      <a class="nav-item-link" target="_blank" href="/personalBlog/atom.xml" title="RSS Feed">
         <i class="ri-rss-line"></i>
       </a>
       
@@ -389,26 +389,26 @@
   <div class="reward-box">
     
     <div class="reward-item">
-      <img class="reward-img" src="/images/alipay.jpg">
+      <img class="reward-img" src="/personalBlog/images/alipay.jpg">
       <span class="reward-type">支付宝</span>
     </div>
     
     
     <div class="reward-item">
-      <img class="reward-img" src="/images/wechat.jpg">
+      <img class="reward-img" src="/personalBlog/images/wechat.jpg">
       <span class="reward-type">微信</span>
     </div>
     
   </div>
 </div>
     
-<script src="/js/jquery-3.6.0.min.js"></script>
+<script src="/personalBlog/js/jquery-3.6.0.min.js"></script>
  
-<script src="/js/lazyload.min.js"></script>
+<script src="/personalBlog/js/lazyload.min.js"></script>
 
 <!-- Tocbot -->
  
-<script src="/js/tocbot.min.js"></script>
+<script src="/personalBlog/js/tocbot.min.js"></script>
 
 <script>
   tocbot.init({
@@ -431,7 +431,7 @@
 />
 <script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
 
-<script src="/dist/main.js"></script>
+<script src="/personalBlog/dist/main.js"></script>
 
 <!-- ImageViewer -->
  <!-- Root element of PhotoSwipe. Must have class pswp. -->
@@ -546,7 +546,7 @@
 
 <!-- busuanzi  -->
  
-<script src="/js/busuanzi-2.3.pure.min.js"></script>
+<script src="/personalBlog/js/busuanzi-2.3.pure.min.js"></script>
  
 <!-- ClickLove -->
 
@@ -556,7 +556,7 @@
 
 <!-- CodeCopy -->
  
-<link rel="stylesheet" href="/css/clipboard.css">
+<link rel="stylesheet" href="/personalBlog/css/clipboard.css">
  <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
 <script>
   function wait(callback, seconds) {

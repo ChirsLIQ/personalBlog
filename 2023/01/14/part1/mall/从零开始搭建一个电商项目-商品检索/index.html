@@ -16,13 +16,13 @@
       
       <link rel="shortcut icon" href="/favicon.ico" />
        
-<link rel="stylesheet" href="/dist/main.css">
+<link rel="stylesheet" href="/personalBlog/dist/main.css">
 
       
-<link rel="stylesheet" href="/css/fonts/remixicon.css">
+<link rel="stylesheet" href="/personalBlog/css/fonts/remixicon.css">
 
       
-<link rel="stylesheet" href="/css/custom.css">
+<link rel="stylesheet" href="/personalBlog/css/custom.css">
  
       <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
        
@@ -41,7 +41,7 @@
           font-size: 1.6rem;
         }
       </style>
-    <link rel="alternate" href="/atom.xml" title="C" type="application/atom+xml">
+    <link rel="alternate" href="/personalBlog/atom.xml" title="C" type="application/atom+xml">
 </head>
   </html>
 </html>
@@ -73,11 +73,11 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/01/14/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E6%A3%80%E7%B4%A2/" class="article-date">
+      <a href="/personalBlog/2023/01/14/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E6%A3%80%E7%B4%A2/" class="article-date">
   <time datetime="2023-01-15T04:20:00.000Z" itemprop="datePublished">2023-01-14</time>
 </a> 
   <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%9E%8E%E8%83%A1%E9%97%B9/">瞎胡闹</a>
+    <a class="article-category-link" href="/personalBlog/categories/%E7%9E%8E%E8%83%A1%E9%97%B9/">瞎胡闹</a>
   </div>
   
 <div class="word_count">
@@ -109,13 +109,13 @@
        
   <ol>
 <li><p>前言</p>
-<p>大家网页端逛JD的时候，下图是很常见的。那么它的后端是如何实现的？最简单的想法就是把数据保存到mysql中，然后返回给前端。其实也可以，但是我们发现不止需要返回商品数据，还需要根据特定的信息去检索，进行模糊匹配。mysql关键字like可以实现，但是你不能确保查询的时候不进行全表扫描，而且大量数据查询，对于磁盘保存数据的mysql来说，可能就不太适合了。<span id="more"></span><br>这问题那些服务器端大佬肯定早想到了  ElasticSearch   参考 第二篇 文章，使用Docker搭建ES。<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E6%A3%80%E7%B4%A2/1670847495308-46eb6846-8cde-4634-936a-c55b0d36e687.png" alt="image.png"></p>
+<p>大家网页端逛JD的时候，下图是很常见的。那么它的后端是如何实现的？最简单的想法就是把数据保存到mysql中，然后返回给前端。其实也可以，但是我们发现不止需要返回商品数据，还需要根据特定的信息去检索，进行模糊匹配。mysql关键字like可以实现，但是你不能确保查询的时候不进行全表扫描，而且大量数据查询，对于磁盘保存数据的mysql来说，可能就不太适合了。<span id="more"></span><br>这问题那些服务器端大佬肯定早想到了  ElasticSearch   参考 第二篇 文章，使用Docker搭建ES。<br><img src="/personalBlog/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E6%A3%80%E7%B4%A2/1670847495308-46eb6846-8cde-4634-936a-c55b0d36e687.png" alt="image.png"></p>
 </li>
 <li><p>商品上架</p>
-<p>进入SPU管理菜单，点击上架。该功能主要保存商品信息到ES中，并修改SPU状态为已上架。<img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E6%A3%80%E7%B4%A2/1670849313493-2a6ce0a0-8a84-46da-b2dd-15c953d1f798.png" alt="image.png"><br>需要创建保存到ES索引的mappin（相当于mysql的数据类型），参考以下结构<br><a target="_blank" rel="noopener" href="https://gitee.com/chris_777/easymall/blob/develop/easy-mall-search/src/main/resources/easy_product-index_mapping.json">https://gitee.com/chris_777&#x2F;easymall&#x2F;blob&#x2F;develop&#x2F;easy-mall-search&#x2F;src&#x2F;main&#x2F;resources&#x2F;easy_product-index_mapping.json</a></p>
+<p>进入SPU管理菜单，点击上架。该功能主要保存商品信息到ES中，并修改SPU状态为已上架。<img src="/personalBlog/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E6%A3%80%E7%B4%A2/1670849313493-2a6ce0a0-8a84-46da-b2dd-15c953d1f798.png" alt="image.png"><br>需要创建保存到ES索引的mappin（相当于mysql的数据类型），参考以下结构<br><a target="_blank" rel="noopener" href="https://gitee.com/chris_777/easymall/blob/develop/easy-mall-search/src/main/resources/easy_product-index_mapping.json">https://gitee.com/chris_777&#x2F;easymall&#x2F;blob&#x2F;develop&#x2F;easy-mall-search&#x2F;src&#x2F;main&#x2F;resources&#x2F;easy_product-index_mapping.json</a></p>
 </li>
 <li><p>渲染检索结果</p>
-<p>需要搭建nginx，前面第二篇有搭建教程。<br>配置域名： 本机的 hosts文件<br>192.168.202.129 easymall.com     # 商城主页<br>192.168.202.129 search.easymall.com  # 检索服务页面<br>192.168.202.129 item.easymall.com  # 商品详情页面<br>192.168.202.129 auth.easymall.com # 登录服务页面<br>192.168.202.129 cart.easymall.com  # 购物车服务页面<br>192.168.202.129 order.easymall.com  # 订单服务页面<br>192.168.202.129 seckill.easymall.com  # 秒杀服务页面<br>配置nginx<br>配置 nginx 的上有服务器组。<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E6%A3%80%E7%B4%A2/1670854760569-705285bc-7c94-4dd7-9ce4-4b205595031a.png" alt="image.png"><br>然后进到 conf.d 创建一个 easymall.conf 配置文件，如图。<br>定义server_name 当访问这些域名时会匹配http:&#x2F;&#x2F;上游服务器组名（easymall）<br>其中 proxy_set_header  防止请求转发丢失Host请求头<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E6%A3%80%E7%B4%A2/1670854833429-9fdc2437-25e2-4c37-952b-92adc834b575.png" alt="image.png"><br>在gateway服务中配置路由信息，如图<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E6%A3%80%E7%B4%A2/1670855271502-0a48cc81-a737-4070-b123-301790ef87c4.png" alt="image.png"><br>启动gateway、search服务，访问 <a target="_blank" rel="noopener" href="http://search.easymall.com/">http://search.easymall.com/</a>，如下图，<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E6%A3%80%E7%B4%A2/1670936575659-78187bd1-8045-418e-85ac-ba98f9ae80c4.png" alt="image.png"></p>
+<p>需要搭建nginx，前面第二篇有搭建教程。<br>配置域名： 本机的 hosts文件<br>192.168.202.129 easymall.com     # 商城主页<br>192.168.202.129 search.easymall.com  # 检索服务页面<br>192.168.202.129 item.easymall.com  # 商品详情页面<br>192.168.202.129 auth.easymall.com # 登录服务页面<br>192.168.202.129 cart.easymall.com  # 购物车服务页面<br>192.168.202.129 order.easymall.com  # 订单服务页面<br>192.168.202.129 seckill.easymall.com  # 秒杀服务页面<br>配置nginx<br>配置 nginx 的上有服务器组。<br><img src="/personalBlog/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E6%A3%80%E7%B4%A2/1670854760569-705285bc-7c94-4dd7-9ce4-4b205595031a.png" alt="image.png"><br>然后进到 conf.d 创建一个 easymall.conf 配置文件，如图。<br>定义server_name 当访问这些域名时会匹配http:&#x2F;&#x2F;上游服务器组名（easymall）<br>其中 proxy_set_header  防止请求转发丢失Host请求头<br><img src="/personalBlog/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E6%A3%80%E7%B4%A2/1670854833429-9fdc2437-25e2-4c37-952b-92adc834b575.png" alt="image.png"><br>在gateway服务中配置路由信息，如图<br><img src="/personalBlog/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E6%A3%80%E7%B4%A2/1670855271502-0a48cc81-a737-4070-b123-301790ef87c4.png" alt="image.png"><br>启动gateway、search服务，访问 <a target="_blank" rel="noopener" href="http://search.easymall.com/">http://search.easymall.com/</a>，如下图，<br><img src="/personalBlog/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E6%A3%80%E7%B4%A2/1670936575659-78187bd1-8045-418e-85ac-ba98f9ae80c4.png" alt="image.png"></p>
 </li>
 <li><p>ES基本概念与语法</p>
 <p>本人使用的ES 8.3.3 版本，改版本取消了Type （类型）。<br><strong>Index（索引）</strong><br> 动词，相当于 MySQL 中的 insert；<br> 名词，相当于 MySQL 中的 Database<br><strong>Document（文档）</strong><br> 保存在某个索引（Index）下的一个数据（Document），文档是JSON格式的，Document 就像是 MySQL 中的某个 Table 里面的内容；<br><strong>映射（Mapping）</strong><br>定义索引中的字段的名称；<br>定义字段的数据类型，比如字符串、数字、布尔；<br>字段，倒排索引的相关配置，比如设置某个字段为不被索引、记录 position 等。<br>上述创建的 easy_product 的mapping，其中type 指定相应的数据类型</p>
@@ -206,12 +206,12 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2023/01/14/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E6%A3%80%E7%B4%A2/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://chirsliq.github.io/personalBlog/2023/01/14/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E6%A3%80%E7%B4%A2/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>  
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/personalBlog/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
 
     </footer>
   </div>
@@ -219,7 +219,7 @@
    
   <nav class="article-nav">
     
-      <a href="/2023/01/15/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="article-nav-link">
+      <a href="/personalBlog/2023/01/15/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="article-nav-link">
         <strong class="article-nav-caption">上一篇</strong>
         <div class="article-nav-title">
           
@@ -229,7 +229,7 @@
       </a>
     
     
-      <a href="/2023/01/13/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/" class="article-nav-link">
+      <a href="/personalBlog/2023/01/13/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
         <div class="article-nav-title">从零开始搭建一个电商项目-商品管理（四）</div>
       </a>
@@ -308,29 +308,29 @@
 <nav class="navbar">
   
   <div class="logo">
-    <a href="/"><img src="/images/ayer-side.svg" alt="C"></a>
+    <a href="/personalBlog/"><img src="/images/ayer-side.svg" alt="C"></a>
   </div>
   
   <ul class="nav nav-main">
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/">主页</a>
+      <a class="nav-item-link" href="/personalBlog/">主页</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/archives">归档</a>
+      <a class="nav-item-link" href="/personalBlog/archives">归档</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/categories">分类</a>
+      <a class="nav-item-link" href="/personalBlog/categories">分类</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/tags">标签</a>
+      <a class="nav-item-link" href="/personalBlog/tags">标签</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+      <a class="nav-item-link" href="/personalBlog/tags/%E6%97%85%E8%A1%8C/">旅行</a>
     </li>
     
     <li class="nav-item">
@@ -338,11 +338,11 @@
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/friends">友链</a>
+      <a class="nav-item-link" href="/personalBlog/friends">友链</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/2019/about">关于我</a>
+      <a class="nav-item-link" href="/personalBlog/2019/about">关于我</a>
     </li>
     
   </ul>
@@ -356,7 +356,7 @@
       </a>
       
       
-      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+      <a class="nav-item-link" target="_blank" href="/personalBlog/atom.xml" title="RSS Feed">
         <i class="ri-rss-line"></i>
       </a>
       
@@ -379,26 +379,26 @@
   <div class="reward-box">
     
     <div class="reward-item">
-      <img class="reward-img" src="/images/alipay.jpg">
+      <img class="reward-img" src="/personalBlog/images/alipay.jpg">
       <span class="reward-type">支付宝</span>
     </div>
     
     
     <div class="reward-item">
-      <img class="reward-img" src="/images/wechat.jpg">
+      <img class="reward-img" src="/personalBlog/images/wechat.jpg">
       <span class="reward-type">微信</span>
     </div>
     
   </div>
 </div>
     
-<script src="/js/jquery-3.6.0.min.js"></script>
+<script src="/personalBlog/js/jquery-3.6.0.min.js"></script>
  
-<script src="/js/lazyload.min.js"></script>
+<script src="/personalBlog/js/lazyload.min.js"></script>
 
 <!-- Tocbot -->
  
-<script src="/js/tocbot.min.js"></script>
+<script src="/personalBlog/js/tocbot.min.js"></script>
 
 <script>
   tocbot.init({
@@ -421,7 +421,7 @@
 />
 <script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
 
-<script src="/dist/main.js"></script>
+<script src="/personalBlog/dist/main.js"></script>
 
 <!-- ImageViewer -->
  <!-- Root element of PhotoSwipe. Must have class pswp. -->
@@ -536,7 +536,7 @@
 
 <!-- busuanzi  -->
  
-<script src="/js/busuanzi-2.3.pure.min.js"></script>
+<script src="/personalBlog/js/busuanzi-2.3.pure.min.js"></script>
  
 <!-- ClickLove -->
 
@@ -546,7 +546,7 @@
 
 <!-- CodeCopy -->
  
-<link rel="stylesheet" href="/css/clipboard.css">
+<link rel="stylesheet" href="/personalBlog/css/clipboard.css">
  <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
 <script>
   function wait(callback, seconds) {

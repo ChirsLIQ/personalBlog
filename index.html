@@ -16,13 +16,13 @@
       
       <link rel="shortcut icon" href="/favicon.ico" />
        
-<link rel="stylesheet" href="/dist/main.css">
+<link rel="stylesheet" href="/personalBlog/dist/main.css">
 
       
-<link rel="stylesheet" href="/css/fonts/remixicon.css">
+<link rel="stylesheet" href="/personalBlog/css/fonts/remixicon.css">
 
       
-<link rel="stylesheet" href="/css/custom.css">
+<link rel="stylesheet" href="/personalBlog/css/custom.css">
  
       <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
        
@@ -41,7 +41,7 @@
           font-size: 1.6rem;
         }
       </style>
-    <link rel="alternate" href="/atom.xml" title="C" type="application/atom+xml">
+    <link rel="alternate" href="/personalBlog/atom.xml" title="C" type="application/atom+xml">
 </head>
   </html>
 </html>
@@ -57,7 +57,7 @@
     
       
       <a class="forkMe" href="https://github.com/Shen-Yu/hexo-theme-ayer"
-        target="_blank"><img width="149" height="149" src="/images/forkme.png"
+        target="_blank"><img width="149" height="149" src="/personalBlog/images/forkme.png"
           class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
     
   <div class="cover-frame">
@@ -65,7 +65,7 @@
       <img src="/images/cover1.jpg" alt="image frame" />
     </div>
     <div class="cover-inner text-center text-white">
-      <h1><a href="/">C</a></h1>
+      <h1><a href="/personalBlog/">C</a></h1>
       <div id="subtitle-box">
         
         <span id="subtitle"></span>
@@ -182,7 +182,7 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2024/05/26/2024/202405/2024-05-26-ConditionalOnBean%E6%B3%A8%E8%A7%A3/"
+  <a class="article-title" href="/personalBlog/2024/05/26/2024/202405/2024-05-26-ConditionalOnBean%E6%B3%A8%E8%A7%A3/"
     >ConditionalOnBean注解</a> 
 </h2>
  
@@ -191,11 +191,11 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2024/05/26/2024/202405/2024-05-26-ConditionalOnBean%E6%B3%A8%E8%A7%A3/" class="article-date">
+      <a href="/personalBlog/2024/05/26/2024/202405/2024-05-26-ConditionalOnBean%E6%B3%A8%E8%A7%A3/" class="article-date">
   <time datetime="2024-05-27T06:00:00.000Z" itemprop="datePublished">2024-05-26</time>
 </a> 
   <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%BA%90%E7%A0%81/">源码</a>
+    <a class="article-category-link" href="/personalBlog/categories/%E6%BA%90%E7%A0%81/">源码</a>
   </div>
    
     </div>
@@ -221,12 +221,12 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestB</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>我们直接将断点打在 org.springframework.context.annotation.ConfigurationClassParser#processConfigurationClass 方法上，并添加条件  <code>&quot;testA&quot;.equals(configClass.getBeanName())</code>。（这段代码是以及扫描出需要被Spring管理的Bean，后续的解析方法的入口，可以看一下之前写的文章 <a target="_blank" rel="noopener" href="https://wysiwyg.work/2023/03/01/part1/source/Spring/Spring%E7%9A%84refresh%E6%96%B9%E6%B3%95/%EF%BC%89">https://wysiwyg.work/2023/03/01/part1/source/Spring/Spring%E7%9A%84refresh%E6%96%B9%E6%B3%95/）</a></p>
-<p><img src="/2024-05-26-ConditionalOnBean%E6%B3%A8%E8%A7%A3/image-20240526224801786.png" alt="image-20240526224801786"></p>
+<p><img src="/personalBlog/2024-05-26-ConditionalOnBean%E6%B3%A8%E8%A7%A3/image-20240526224801786.png" alt="image-20240526224801786"></p>
 <p>我们看一下 <code>org.springframework.context.annotation.ConditionEvaluator#shouldSkip(org.springframework.core.type.AnnotatedTypeMetadata, org.springframework.context.annotation.ConfigurationCondition.ConfigurationPhase)</code> 方法（建议断点一点点走）：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">shouldSkip</span><span class="params">(<span class="meta">@Nullable</span> AnnotatedTypeMetadata metadata, <span class="meta">@Nullable</span> ConfigurationPhase phase)</span> &#123;</span><br><span class="line">    <span class="comment">//如果没有Conditional注解则返回false，也就是不需要跳过</span></span><br><span class="line">    <span class="keyword">if</span> (metadata == <span class="literal">null</span> || !metadata.isAnnotated(Conditional.class.getName())) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//因为不为空会跳过</span></span><br><span class="line">    <span class="keyword">if</span> (phase == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (metadata <span class="keyword">instanceof</span> AnnotationMetadata &amp;&amp;</span><br><span class="line">            ConfigurationClassUtils.isConfigurationCandidate((AnnotationMetadata) metadata)) &#123;</span><br><span class="line">            <span class="keyword">return</span> shouldSkip(metadata, ConfigurationPhase.PARSE_CONFIGURATION);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> shouldSkip(metadata, ConfigurationPhase.REGISTER_BEAN);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    List&lt;Condition&gt; conditions = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    <span class="comment">//获取 @Conditional 注解的value值，也就是org.springframework.boot.autoconfigure.condition.OnBeanCondition</span></span><br><span class="line">    <span class="keyword">for</span> (String[] conditionClasses : getConditionClasses(metadata)) &#123;</span><br><span class="line">        <span class="keyword">for</span> (String conditionClass : conditionClasses) &#123;</span><br><span class="line">            <span class="type">Condition</span> <span class="variable">condition</span> <span class="operator">=</span> getCondition(conditionClass, <span class="built_in">this</span>.context.getClassLoader());</span><br><span class="line">            conditions.add(condition);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//排序</span></span><br><span class="line">    AnnotationAwareOrderComparator.sort(conditions);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (Condition condition : conditions) &#123;</span><br><span class="line">        <span class="type">ConfigurationPhase</span> <span class="variable">requiredPhase</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (condition <span class="keyword">instanceof</span> ConfigurationCondition) &#123;</span><br><span class="line">            requiredPhase = ((ConfigurationCondition) condition).getConfigurationPhase();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//requiredPhase == phase 这里不匹配，所以会返回false，也就是不需要跳过，意思就是需要加载此类</span></span><br><span class="line">        <span class="keyword">if</span> ((requiredPhase == <span class="literal">null</span> || requiredPhase == phase) &amp;&amp; !condition.matches(<span class="built_in">this</span>.context, metadata)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>我们在把断点打在 <code>org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader#loadBeanDefinitions</code> 方法上，这个方法是将扫描出来的 BeanDefinition 加载到Spring 容器中，正如方法名字那样（断点条件和上面一样）：</p>
-<p><img src="/2024-05-26-ConditionalOnBean%E6%B3%A8%E8%A7%A3/image-20240526230011888.png" alt="image-20240526230011888"></p>
+<p><img src="/personalBlog/2024-05-26-ConditionalOnBean%E6%B3%A8%E8%A7%A3/image-20240526230011888.png" alt="image-20240526230011888"></p>
 <p>我们继续看 <code>org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader#loadBeanDefinitionsForConfigurationClass</code> 方法。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">loadBeanDefinitionsForConfigurationClass</span><span class="params">(</span></span><br><span class="line"><span class="params">    ConfigurationClass configClass, TrackedConditionEvaluator trackedConditionEvaluator)</span> &#123;</span><br><span class="line">    <span class="comment">//主要就是这里啦</span></span><br><span class="line">    <span class="keyword">if</span> (trackedConditionEvaluator.shouldSkip(configClass)) &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">beanName</span> <span class="operator">=</span> configClass.getBeanName();</span><br><span class="line">        <span class="comment">//删除BeanDefinition</span></span><br><span class="line">        <span class="keyword">if</span> (StringUtils.hasLength(beanName) &amp;&amp; <span class="built_in">this</span>.registry.containsBeanDefinition(beanName)) &#123;</span><br><span class="line">            <span class="built_in">this</span>.registry.removeBeanDefinition(beanName);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.importRegistry.removeImportingClass(configClass.getMetadata().getClassName());</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// ... 省略</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.TrackedConditionEvaluator#shouldSkip</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">shouldSkip</span><span class="params">(ConfigurationClass configClass)</span> &#123;</span><br><span class="line">    <span class="type">Boolean</span> <span class="variable">skip</span> <span class="operator">=</span> <span class="built_in">this</span>.skipped.get(configClass);</span><br><span class="line">    <span class="keyword">if</span> (skip == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="comment">//使用 @Import引入的类</span></span><br><span class="line">        <span class="keyword">if</span> (configClass.isImported()) &#123;</span><br><span class="line">            <span class="type">boolean</span> <span class="variable">allSkipped</span> <span class="operator">=</span> <span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">for</span> (ConfigurationClass importedBy : configClass.getImportedBy()) &#123;</span><br><span class="line">                <span class="keyword">if</span> (!shouldSkip(importedBy)) &#123;</span><br><span class="line">                    allSkipped = <span class="literal">false</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (allSkipped) &#123;</span><br><span class="line">                <span class="comment">// The config classes that imported this one were all skipped, therefore we are skipped...</span></span><br><span class="line">                skip = <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//主要就是这里了</span></span><br><span class="line">        <span class="keyword">if</span> (skip == <span class="literal">null</span>) &#123;</span><br><span class="line">            skip = conditionEvaluator.shouldSkip(configClass.getMetadata(), ConfigurationPhase.REGISTER_BEAN);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.skipped.put(configClass, skip);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> skip;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//org.springframework.context.annotation.ConditionEvaluator#shouldSkip(org.springframework.core.type.AnnotatedTypeMetadata, org.springframework.context.annotation.ConfigurationCondition.ConfigurationPhase)</span></span><br><span class="line"><span class="comment">//其实这个方法就是上面那个方法拉，只不过 phase 为ConfigurationPhase.REGISTER_BEAN</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">shouldSkip</span><span class="params">(<span class="meta">@Nullable</span> AnnotatedTypeMetadata metadata, <span class="meta">@Nullable</span> ConfigurationPhase phase)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (metadata == <span class="literal">null</span> || !metadata.isAnnotated(Conditional.class.getName())) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//直接往下看</span></span><br><span class="line">    <span class="keyword">if</span> (phase == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (metadata <span class="keyword">instanceof</span> AnnotationMetadata &amp;&amp;</span><br><span class="line">            ConfigurationClassUtils.isConfigurationCandidate((AnnotationMetadata) metadata)) &#123;</span><br><span class="line">            <span class="keyword">return</span> shouldSkip(metadata, ConfigurationPhase.PARSE_CONFIGURATION);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> shouldSkip(metadata, ConfigurationPhase.REGISTER_BEAN);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    List&lt;Condition&gt; conditions = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span> (String[] conditionClasses : getConditionClasses(metadata)) &#123;</span><br><span class="line">        <span class="keyword">for</span> (String conditionClass : conditionClasses) &#123;</span><br><span class="line">            <span class="type">Condition</span> <span class="variable">condition</span> <span class="operator">=</span> getCondition(conditionClass, <span class="built_in">this</span>.context.getClassLoader());</span><br><span class="line">            conditions.add(condition);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    AnnotationAwareOrderComparator.sort(conditions);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (Condition condition : conditions) &#123;</span><br><span class="line">        <span class="type">ConfigurationPhase</span> <span class="variable">requiredPhase</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (condition <span class="keyword">instanceof</span> ConfigurationCondition) &#123;</span><br><span class="line">            requiredPhase = ((ConfigurationCondition) condition).getConfigurationPhase();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// requiredPhase == null || requiredPhase == phase 这里都会为ture，所以回去走 matches方法</span></span><br><span class="line">        <span class="keyword">if</span> ((requiredPhase == <span class="literal">null</span> || requiredPhase == phase) &amp;&amp; !condition.matches(<span class="built_in">this</span>.context, metadata)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//org.springframework.boot.autoconfigure.condition.SpringBootCondition#matches(org.springframework.context.annotation.ConditionContext, org.springframework.core.type.AnnotatedTypeMetadata)</span></span><br><span class="line"><span class="comment">// OnBeanCondition 继承 SpringBootCondition</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="title function_">matches</span><span class="params">(ConditionContext context, AnnotatedTypeMetadata metadata)</span> &#123;</span><br><span class="line">    <span class="comment">//返回类或方法名 这里返回 com.chris.feign.condition.TestA</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">classOrMethodName</span> <span class="operator">=</span> getClassOrMethodName(metadata);</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">//主要看这个方法</span></span><br><span class="line">        <span class="type">ConditionOutcome</span> <span class="variable">outcome</span> <span class="operator">=</span> getMatchOutcome(context, metadata);</span><br><span class="line">        <span class="comment">//日志输出</span></span><br><span class="line">        logOutcome(classOrMethodName, outcome);</span><br><span class="line">        <span class="comment">//这里拼接信息</span></span><br><span class="line">        recordEvaluation(context, classOrMethodName, outcome);</span><br><span class="line">        <span class="comment">//返回 match值，</span></span><br><span class="line">        <span class="keyword">return</span> outcome.isMatch();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span> (NoClassDefFoundError ex) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;Could not evaluate condition on &quot;</span> + classOrMethodName + <span class="string">&quot; due to &quot;</span></span><br><span class="line">                                        + ex.getMessage() + <span class="string">&quot; not found. Make sure your own configuration does not rely on &quot;</span></span><br><span class="line">                                        + <span class="string">&quot;that class. This can also happen if you are &quot;</span></span><br><span class="line">                                        + <span class="string">&quot;@ComponentScanning a springframework package (e.g. if you &quot;</span></span><br><span class="line">                                        + <span class="string">&quot;put a @ComponentScan in the default package by mistake)&quot;</span>, ex);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span> (RuntimeException ex) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;Error processing condition on &quot;</span> + getName(metadata), ex);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//org.springframework.boot.autoconfigure.condition.OnBeanCondition#getMatchOutcome</span></span><br><span class="line"><span class="keyword">public</span> ConditionOutcome <span class="title function_">getMatchOutcome</span><span class="params">(ConditionContext context, AnnotatedTypeMetadata metadata)</span> &#123;</span><br><span class="line">    <span class="type">ConditionMessage</span> <span class="variable">matchMessage</span> <span class="operator">=</span> ConditionMessage.empty();</span><br><span class="line">    <span class="type">MergedAnnotations</span> <span class="variable">annotations</span> <span class="operator">=</span> metadata.getAnnotations();</span><br><span class="line">    <span class="comment">//是否有ConditionalOnBean 注解，肯定有啦</span></span><br><span class="line">    <span class="keyword">if</span> (annotations.isPresent(ConditionalOnBean.class)) &#123;</span><br><span class="line">        Spec&lt;ConditionalOnBean&gt; spec = <span class="keyword">new</span> <span class="title class_">Spec</span>&lt;&gt;(context, metadata, annotations, ConditionalOnBean.class);</span><br><span class="line">        <span class="comment">//这里是主要逻辑</span></span><br><span class="line">        <span class="type">MatchResult</span> <span class="variable">matchResult</span> <span class="operator">=</span> getMatchingBeans(context, spec);</span><br><span class="line">        <span class="comment">// return this.unmatchedAnnotations.isEmpty() &amp;&amp; this.unmatchedNames.isEmpty()</span></span><br><span class="line">		<span class="comment">//			&amp;&amp; this.unmatchedTypes.isEmpty()</span></span><br><span class="line">        <span class="comment">//因为这里 unmatchedTypes 是有值的，所以会返回false，也就是会走  noMatch 方法，也就会触发删除 TestA 的BeanDefinition,也就不会注册到spring容器中。</span></span><br><span class="line">        <span class="keyword">if</span> (!matchResult.isAllMatched()) &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">reason</span> <span class="operator">=</span> createOnBeanNoMatchReason(matchResult);</span><br><span class="line">            <span class="keyword">return</span> ConditionOutcome.noMatch(spec.message().because(reason));</span><br><span class="line">        &#125;</span><br><span class="line">        matchMessage = spec.message(matchMessage).found(<span class="string">&quot;bean&quot;</span>, <span class="string">&quot;beans&quot;</span>).items(Style.QUOTE,</span><br><span class="line">                                                                               matchResult.getNamesOfAllMatches());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// ... 省略</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//org.springframework.boot.autoconfigure.condition.OnBeanCondition#getMatchingBeans</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">final</span> MatchResult <span class="title function_">getMatchingBeans</span><span class="params">(ConditionContext context, Spec&lt;?&gt; spec)</span> &#123;</span><br><span class="line">    <span class="type">ClassLoader</span> <span class="variable">classLoader</span> <span class="operator">=</span> context.getClassLoader();</span><br><span class="line">    <span class="comment">//获取当前的Bean工厂</span></span><br><span class="line">    <span class="type">ConfigurableListableBeanFactory</span> <span class="variable">beanFactory</span> <span class="operator">=</span> context.getBeanFactory();</span><br><span class="line">    <span class="comment">//返回false，因为 spec.getStrategy()等于ALL</span></span><br><span class="line">    <span class="type">boolean</span> <span class="variable">considerHierarchy</span> <span class="operator">=</span> spec.getStrategy() != SearchStrategy.CURRENT;</span><br><span class="line">    Set&lt;Class&lt;?&gt;&gt; parameterizedContainers = spec.getParameterizedContainers();</span><br><span class="line">    <span class="comment">// spec.getStrategy()等于ALL</span></span><br><span class="line">    <span class="keyword">if</span> (spec.getStrategy() == SearchStrategy.ANCESTORS) &#123;</span><br><span class="line">        <span class="type">BeanFactory</span> <span class="variable">parent</span> <span class="operator">=</span> beanFactory.getParentBeanFactory();</span><br><span class="line">        Assert.isInstanceOf(ConfigurableListableBeanFactory.class, parent,</span><br><span class="line">                            <span class="string">&quot;Unable to use SearchStrategy.ANCESTORS&quot;</span>);</span><br><span class="line">        beanFactory = (ConfigurableListableBeanFactory) parent;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">MatchResult</span> <span class="variable">result</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MatchResult</span>();</span><br><span class="line">    <span class="comment">//这里为空</span></span><br><span class="line">    Set&lt;String&gt; beansIgnoredByType = getNamesOfBeansIgnoredByType(classLoader, beanFactory, considerHierarchy,</span><br><span class="line">                                                                  spec.getIgnoredTypes(), parameterizedContainers);</span><br><span class="line">    <span class="comment">//spec.getTypes() 获取的就是注解ConditionalOnBean上的type值，即 com.chris.feign.condition.TestB</span></span><br><span class="line">    <span class="keyword">for</span> (String type : spec.getTypes()) &#123;</span><br><span class="line">        <span class="comment">//根据type获取对应的Bean名称 ，因为TestB不存在，所以这里返回空</span></span><br><span class="line">        Collection&lt;String&gt; typeMatches = getBeanNamesForType(classLoader, considerHierarchy, beanFactory, type,</span><br><span class="line">                                                             parameterizedContainers);</span><br><span class="line">        Iterator&lt;String&gt; iterator = typeMatches.iterator();</span><br><span class="line">        <span class="keyword">while</span> (iterator.hasNext()) &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">match</span> <span class="operator">=</span> iterator.next();</span><br><span class="line">            <span class="keyword">if</span> (beansIgnoredByType.contains(match) || ScopedProxyUtils.isScopedTarget(match)) &#123;</span><br><span class="line">                iterator.remove();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (typeMatches.isEmpty()) &#123;</span><br><span class="line">            <span class="comment">// unmatchedTypes 添加此类型</span></span><br><span class="line">            result.recordUnmatchedType(type);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            result.recordMatchedType(type, typeMatches);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (String annotation : spec.getAnnotations()) &#123;</span><br><span class="line">        Set&lt;String&gt; annotationMatches = getBeanNamesForAnnotation(classLoader, beanFactory, annotation,</span><br><span class="line">                                                                  considerHierarchy);</span><br><span class="line">        annotationMatches.removeAll(beansIgnoredByType);</span><br><span class="line">        <span class="keyword">if</span> (annotationMatches.isEmpty()) &#123;</span><br><span class="line">            result.recordUnmatchedAnnotation(annotation);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            result.recordMatchedAnnotation(annotation, annotationMatches);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (String beanName : spec.getNames()) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!beansIgnoredByType.contains(beanName) &amp;&amp; containsBean(beanFactory, beanName, considerHierarchy)) &#123;</span><br><span class="line">            result.recordMatchedName(beanName);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            result.recordUnmatchedName(beanName);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//这里 会返回 unmatchedTypes 有值的MatchResult对象，我们在返回调用此方法的方法，往上走..</span></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -243,7 +243,7 @@
     
     <footer class="article-footer">
        
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/personalBlog/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
 
     </footer>
   </div>
@@ -265,7 +265,7 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2024/03/03/2024/202404/Jenkins/"
+  <a class="article-title" href="/personalBlog/2024/03/03/2024/202404/Jenkins/"
     >Jenkins</a> 
 </h2>
  
@@ -274,11 +274,11 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2024/03/03/2024/202404/Jenkins/" class="article-date">
+      <a href="/personalBlog/2024/03/03/2024/202404/Jenkins/" class="article-date">
   <time datetime="2024-03-04T07:00:00.000Z" itemprop="datePublished">2024-03-03</time>
 </a> 
   <div class="article-category">
-    <a class="article-category-link" href="/categories/CI-DI/">CI/DI</a>
+    <a class="article-category-link" href="/personalBlog/categories/CI-DI/">CI/DI</a>
   </div>
    
     </div>
@@ -288,7 +288,7 @@
   <h2 id="CI-DI简介"><a href="#CI-DI简介" class="headerlink" title="CI&#x2F;DI简介"></a>CI&#x2F;DI简介</h2><p>CI&#x2F;DI就是持续集成与部署，持续集成（Continuous integration），持续部署（Continuous deployment）。</p>
 <p>持续集成：频繁地将代码集成到主干。通俗的来说就是将不同分支的代码提交到代码仓库，如GitLab。将非主分支合并到主分支上。并进行构建测试，确认是否正确的集成。</p>
 <p>持续部署：将集成测试完成的项目部署到对应的环境。</p>
-<p><img src="/Jenkins/CIDI-Jenkins-1710767035733.png" alt="CIDI-Jenkins"></p>
+<p><img src="/personalBlog/Jenkins/CIDI-Jenkins-1710767035733.png" alt="CIDI-Jenkins"></p>
 <p><strong>首先</strong>，开发将代码提交到代码仓库，将代码的改动合并到相应的分支。</p>
 <p><strong>下一步，</strong>Jenkins利用git、maven等插件，对提交的代码进行拉取、测试、打包等，</p>
 <p><strong>最后，</strong>将代码打包成jar&#x2F;war推送到测试、生产服务器进行部署。</p>
@@ -306,7 +306,7 @@
 
 <h3 id="启动gitlab"><a href="#启动gitlab" class="headerlink" title="启动gitlab"></a>启动gitlab</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">启动</span></span><br><span class="line">gitlab-ctl start    </span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">更新配置需要执行</span></span><br><span class="line">gitlab-ctl reconfigure</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">状态</span></span><br><span class="line">gitlab-ctl status</span><br><span class="line">gitlab-ctl stop</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看日照计</span></span><br><span class="line">gitlab-ctl tail </span><br></pre></td></tr></table></figure>
 
-<p><img src="/Jenkins/image-20240306210106477.png" alt="image-20240306210106477"></p>
+<p><img src="/personalBlog/Jenkins/image-20240306210106477.png" alt="image-20240306210106477"></p>
 <h3 id="访问"><a href="#访问" class="headerlink" title="访问"></a>访问</h3><h3 id="突发"><a href="#突发" class="headerlink" title="突发"></a>突发</h3><p>忘记密码了。。。</p>
 <ol>
 <li>使用以下命令</li>
@@ -314,13 +314,13 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab-rails console production</span><br></pre></td></tr></table></figure>
 
 <p>若出现报错</p>
-<p><img src="/Jenkins/image-20240319223519314.png" alt="image-20240319223519314"></p>
+<p><img src="/personalBlog/Jenkins/image-20240319223519314.png" alt="image-20240319223519314"></p>
 <ol start="2">
 <li>使用以下命令</li>
 </ol>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab-rails console -e production</span><br></pre></td></tr></table></figure>
 
-<p><img src="/Jenkins/image-20240319232241882.png" alt="image-20240319232241882"></p>
+<p><img src="/personalBlog/Jenkins/image-20240319232241882.png" alt="image-20240319232241882"></p>
 <ol start="3">
 <li>查看root信息 user &#x3D; User.where(id:1).first</li>
 </ol>
@@ -353,19 +353,19 @@
 
 <h3 id="访问-1"><a href="#访问-1" class="headerlink" title="访问"></a>访问</h3><p> <a target="_blank" rel="noopener" href="http://192.168.202.129:12001/">http://192.168.202.129:12001/</a></p>
 <p>输入控制台的密码串，或去 <code>/var/lib/jenkins/secrets/initialAdminPassword</code> 查看。</p>
-<p><img src="/Jenkins/image-20240306224436946.png" alt="image-20240306224436946"></p>
+<p><img src="/personalBlog/Jenkins/image-20240306224436946.png" alt="image-20240306224436946"></p>
 <p>输入管理员密码，安装插件后，创建用户名完成之后，进入主页。如下图：</p>
-<p><img src="/Jenkins/image-20240306230210066.png" alt="image-20240306230210066"></p>
+<p><img src="/personalBlog/Jenkins/image-20240306230210066.png" alt="image-20240306230210066"></p>
 <h3 id="可能遇到的问题"><a href="#可能遇到的问题" class="headerlink" title="可能遇到的问题"></a>可能遇到的问题</h3><ul>
 <li><p>插件安装不下来或受高本版jenkins的约束，可配置对应版本所需的镜像地址</p>
-<p><img src="/Jenkins/image-20240307221510889.png" alt="image-20240307221510889"></p>
+<p><img src="/personalBlog/Jenkins/image-20240307221510889.png" alt="image-20240307221510889"></p>
 <p>修改 Update Site的值   Plugin Manager  —&gt; Advanced  替换镜像源</p>
-<p><img src="/Jenkins/image-20240307222931941.png" alt="image-20240307222931941"></p>
+<p><img src="/personalBlog/Jenkins/image-20240307222931941.png" alt="image-20240307222931941"></p>
 <p><a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/"> 清华大学开源软件镜像站</a>     <a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/%EF%BC%8C%E6%89%BE%E5%AF%B9%E8%87%AA%E5%B7%B1%E5%AF%B9%E5%BA%94%E7%89%88%E6%9C%AC%E7%9A%84jenkins%E7%89%88%E6%9C%AC%EF%BC%8C%E6%88%91%E8%BF%99%E9%87%8C%E6%98%AF">https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/，找对自己对应版本的jenkins版本，我这里是</a> Jenkins 2.346.3</p>
-<p><img src="/Jenkins/image-20240307222906015.png" alt="image-20240307222906015"></p>
-<p><img src="/Jenkins/image-20240307223042572.png" alt="image-20240307223042572"></p>
+<p><img src="/personalBlog/Jenkins/image-20240307222906015.png" alt="image-20240307222906015"></p>
+<p><img src="/personalBlog/Jenkins/image-20240307223042572.png" alt="image-20240307223042572"></p>
 <p>将地址复制到 Update Site 中，点击提交</p>
-<p><img src="/Jenkins/image-20240307223152257.png" alt="image-20240307223152257"></p>
+<p><img src="/personalBlog/Jenkins/image-20240307223152257.png" alt="image-20240307223152257"></p>
 <p>全局搜索 default.json 文件，然后进入到对应的目录</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -name default.json</span><br></pre></td></tr></table></figure>
 
@@ -378,43 +378,43 @@
 <h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><h3 id="基于角色的访问权限控制"><a href="#基于角色的访问权限控制" class="headerlink" title="基于角色的访问权限控制"></a>基于角色的访问权限控制</h3><ul>
 <li>安装<strong>Role-based Authorization Strategy</strong>插件</li>
 </ul>
-<p><img src="/Jenkins/image-20240318213047763.png" alt="image-20240318213047763"></p>
+<p><img src="/personalBlog/Jenkins/image-20240318213047763.png" alt="image-20240318213047763"></p>
 <ul>
 <li>全局安全配置</li>
 </ul>
-<p><img src="/Jenkins/image-20240318213412000.png" alt="image-20240318213412000"></p>
+<p><img src="/personalBlog/Jenkins/image-20240318213412000.png" alt="image-20240318213412000"></p>
 <ul>
 <li>修改安全配置为 Role-Based Strategy</li>
 </ul>
-<p><img src="/Jenkins/image-20240318213734803.png" alt="image-20240318213734803"></p>
+<p><img src="/personalBlog/Jenkins/image-20240318213734803.png" alt="image-20240318213734803"></p>
 <ul>
 <li>创建用户</li>
 </ul>
-<p><img src="/Jenkins/image-20240318214032455.png" alt="image-20240318214032455"></p>
+<p><img src="/personalBlog/Jenkins/image-20240318214032455.png" alt="image-20240318214032455"></p>
 <ul>
 <li>创建两个用户chris、chris1</li>
 </ul>
-<p><img src="/Jenkins/image-20240318214149950.png" alt="image-20240318214149950"></p>
+<p><img src="/personalBlog/Jenkins/image-20240318214149950.png" alt="image-20240318214149950"></p>
 <ul>
 <li>创建角色</li>
 </ul>
-<p><img src="/Jenkins/image-20240318214523287.png" alt="image-20240318214523287"></p>
+<p><img src="/personalBlog/Jenkins/image-20240318214523287.png" alt="image-20240318214523287"></p>
 <p>角色分为 <strong>Global roles</strong>、<strong>Item roles</strong>、<strong>Agent roles</strong></p>
 <p> <strong>Global roles</strong>：管理员等高级用户可以创建基于全局的角色</p>
 <p><strong>Item roles：</strong>针对项目锁拥有的角色</p>
 <p><strong>Agent roles</strong>：代理角色，与各个节点相关</p>
 <p>创建 grole 角色，默认和管理员拥有相同的权利</p>
-<p><img src="/Jenkins/image-20240318215859841.png" alt="image-20240318215859841"></p>
+<p><img src="/personalBlog/Jenkins/image-20240318215859841.png" alt="image-20240318215859841"></p>
 <ul>
 <li>分配角色</li>
 </ul>
 <p>将用户 <strong>chris</strong> 赋予 <strong>grole</strong> 角色</p>
-<p><img src="/Jenkins/image-20240318220215471.png" alt="image-20240318220215471"></p>
+<p><img src="/personalBlog/Jenkins/image-20240318220215471.png" alt="image-20240318220215471"></p>
 <h3 id="凭证管理"><a href="#凭证管理" class="headerlink" title="凭证管理"></a>凭证管理</h3><p>我们需要jenkins从git上拉取我们提交的代码，git肯定是需要访问凭证信息的，此时我们可以创建一个连接git的凭证，在拉取项目代码时可以使用。</p>
 <p>安装 <strong>Credentials Binding</strong> 插件，我这里已经安装了，跳过。安装完之后，会有一个凭证管理入口</p>
-<p><img src="/Jenkins/image-20240318221524020.png" alt="image-20240318221524020"></p>
+<p><img src="/personalBlog/Jenkins/image-20240318221524020.png" alt="image-20240318221524020"></p>
 <p>点击进去之后，添加凭证</p>
-<p><img src="/Jenkins/image-20240318221642606.png" alt="image-20240318221642606"></p>
+<p><img src="/personalBlog/Jenkins/image-20240318221642606.png" alt="image-20240318221642606"></p>
 <p>有五种凭证类型</p>
 <ol>
 <li>Username with password ：用户名和密码方式</li>
@@ -423,12 +423,12 @@
 <li>Secret text： 保存一个加密文本，如GitHub 的 api token</li>
 <li>Certificate： 通过证书方式</li>
 </ol>
-<p><img src="/Jenkins/image-20240318221700856.png" alt="image-20240318221700856"></p>
+<p><img src="/personalBlog/Jenkins/image-20240318221700856.png" alt="image-20240318221700856"></p>
 <h4 id="创建ssh秘钥访问git"><a href="#创建ssh秘钥访问git" class="headerlink" title="创建ssh秘钥访问git"></a>创建ssh秘钥访问git</h4><ol>
 <li>安装git插件</li>
 </ol>
 <p>搜索git安装即可</p>
-<p><img src="/Jenkins/image-20240318224632530.png" alt="image-20240318224632530"></p>
+<p><img src="/personalBlog/Jenkins/image-20240318224632530.png" alt="image-20240318224632530"></p>
 <p>jenkins服务器上也需要安装git</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装命令</span></span><br><span class="line">yum install git -y</span><br><span class="line">git --version</span><br></pre></td></tr></table></figure>
 
@@ -437,37 +437,37 @@
 </ol>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa </span><br><span class="line">cd ~/.ssh</span><br></pre></td></tr></table></figure>
 
-<p><img src="/Jenkins/image-20240318222917544.png" alt="image-20240318222917544"></p>
+<p><img src="/personalBlog/Jenkins/image-20240318222917544.png" alt="image-20240318222917544"></p>
 <p><strong>id_rsa</strong>：私钥文件</p>
 <p><strong>id_rsa.pub</strong>：公钥文件</p>
 <ol start="3">
 <li>将生成的私钥文件内容，放到jenkins上，即创建凭证</li>
 </ol>
-<p><img src="/Jenkins/image-20240318223224391.png" alt="image-20240318223224391"></p>
+<p><img src="/personalBlog/Jenkins/image-20240318223224391.png" alt="image-20240318223224391"></p>
 <ol start="4">
 <li>将生成的公钥内容放到gitlab中</li>
 </ol>
-<p><img src="/Jenkins/image-20240328212010255.png" alt="image-20240328212010255"></p>
+<p><img src="/personalBlog/Jenkins/image-20240328212010255.png" alt="image-20240328212010255"></p>
 <ol start="5">
 <li>创建一个freestyle项目</li>
 </ol>
-<p><img src="/Jenkins/image-20240328212131000.png" alt="image-20240328212131000"></p>
+<p><img src="/personalBlog/Jenkins/image-20240328212131000.png" alt="image-20240328212131000"></p>
 <ol start="6">
 <li>输入gitlab仓库的项目地址，并选择需要使用的秘钥信息，注意Branches to build选择对应的分支。</li>
 </ol>
-<p><img src="/Jenkins/image-20240328220805266.png" alt="image-20240328220805266"></p>
+<p><img src="/personalBlog/Jenkins/image-20240328220805266.png" alt="image-20240328220805266"></p>
 <ol start="7">
 <li>保存之后，点击 build now</li>
 </ol>
-<p><img src="/Jenkins/image-20240328221116373.png" alt="image-20240328221116373"></p>
+<p><img src="/personalBlog/Jenkins/image-20240328221116373.png" alt="image-20240328221116373"></p>
 <ol start="8">
 <li>查看构建的历史</li>
 </ol>
-<p><img src="/Jenkins/image-20240328221438397.png" alt="image-20240328221438397"></p>
+<p><img src="/personalBlog/Jenkins/image-20240328221438397.png" alt="image-20240328221438397"></p>
 <ol start="9">
 <li>访问jenkins部署的服务器，<code>/var/lib/jenkins/workspace </code>,发现项目已经拉下来了，项目名就是创建的 <code>freestyle</code> 项目名称</li>
 </ol>
-<p><img src="/Jenkins/image-20240328221555344.png" alt="image-20240328221555344"></p>
+<p><img src="/personalBlog/Jenkins/image-20240328221555344.png" alt="image-20240328221555344"></p>
 <h3 id="Maven管理"><a href="#Maven管理" class="headerlink" title="Maven管理"></a>Maven管理</h3><ol>
 <li>安装maven</li>
 </ol>
@@ -495,75 +495,75 @@
 <ul>
 <li>配置JDK</li>
 </ul>
-<p><img src="/Jenkins/image-20240402215555459.png" alt="image-20240402215555459"></p>
+<p><img src="/personalBlog/Jenkins/image-20240402215555459.png" alt="image-20240402215555459"></p>
 <ul>
 <li>配置Maven</li>
 </ul>
-<p><img src="/Jenkins/image-20240402215936543.png" alt="image-20240402215936543"></p>
+<p><img src="/personalBlog/Jenkins/image-20240402215936543.png" alt="image-20240402215936543"></p>
 <ul>
 <li>添加配置（记得创建一个maven项目哦）</li>
 </ul>
-<p><img src="/Jenkins/image-20240402220914939.png" alt="image-20240402220914939"></p>
+<p><img src="/personalBlog/Jenkins/image-20240402220914939.png" alt="image-20240402220914939"></p>
 <ul>
 <li>添加mvn打包命令</li>
 </ul>
-<p><img src="/Jenkins/image-20240402221036314.png" alt="image-20240402221036314"></p>
+<p><img src="/personalBlog/Jenkins/image-20240402221036314.png" alt="image-20240402221036314"></p>
 <ul>
 <li>配置环境变量，不然build时候找不到命令</li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#将输出的环境变量进行配置</span><br><span class="line">echo $PATH</span><br></pre></td></tr></table></figure>
 
-<p><img src="/Jenkins/image-20240402231302996.png" alt="image-20240402231302996"></p>
+<p><img src="/personalBlog/Jenkins/image-20240402231302996.png" alt="image-20240402231302996"></p>
 <ul>
 <li>开始Build</li>
 </ul>
-<p><img src="/Jenkins/image-20240402221101106.png" alt="image-20240402221101106"></p>
+<p><img src="/personalBlog/Jenkins/image-20240402221101106.png" alt="image-20240402221101106"></p>
 <ul>
 <li>拉代码，执行maven命令</li>
 </ul>
-<p><img src="/Jenkins/image-20240402233949999.png" alt="image-20240402233949999"></p>
+<p><img src="/personalBlog/Jenkins/image-20240402233949999.png" alt="image-20240402233949999"></p>
 <ul>
 <li>可以查看maven本地仓库，依赖包已经下载</li>
 </ul>
-<p><img src="/Jenkins/image-20240402233155798.png" alt="image-20240402233155798"></p>
+<p><img src="/personalBlog/Jenkins/image-20240402233155798.png" alt="image-20240402233155798"></p>
 <h4 id="出现的问题"><a href="#出现的问题" class="headerlink" title="出现的问题"></a>出现的问题</h4><p>查看日志，发现报错</p>
-<p><img src="/Jenkins/image-20240402230710997.png" alt="image-20240402230710997"></p>
+<p><img src="/personalBlog/Jenkins/image-20240402230710997.png" alt="image-20240402230710997"></p>
 <p>配置Git的目录，根据自己安装的目录修改</p>
-<p><img src="/Jenkins/image-20240402230759324.png" alt="image-20240402230759324"></p>
+<p><img src="/personalBlog/Jenkins/image-20240402230759324.png" alt="image-20240402230759324"></p>
 <h4 id="补一句"><a href="#补一句" class="headerlink" title="补一句"></a>补一句</h4><p>我们可以在maven打完包之后，使用java命令启动jar包即可。</p>
 <h3 id="部署Jar包"><a href="#部署Jar包" class="headerlink" title="部署Jar包"></a>部署Jar包</h3><ol>
 <li>创建一个maven项目</li>
 </ol>
-<p><img src="/Jenkins/image-20240404195903044.png" alt="image-20240404195903044"></p>
+<p><img src="/personalBlog/Jenkins/image-20240404195903044.png" alt="image-20240404195903044"></p>
 <ol start="2">
 <li>配置项目路径，注意分支</li>
 </ol>
-<p><img src="/Jenkins/image-20240404200408800.png" alt="image-20240404200408800"></p>
+<p><img src="/personalBlog/Jenkins/image-20240404200408800.png" alt="image-20240404200408800"></p>
 <ol start="3">
 <li><p>构建命令</p>
 <p><strong>Run only if build succeeds</strong>：在构建成功时执行后续步骤</p>
 </li>
 </ol>
-<p><img src="/Jenkins/image-20240404201654697.png" alt="image-20240404201654697"></p>
+<p><img src="/personalBlog/Jenkins/image-20240404201654697.png" alt="image-20240404201654697"></p>
 <ol start="4">
 <li>安装 Publish Over SSH 插件</li>
 </ol>
 <ul>
 <li>若部署的服务器跟jenkins不在同一服务器，需要下载</li>
 </ul>
-<p><img src="/Jenkins/image-20240404201332208.png" alt="image-20240404201332208"></p>
+<p><img src="/personalBlog/Jenkins/image-20240404201332208.png" alt="image-20240404201332208"></p>
 <ul>
 <li>配置远程服务器信息以及密码等信息</li>
 </ul>
 <p>Passphrase： 如果生成秘钥的时候输入了密码，就在这里输入，否则留空</p>
 <p>Path to Key： Jenkins 所在服务器秘钥(id_rsa)的路径，和下面的Key二选一（&#x2F;root&#x2F;.ssh&#x2F;id_rsa）</p>
 <p>Key： Jenkins 所在服务器秘钥(id_rsa)的路内容，和上面的Path to Key二选一</p>
-<p><img src="/Jenkins/image-20240404202955835.png" alt="image-20240404202955835"></p>
+<p><img src="/personalBlog/Jenkins/image-20240404202955835.png" alt="image-20240404202955835"></p>
 <ul>
 <li>配置远程服务器</li>
 </ul>
 <p>Remote Directory：访问的远程服务器目录</p>
-<p><img src="/Jenkins/image-20240404203852234.png" alt="image-20240404203852234"></p>
+<p><img src="/personalBlog/Jenkins/image-20240404203852234.png" alt="image-20240404203852234"></p>
 <ol start="5">
 <li>添加 post-build step <code>Send files or execute commands over SSH</code></li>
 </ol>
@@ -574,18 +574,18 @@
 <p><strong>注：这里执行命令的时候进入到了jar包的目录，然后以后台方式启动</strong></p>
 <p><strong>如果没有进入到目录，命令启动jar没用</strong></p>
 <p><strong>如果不是后台运行，jenkins会卡主</strong></p>
-<p><img src="/Jenkins/image-20240404211332717.png" alt="image-20240404211332717"></p>
-<p><img src="/Jenkins/image-20240404214736207.png" alt="image-20240404214736207"></p>
+<p><img src="/personalBlog/Jenkins/image-20240404211332717.png" alt="image-20240404211332717"></p>
+<p><img src="/personalBlog/Jenkins/image-20240404214736207.png" alt="image-20240404214736207"></p>
 <ol start="6">
 <li>开始构建</li>
 </ol>
-<p><img src="/Jenkins/image-20240404220009316.png" alt="image-20240404220009316"></p>
+<p><img src="/personalBlog/Jenkins/image-20240404220009316.png" alt="image-20240404220009316"></p>
 <ol start="7">
 <li>远程服务器上查看jar包以及是否执行</li>
 </ol>
 <p>完工！</p>
-<p><img src="/Jenkins/image-20240404220050542.png" alt="image-20240404220050542"></p>
-<p><img src="/Jenkins/image-20240404220132116.png" alt="image-20240404220132116"></p>
+<p><img src="/personalBlog/Jenkins/image-20240404220050542.png" alt="image-20240404220050542"></p>
+<p><img src="/personalBlog/Jenkins/image-20240404220132116.png" alt="image-20240404220132116"></p>
 <h3 id="流水线"><a href="#流水线" class="headerlink" title="流水线"></a>流水线</h3><h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>将原先一个任务做完的事情，拆分为多个子任务执行，以流水线的方式执行。</p>
 <p>由于拆分为多个子任务，可以观察每个子任务执行的状态，并在出现问题的时候，可以迅速查询出问题点，提高效率。</p>
 <h4 id="功能特性"><a href="#功能特性" class="headerlink" title="功能特性"></a>功能特性</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">代码实现：以代码的形式实现，不仅可以被纳入版本控制，还可以通过编辑代码实现目标效果。</span><br><span class="line">可持续性：任务的执行，不受jenkins等其他环境的限制。</span><br><span class="line">操作灵活：子任务可以随意终止和继续</span><br><span class="line">  多功能：支持复杂CD要求，包括fork/join子进程，循环和并行执行工作的能力</span><br><span class="line">  可扩展：支持DSL的自定义扩展以及与其他插件集成。</span><br></pre></td></tr></table></figure>
@@ -593,11 +593,11 @@
 <h4 id="两种实现方式"><a href="#两种实现方式" class="headerlink" title="两种实现方式"></a>两种实现方式</h4><h5 id="脚本式pipeline"><a href="#脚本式pipeline" class="headerlink" title="脚本式pipeline"></a>脚本式pipeline</h5><p>基于groovy的DSL语言实现，提供了大量的灵活性和可拓展性。因为jenkins的基于java实现的，所以很早引入了groovy作为DSL。如果使用groovy来编写jenkins file，这对与小白是有难度的，所以就有了声明式pipeline出现。</p>
 <h5 id="声明式pipeline"><a href="#声明式pipeline" class="headerlink" title="声明式pipeline"></a>声明式pipeline</h5><p>适合没有编程经验的初学者，并得到了官方越来越多的支持。</p>
 <h4 id="实践-1"><a href="#实践-1" class="headerlink" title="实践"></a>实践</h4><p>创建流水线项目，如果没有改选择，则需要下载<strong>Pipeline</strong>的插件</p>
-<p><img src="/Jenkins/image-20240405121904524.png" alt="image-20240405121904524"></p>
+<p><img src="/personalBlog/Jenkins/image-20240405121904524.png" alt="image-20240405121904524"></p>
 <p>两种定义方式</p>
-<p>Pipeline Script：直接把脚本内容写到脚本对话框中<br>Pipeline script from SCM ：Source Control Management–源代码控制管理，即从gitlab&#x2F;github&#x2F;git上获得pipeline脚本–JenkisFile<br><img src="/Jenkins/image-20240405173614254.png" alt="image-20240405173614254"></p>
+<p>Pipeline Script：直接把脚本内容写到脚本对话框中<br>Pipeline script from SCM ：Source Control Management–源代码控制管理，即从gitlab&#x2F;github&#x2F;git上获得pipeline脚本–JenkisFile<br><img src="/personalBlog/Jenkins/image-20240405173614254.png" alt="image-20240405173614254"></p>
 <p>刚开始不会写脚本咋办呢，可以使用 <a target="_blank" rel="noopener" href="http://192.168.202.129:12001/job/pipeline_test/pipeline-syntax">Pipeline Syntax</a> 来生成。</p>
-<p><img src="/Jenkins/image-20240405173929240.png" alt="image-20240405173929240"></p>
+<p><img src="/personalBlog/Jenkins/image-20240405173929240.png" alt="image-20240405173929240"></p>
 <h5 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h5><p>从Git仓库拉取代码，使用Maven进行构建，打包并运行，先上最终脚本</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">pipeline &#123;</span><br><span class="line">    agent any</span><br><span class="line"></span><br><span class="line">    stages &#123;</span><br><span class="line">        stage(&#x27;Git Pull&#x27;) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                echo &quot;开始拉取代码...&quot;</span><br><span class="line">                git credentialsId: &#x27;git-ssh&#x27;, url: &#x27;git@192.168.202.129:jenkins_group/first-test-project.git&#x27;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage(&#x27;Maven clean package&#x27;) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                echo &quot;maven clean package...&quot;</span><br><span class="line">                sh &#x27;mvn clean package&#x27;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage(&#x27;deploy project&#x27;) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                echo &quot;deploy project...&quot;</span><br><span class="line">                sshPublisher(publishers: [sshPublisherDesc(configName: &#x27;192.168.202.130&#x27;, transfers: [sshTransfer(cleanRemote: false, excludes: &#x27;&#x27;, execCommand: &#x27;&#x27;&#x27;cd /home/jenkins_project</span><br><span class="line">java -jar demo-0.0.1-SNAPSHOT.jar &gt;application.log  2&gt;&amp;1 &amp;</span><br><span class="line">echo &quot;部署成功&quot;&#x27;&#x27;&#x27;, execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: &#x27;[, ]+&#x27;, remoteDirectory: &#x27;&#x27;, remoteDirectorySDF: false, removePrefix: &#x27;target&#x27;, sourceFiles: &#x27;target/demo-0.0.1-SNAPSHOT.jar&#x27;)], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -605,8 +605,8 @@
 <li>拉取代码</li>
 </ul>
 <p>选择Git选项，输入代码地址，分支，以及认证方式生成脚本</p>
-<p><img src="/Jenkins/image-20240407213947990.png" alt="image-20240407213947990"></p>
-<p><img src="/Jenkins/image-20240407214020022.png" alt="image-20240407214020022"></p>
+<p><img src="/personalBlog/Jenkins/image-20240407213947990.png" alt="image-20240407213947990"></p>
+<p><img src="/personalBlog/Jenkins/image-20240407214020022.png" alt="image-20240407214020022"></p>
 <ul>
 <li>Maven构建</li>
 </ul>
@@ -615,17 +615,17 @@
 <li>上传到远程服务器部署</li>
 </ul>
 <p>选择下图的选项，剩下的配置信息跟构建Maven项目一致</p>
-<p><img src="/Jenkins/image-20240407215342415.png" alt="image-20240407215342415"></p>
-<p><img src="/Jenkins/image-20240407215512301.png" alt="image-20240407215512301"></p>
-<p><img src="/Jenkins/image-20240407215542806.png" alt="image-20240407215542806"></p>
+<p><img src="/personalBlog/Jenkins/image-20240407215342415.png" alt="image-20240407215342415"></p>
+<p><img src="/personalBlog/Jenkins/image-20240407215512301.png" alt="image-20240407215512301"></p>
+<p><img src="/personalBlog/Jenkins/image-20240407215542806.png" alt="image-20240407215542806"></p>
 <ul>
 <li>开始Build</li>
 </ul>
-<p><img src="/Jenkins/image-20240407220257195.png" alt="image-20240407220257195"></p>
+<p><img src="/personalBlog/Jenkins/image-20240407220257195.png" alt="image-20240407220257195"></p>
 <p>可以看到每一步的执行时间</p>
-<p><img src="/Jenkins/image-20240407220336738.png" alt="image-20240407220336738"></p>
+<p><img src="/personalBlog/Jenkins/image-20240407220336738.png" alt="image-20240407220336738"></p>
 <h3 id="触发器"><a href="#触发器" class="headerlink" title="触发器"></a>触发器</h3><p>我们配置项目的时候，会有如下图所示的选项</p>
-<p><img src="/Jenkins/image-20240407220750837.png" alt="image-20240407220750837"></p>
+<p><img src="/personalBlog/Jenkins/image-20240407220750837.png" alt="image-20240407220750837"></p>
 <p><strong>Build whenever a SNAPSHOT dependency is built</strong>：</p>
 <p>当job依赖的快照版本被build时，执行本job。</p>
 <p>**Trigger builds remotely (e.g., from scripts)**：</p>
@@ -639,16 +639,16 @@
 <h4 id="实例-1"><a href="#实例-1" class="headerlink" title="实例"></a>实例</h4><p>这里演示一下构建完任务之后，构建后续的任务。</p>
 <p><strong>创建一个Freestyle项目（A2）进行Install：</strong></p>
 <p><strong>Trigger only if build is stable</strong>：只有构建稳定时触发</p>
-<p><img src="/Jenkins/image-20240407224320458.png" alt="image-20240407224320458"></p>
+<p><img src="/personalBlog/Jenkins/image-20240407224320458.png" alt="image-20240407224320458"></p>
 <p>使用Shell脚本对A1项目进行构建：</p>
-<p><img src="/Jenkins/image-20240407224409538.png" alt="image-20240407224409538"></p>
+<p><img src="/personalBlog/Jenkins/image-20240407224409538.png" alt="image-20240407224409538"></p>
 <p><strong>创建一个Freestyle项目（A1）用于Git拉取项目代码：</strong></p>
-<p><img src="/Jenkins/image-20240407223401524.png" alt="image-20240407223401524"></p>
+<p><img src="/personalBlog/Jenkins/image-20240407223401524.png" alt="image-20240407223401524"></p>
 <p><strong>开始构建A1：</strong></p>
 <p>拉取代码之后，触发构建A2：</p>
-<p><img src="/Jenkins/image-20240407224511067.png" alt="image-20240407224511067"></p>
+<p><img src="/personalBlog/Jenkins/image-20240407224511067.png" alt="image-20240407224511067"></p>
 <p>查看A2执行情况，也成功触发：</p>
-<p><img src="/Jenkins/image-20240407224551066.png" alt="image-20240407224551066"></p>
+<p><img src="/personalBlog/Jenkins/image-20240407224551066.png" alt="image-20240407224551066"></p>
  
       <!-- reward -->
       
@@ -659,7 +659,7 @@
     
     <footer class="article-footer">
        
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/personalBlog/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
 
     </footer>
   </div>
@@ -681,7 +681,7 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2024/01/09/2024/20240303/2024-01-09-MQTT/"
+  <a class="article-title" href="/personalBlog/2024/01/09/2024/20240303/2024-01-09-MQTT/"
     >MQTT</a> 
 </h2>
  
@@ -690,11 +690,11 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2024/01/09/2024/20240303/2024-01-09-MQTT/" class="article-date">
+      <a href="/personalBlog/2024/01/09/2024/20240303/2024-01-09-MQTT/" class="article-date">
   <time datetime="2024-01-10T00:00:00.000Z" itemprop="datePublished">2024-01-09</time>
 </a> 
   <div class="article-category">
-    <a class="article-category-link" href="/categories/MQTT/">MQTT</a>
+    <a class="article-category-link" href="/personalBlog/categories/MQTT/">MQTT</a>
   </div>
    
     </div>
@@ -702,7 +702,7 @@
     <div class="article-entry" itemprop="articleBody">
        
   <h2 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h2><p>MQTT（Message Queuing Telemetry Transport，消息队列遥测传输协议），是一种基于发布&#x2F;订阅（publish&#x2F;subscribe）模式的”轻量级”通讯协议，该协议构建于TCP&#x2F;IP协议上，由IBM在1999年发布。MQTT最大的优点在于，可以用极少的代码和带宽，为远程连接的设备提供可靠的消息服务。作为一种低开销、低带宽占用的即时通讯协议，在物联网、小型设备和移动应用等方面有着比较广泛的应用。</p>
-<p><img src="/2024-01-09-MQTT/mqtt.png" alt="mqtt"></p>
+<p><img src="/personalBlog/2024-01-09-MQTT/mqtt.png" alt="mqtt"></p>
 <h2 id="设计规范"><a href="#设计规范" class="headerlink" title="设计规范"></a>设计规范</h2><p>由于物联网的环境是非常特别的，所以MQTT遵循以下设计原则：</p>
 <ol>
 <li>精简，不添加可有可无的功能</li>
@@ -739,7 +739,7 @@
 <li>发送端接收到PUBREC之后，发送PUBREC，表示此次发送结束</li>
 <li>Broker收到PUBREC，返回PUBCOMP给发送端，表示结束了，我知道了。</li>
 </ol>
-<p><img src="/2024-01-09-MQTT/mqtt_QoS.png" alt="mqtt_QoS"></p>
+<p><img src="/personalBlog/2024-01-09-MQTT/mqtt_QoS.png" alt="mqtt_QoS"></p>
 </li>
 <li><p>小型传输，费用小(固定长度的头部为2字节)，协议交换最小化，减少网络流量</p>
 </li>
@@ -787,7 +787,7 @@
 <li>可变头，存在于部分MQTT数据包中，数据包的类型决定了数据包中是否有可变头。</li>
 <li>消息体，存在于部分的MQTT数据包中，也就是实际的内容。</li>
 </ul>
-<h3 id="固定头"><a href="#固定头" class="headerlink" title="固定头"></a>固定头</h3><p><img src="/2024-01-09-MQTT/mqtt1.png" alt="mqtt1"></p>
+<h3 id="固定头"><a href="#固定头" class="headerlink" title="固定头"></a>固定头</h3><p><img src="/personalBlog/2024-01-09-MQTT/mqtt1.png" alt="mqtt1"></p>
 <h4 id="数据包类型"><a href="#数据包类型" class="headerlink" title="数据包类型"></a>数据包类型</h4><p>7-4bits：表示也就是报文类型，总共4位，无符号号值。</p>
 <table>
 <thead>
@@ -1205,16 +1205,16 @@
 <h3 id="演示结果"><a href="#演示结果" class="headerlink" title="演示结果"></a>演示结果</h3><p>启动应用，登录EQMX控制台。</p>
 <p>可发现总连接数、在线连接数为1。此时订阅端已连接。</p>
 <p>主题数、订阅数也都为1。</p>
-<p><img src="/2024-01-09-MQTT/image-20240129223434655.png" alt="image-20240129223434655"></p>
+<p><img src="/personalBlog/2024-01-09-MQTT/image-20240129223434655.png" alt="image-20240129223434655"></p>
 <p>访问：<a target="_blank" rel="noopener" href="http://localhost:8080/mqttSend?message=%E4%BD%A0%E5%A5%BD">http://localhost:8080/mqttSend?message=%E4%BD%A0%E5%A5%BD</a></p>
 <p>触发了发送消息、发送消息确认事件</p>
 <p>接收消息并进行了处理</p>
-<p><img src="/2024-01-09-MQTT/image-20240129223611314.png" alt="image-20240129223611314"></p>
+<p><img src="/personalBlog/2024-01-09-MQTT/image-20240129223611314.png" alt="image-20240129223611314"></p>
 <p>打开控制台，连接数+1</p>
-<p><img src="/2024-01-09-MQTT/image-20240129223933724.png" alt="image-20240129223933724"></p>
-<p><img src="/2024-01-09-MQTT/image-20240129223952932.png" alt="image-20240129223952932"></p>
+<p><img src="/personalBlog/2024-01-09-MQTT/image-20240129223933724.png" alt="image-20240129223933724"></p>
+<p><img src="/personalBlog/2024-01-09-MQTT/image-20240129223952932.png" alt="image-20240129223952932"></p>
 <p>添加主题监控，可以观察消息的流转条数</p>
-<p><img src="/2024-01-09-MQTT/image-20240129224323429.png" alt="image-20240129224323429"></p>
+<p><img src="/personalBlog/2024-01-09-MQTT/image-20240129224323429.png" alt="image-20240129224323429"></p>
 <h2 id="订阅多个MQTT服务器"><a href="#订阅多个MQTT服务器" class="headerlink" title="订阅多个MQTT服务器"></a>订阅多个MQTT服务器</h2><h3 id="实体类"><a href="#实体类" class="headerlink" title="实体类"></a>实体类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.chirs.mqtt.mqttcore.multiple;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MqttInfo</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Map&lt;Long, MqttTestController.MqttBrokerConfig&gt; mqttClientMap;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        mqttClientMap = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;Long, MqttTestController.MqttBrokerConfig&gt;() &#123;&#123;</span><br><span class="line">            MqttTestController.<span class="type">MqttBrokerConfig</span> <span class="variable">mqttBrokerConfig</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MqttTestController</span>.MqttBrokerConfig();</span><br><span class="line">            mqttBrokerConfig.setHost(<span class="string">&quot;tcp://192.168.202.129:1883&quot;</span>);</span><br><span class="line">            mqttBrokerConfig.setUsername(<span class="string">&quot;admin&quot;</span>);</span><br><span class="line">            mqttBrokerConfig.setPassword(<span class="string">&quot;c123456789&quot;</span>);</span><br><span class="line">            put(<span class="number">1L</span>, mqttBrokerConfig);</span><br><span class="line">        &#125;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String clientId;</span><br><span class="line">    <span class="keyword">private</span> String topic;</span><br><span class="line">    <span class="keyword">private</span> Long serverId;</span><br><span class="line">    <span class="keyword">private</span> String msg;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.chirs.mqtt.mqttcore.multiple;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MqttTransferDTO</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String fromClientId;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String msg;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -1227,11 +1227,11 @@
 
 <h3 id="页面操作"><a href="#页面操作" class="headerlink" title="页面操作"></a>页面操作</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.chirs.mqtt.mqttcore.multiple;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSONObject;</span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"><span class="keyword">import</span> org.eclipse.paho.client.mqttv3.MqttClient;</span><br><span class="line"><span class="keyword">import</span> org.eclipse.paho.client.mqttv3.MqttException;</span><br><span class="line"><span class="keyword">import</span> org.springframework.util.Assert;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestBody;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestParam;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MqttTestController</span> &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/subscribe/connect&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">insertSubscriberInfoAndConnect</span><span class="params">(<span class="meta">@RequestBody</span> MqttInfo subscribeMqttInfo)</span> <span class="keyword">throws</span> MqttException &#123;</span><br><span class="line">        <span class="comment">//效验参数有效性</span></span><br><span class="line">        <span class="comment">//valid(subscribeMqttInfo);</span></span><br><span class="line">        <span class="comment">//将数据保存到数据库</span></span><br><span class="line">        <span class="comment">//save(subscribeMqttInfo)</span></span><br><span class="line">        <span class="built_in">this</span>.initAndConnect(subscribeMqttInfo);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">200</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/publish/connect&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">insertPublisherInfoAndConnect</span><span class="params">(<span class="meta">@RequestBody</span> MqttInfo publishMqttInfo)</span> <span class="keyword">throws</span> MqttException &#123;</span><br><span class="line">        <span class="comment">//效验参数有效性</span></span><br><span class="line">        <span class="comment">//valid(publishMqttInfo);</span></span><br><span class="line">        <span class="comment">//将数据保存到数据库</span></span><br><span class="line">        <span class="comment">//save(publishMqttInfo)</span></span><br><span class="line">        <span class="built_in">this</span>.initAndConnect(publishMqttInfo);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">200</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/subscribe&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">subscribe</span><span class="params">(<span class="meta">@RequestParam(&quot;topic&quot;)</span> String topic,</span></span><br><span class="line"><span class="params">                         <span class="meta">@RequestParam(&quot;clientId&quot;)</span> String clientId)</span> <span class="keyword">throws</span> MqttException &#123;</span><br><span class="line">        <span class="type">MqttClientConnect</span> <span class="variable">clientConnect</span> <span class="operator">=</span> MqttClientConnect.mqttClients.get(clientId);</span><br><span class="line">        Assert.notNull(clientConnect,<span class="string">&quot;错误&quot;</span>);</span><br><span class="line">        clientConnect.sub(topic, <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">200</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/publish&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">publish</span><span class="params">(<span class="meta">@RequestParam(&quot;topic&quot;)</span> String topic,</span></span><br><span class="line"><span class="params">                       <span class="meta">@RequestParam(&quot;msg&quot;)</span> String msg,</span></span><br><span class="line"><span class="params">                       <span class="meta">@RequestParam(&quot;clientId&quot;)</span> String clientId)</span> <span class="keyword">throws</span> MqttException &#123;</span><br><span class="line">        <span class="type">MqttClientConnect</span> <span class="variable">clientConnect</span> <span class="operator">=</span> MqttClientConnect.mqttClients.get(clientId);</span><br><span class="line">        Assert.notNull(clientConnect,<span class="string">&quot;错误&quot;</span>);</span><br><span class="line">        <span class="type">MqttTransferDTO</span> <span class="variable">dto</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MqttTransferDTO</span>();</span><br><span class="line">        dto.setFromClientId(clientId);</span><br><span class="line">        dto.setMsg(msg);</span><br><span class="line">        clientConnect.pub(topic, JSONObject.toJSONString(dto));</span><br><span class="line">        <span class="keyword">return</span> <span class="number">200</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/delete&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">delete</span><span class="params">(<span class="meta">@RequestParam(&quot;clientId&quot;)</span> String clientId)</span> <span class="keyword">throws</span> MqttException &#123;</span><br><span class="line">        <span class="comment">//删除数据库中的数据</span></span><br><span class="line">        <span class="comment">//deleteDBData(clientId);</span></span><br><span class="line">        <span class="built_in">this</span>.disconnect(clientId);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">200</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/disconnect&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">disconnect</span><span class="params">(<span class="meta">@RequestParam(&quot;clientId&quot;)</span> String clientId)</span> <span class="keyword">throws</span> MqttException &#123;</span><br><span class="line">        <span class="type">MqttClientConnect</span> <span class="variable">clientConnect</span> <span class="operator">=</span> MqttClientConnect.mqttClients.get(clientId);</span><br><span class="line">        Assert.notNull(clientConnect,<span class="string">&quot;错误&quot;</span>);</span><br><span class="line">        clientConnect.close();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">200</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">initAndConnect</span><span class="params">(<span class="meta">@RequestBody</span> MqttInfo publishMqttInfo)</span> <span class="keyword">throws</span> MqttException &#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">MqttBrokerConfig</span> <span class="variable">mqttBrokerConfig</span> <span class="operator">=</span> MqttInfo.mqttClientMap.get(publishMqttInfo.getServerId());</span><br><span class="line">        <span class="type">String</span> <span class="variable">clientId</span> <span class="operator">=</span> publishMqttInfo.getClientId();</span><br><span class="line">        <span class="type">MqttClientConnect</span> <span class="variable">clientConnect</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MqttClientConnect</span>();</span><br><span class="line">        clientConnect.setMqttClientId(clientId);</span><br><span class="line">        clientConnect.setMqttClient(mqttBrokerConfig.getHost(),</span><br><span class="line">                                    clientId,</span><br><span class="line">                                    mqttBrokerConfig.getUsername(),</span><br><span class="line">                                    mqttBrokerConfig.getPassword(),</span><br><span class="line">                                    <span class="literal">true</span>,</span><br><span class="line">                                    <span class="keyword">new</span> <span class="title class_">MqttClientCallback</span>(clientId));</span><br><span class="line">        MqttClientConnect.mqttClients.put(clientId, clientConnect);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Data</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">MqttBrokerConfig</span> &#123;</span><br><span class="line">        <span class="keyword">private</span> String password;</span><br><span class="line">        <span class="keyword">private</span> String username;</span><br><span class="line">        <span class="keyword">private</span> String host;</span><br><span class="line">        <span class="keyword">private</span> Long serverId;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><h4 id="创建订阅者并连接MQTT服务器"><a href="#创建订阅者并连接MQTT服务器" class="headerlink" title="创建订阅者并连接MQTT服务器"></a>创建订阅者并连接MQTT服务器</h4><p><img src="/2024-01-09-MQTT/image-20240303165343765.png" alt="image-20240303165343765"></p>
-<h4 id="创建发布者并连接MQTT服务器"><a href="#创建发布者并连接MQTT服务器" class="headerlink" title="创建发布者并连接MQTT服务器"></a>创建发布者并连接MQTT服务器</h4><p><img src="/2024-01-09-MQTT/image-20240303165511117.png" alt="image-20240303165511117"></p>
-<h4 id="订阅"><a href="#订阅" class="headerlink" title="订阅"></a>订阅</h4><p><img src="/2024-01-09-MQTT/image-20240303165540095.png" alt="image-20240303165540095"></p>
-<h4 id="发布两次消息"><a href="#发布两次消息" class="headerlink" title="发布两次消息"></a>发布两次消息</h4><p><img src="/2024-01-09-MQTT/image-20240303165600294.png" alt="image-20240303165600294"></p>
-<h4 id="控制台"><a href="#控制台" class="headerlink" title="控制台"></a>控制台</h4><p><img src="/2024-01-09-MQTT/image-20240303165623962.png" alt="image-20240303165623962"></p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><h4 id="创建订阅者并连接MQTT服务器"><a href="#创建订阅者并连接MQTT服务器" class="headerlink" title="创建订阅者并连接MQTT服务器"></a>创建订阅者并连接MQTT服务器</h4><p><img src="/personalBlog/2024-01-09-MQTT/image-20240303165343765.png" alt="image-20240303165343765"></p>
+<h4 id="创建发布者并连接MQTT服务器"><a href="#创建发布者并连接MQTT服务器" class="headerlink" title="创建发布者并连接MQTT服务器"></a>创建发布者并连接MQTT服务器</h4><p><img src="/personalBlog/2024-01-09-MQTT/image-20240303165511117.png" alt="image-20240303165511117"></p>
+<h4 id="订阅"><a href="#订阅" class="headerlink" title="订阅"></a>订阅</h4><p><img src="/personalBlog/2024-01-09-MQTT/image-20240303165540095.png" alt="image-20240303165540095"></p>
+<h4 id="发布两次消息"><a href="#发布两次消息" class="headerlink" title="发布两次消息"></a>发布两次消息</h4><p><img src="/personalBlog/2024-01-09-MQTT/image-20240303165600294.png" alt="image-20240303165600294"></p>
+<h4 id="控制台"><a href="#控制台" class="headerlink" title="控制台"></a>控制台</h4><p><img src="/personalBlog/2024-01-09-MQTT/image-20240303165623962.png" alt="image-20240303165623962"></p>
  
       <!-- reward -->
       
@@ -1242,7 +1242,7 @@
     
     <footer class="article-footer">
        
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/personalBlog/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
 
     </footer>
   </div>
@@ -1264,7 +1264,7 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/12/17/2023/web/2023-12-17-Netty%E6%A1%86%E6%9E%B6/"
+  <a class="article-title" href="/personalBlog/2023/12/17/2023/web/2023-12-17-Netty%E6%A1%86%E6%9E%B6/"
     >Netty框架</a> 
 </h2>
  
@@ -1273,11 +1273,11 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/12/17/2023/web/2023-12-17-Netty%E6%A1%86%E6%9E%B6/" class="article-date">
+      <a href="/personalBlog/2023/12/17/2023/web/2023-12-17-Netty%E6%A1%86%E6%9E%B6/" class="article-date">
   <time datetime="2023-12-18T07:00:00.000Z" itemprop="datePublished">2023-12-17</time>
 </a> 
   <div class="article-category">
-    <a class="article-category-link" href="/categories/Netty/">Netty</a>
+    <a class="article-category-link" href="/personalBlog/categories/Netty/">Netty</a>
   </div>
    
     </div>
@@ -1303,7 +1303,7 @@
 </li>
 </ul>
 <h4 id="同步阻塞IO（Blocking-IO）"><a href="#同步阻塞IO（Blocking-IO）" class="headerlink" title="同步阻塞IO（Blocking IO）"></a>同步阻塞IO（Blocking IO）</h4><p>阻塞IO一般指的是用户态必须等到内核态执行完一系列操作之后，操作系统从内核态切换回用户态，此时程序才能继续执行。在内核执行指令期间，用户态是不能进行任何操作的。Java中创建的普通的Socket默认就是同步阻塞的。</p>
-<p><img src="/2023-12-17-Netty%E6%A1%86%E6%9E%B6/BIO-1703681843624.png" alt="BIO"></p>
+<p><img src="/personalBlog/2023-12-17-Netty%E6%A1%86%E6%9E%B6/BIO-1703681843624.png" alt="BIO"></p>
 <p>流程如上图：</p>
 <ol>
 <li>应用程序调用Read函数，调用此函数的线程进入阻塞状态。</li>
@@ -1316,7 +1316,7 @@
 <li>优点：实现起来简单。</li>
 </ul>
 <h4 id="同步非阻塞IO（Non-Blocking-IO，NIO）"><a href="#同步非阻塞IO（Non-Blocking-IO，NIO）" class="headerlink" title="同步非阻塞IO（Non-Blocking IO，NIO）"></a>同步非阻塞IO（Non-Blocking IO，NIO）</h4><p>阻塞IO一般指的是用户态等待内核执行指令的过程中，可以不断的寻轮指令是否执行完成。如果没有执行完成，你可以继续去干其它事情。此IO又叫NIO，但Java中的NIO包并不是基于同步非阻塞IO去实现的，而是基于IO多路复用模型。</p>
-<p><img src="/2023-12-17-Netty%E6%A1%86%E6%9E%B6/NIO-1703683009187.png" alt="NIO"></p>
+<p><img src="/personalBlog/2023-12-17-Netty%E6%A1%86%E6%9E%B6/NIO-1703683009187.png" alt="NIO"></p>
 <p>流程如上图：</p>
 <ol>
 <li>应用程序调用Read函数，此时没有可读数据，Read函数立马返回，应用程序继续做其它事情。</li>
@@ -1329,7 +1329,7 @@
 <li>优点：应用程序的调用线程只需要阻塞在Read函数调用开始以及返回时，不会一直阻塞，当可读数据时，应用程序的调用线程可以去干其它事情。</li>
 </ul>
 <h4 id="IO多路复用（IO-Multiplexing）"><a href="#IO多路复用（IO-Multiplexing）" class="headerlink" title="IO多路复用（IO Multiplexing）"></a>IO多路复用（IO Multiplexing）</h4><p>传统的IO模型，在用户每次发起一个请求的时候，服务器都需要创建一个线程，后续客户端与服务器没有任何交互，此线程就处于空闲时间，使得服务器的资源没有得到充分的利用。为了提高性能，操作系统引入了一种新的系统调动。首先会有一个线程管理多个用户的连接请求，轮询的检查用户连接的状态（检查IO的文件描述符），若有连接进行读或写操作，操作系统会返回此文件描述符，应用程序可以使用此文件描述符进行后续操作。比如select、poll、epoll系统调用。</p>
-<p><img src="/2023-12-17-Netty%E6%A1%86%E6%9E%B6/Select-1703683228039.png" alt="Select"></p>
+<p><img src="/personalBlog/2023-12-17-Netty%E6%A1%86%E6%9E%B6/Select-1703683228039.png" alt="Select"></p>
 <p>流程如上图：</p>
 <ol>
 <li>应用程序将Read操作的文件描述符（Socket连接）注册到Linux的select&#x2F;epoll选择器中（此时调用的线程处于阻塞状态），Java对应Selector类。然后，开启一个线程寻轮检查连接是否有可读事件（可以是写、连接等事件）发生。</li>
@@ -1345,24 +1345,24 @@
 <p><strong>select：</strong>select有连接数量限制，为1024个。select函数返回后，需要通过遍历所有的文件描述符，因为他不知道具体是哪个IO流实践发生。</p>
 <p><strong>poll：</strong>解决了1024个连接限制的问题，但还是需要遍历所有的文件描述符，来获取已经就绪的socket。</p>
 <p><strong>epoll：</strong>无需遍历所有的文件描述符，而是通过事件回调机制，只处理就绪状态的socket。</p>
-<h4 id="信号驱动-IO-模型"><a href="#信号驱动-IO-模型" class="headerlink" title="信号驱动 IO 模型"></a>信号驱动 IO 模型</h4><p><img src="/2023-12-17-Netty%E6%A1%86%E6%9E%B6/sigaction-1703683353887.png" alt="sigaction"></p>
+<h4 id="信号驱动-IO-模型"><a href="#信号驱动-IO-模型" class="headerlink" title="信号驱动 IO 模型"></a>信号驱动 IO 模型</h4><p><img src="/personalBlog/2023-12-17-Netty%E6%A1%86%E6%9E%B6/sigaction-1703683353887.png" alt="sigaction"></p>
 <p>信号驱动IO向内核发送一个信号（调用sigaction的时候建立一个SIGIO的信号），然后应用用户进程可以去做别的事，不用阻塞。当内核数据准备好后，再通过SIGIO信号通知应用进程，数据准备好后的可读状态。应用用户进程收到信号之后，可以调用Read函数获取数据。</p>
 <p>无论是BIO、NIO还是IO多路复用，在调用Read函数获取数据时，应用程序都会处于阻塞状态，那么有什么IO可以解决？答案是异步IO。</p>
 <h4 id="异步IO（Asynchronous-IO，AIO）"><a href="#异步IO（Asynchronous-IO，AIO）" class="headerlink" title="异步IO（Asynchronous IO，AIO）"></a>异步IO（Asynchronous IO，AIO）</h4><p>应用程序进行系统调用，请求内核获取数据。应用程序只是告知一下内核，就可以去继续干其它事情了，当操作系统有数据之后，会将数据复制到用户态缓冲区，并通知应用程序处理完成。</p>
 <h2 id="Java中的IO"><a href="#Java中的IO" class="headerlink" title="Java中的IO"></a>Java中的IO</h2><p>Java的传统IO是基于BIO实现的，也就是基于同步阻塞IO。Java的NIO不是基于Linux的NIO实现的，而是基于IO多路复用实现的。</p>
 <p>Java的NIO2也就是异步IO，对应操作系统的AIO。</p>
-<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><h4 id="BIO"><a href="#BIO" class="headerlink" title="BIO"></a>BIO</h4><p><img src="/2023-12-17-Netty%E6%A1%86%E6%9E%B6/BIO-1703684508576.png" alt="BIO"></p>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><h4 id="BIO"><a href="#BIO" class="headerlink" title="BIO"></a>BIO</h4><p><img src="/personalBlog/2023-12-17-Netty%E6%A1%86%E6%9E%B6/BIO-1703684508576.png" alt="BIO"></p>
 <p>如上图，每当有一个客户连接到服务器，后台都会创建一个线程处理用户的业务。为了提高性能，线程1，2，3可能设置成多线程，但还是无法解决空闲线程浪费服务器资源的问题。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ServerSocket</span> <span class="variable">serverSocket</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ServerSocket</span>();</span><br><span class="line">        <span class="type">SocketAddress</span> <span class="variable">socketAddress</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">InetSocketAddress</span>(<span class="number">9000</span>);</span><br><span class="line">        serverSocket.bind(socketAddress);</span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            <span class="comment">//等待连接 阻塞</span></span><br><span class="line">            <span class="type">Socket</span> <span class="variable">accept</span> <span class="operator">=</span> serverSocket.accept();</span><br><span class="line">            System.out.println(<span class="string">&quot;客户端连接 &quot;</span> + accept.getRemoteSocketAddress());</span><br><span class="line">            <span class="comment">//有客户连接，读取数据，开启一个线程</span></span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="comment">//读取数据阻塞</span></span><br><span class="line">                    <span class="type">InputStream</span> <span class="variable">inputStream</span> <span class="operator">=</span> accept.getInputStream();</span><br><span class="line">                    <span class="type">byte</span>[] bytes = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">1024</span>];</span><br><span class="line">                    <span class="comment">//处理业务逻辑...</span></span><br><span class="line">                    <span class="keyword">while</span> (inputStream.read(bytes) != -<span class="number">1</span>) &#123;</span><br><span class="line">                        System.out.println(<span class="keyword">new</span> <span class="title class_">String</span>(bytes));</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;).start();</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="NIO"><a href="#NIO" class="headerlink" title="NIO"></a>NIO</h4><p><img src="/2023-12-17-Netty%E6%A1%86%E6%9E%B6/NIO-1703688465880.png" alt="NIO"></p>
+<h4 id="NIO"><a href="#NIO" class="headerlink" title="NIO"></a>NIO</h4><p><img src="/personalBlog/2023-12-17-Netty%E6%A1%86%E6%9E%B6/NIO-1703688465880.png" alt="NIO"></p>
 <p>如上图，客户端通过网络传输的数据，不在通过传统流的方式在服务器端处理。而是基于缓存的可读可写，此缓存即可以读，又可以写。通过管道的方式将IO事件注册到Selector上，由Selector将准备好的IO时间反馈给应用层，应用层获取到事件后，启动一个线程去处理具体的业务逻辑。处理业务的线程可以获取注册到Selector上对应事件的管道，将想要的数据，写入Buffer，在经由Buffer写入Channel，之后反馈给客户端。</p>
 <h5 id="非阻塞IO"><a href="#非阻塞IO" class="headerlink" title="非阻塞IO"></a>非阻塞IO</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ServerSocketChannel</span> <span class="variable">serverSocketChannel</span> <span class="operator">=</span> ServerSocketChannel.open();</span><br><span class="line"><span class="type">SocketAddress</span> <span class="variable">socketAddress</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">InetSocketAddress</span>(<span class="number">9001</span>);</span><br><span class="line">serverSocketChannel.socket().bind(socketAddress);</span><br><span class="line"><span class="comment">//设置socket为非阻塞</span></span><br><span class="line">serverSocketChannel.configureBlocking(<span class="literal">false</span>);</span><br><span class="line"><span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="comment">//接收客户端连接，此方法非阻塞</span></span><br><span class="line">    <span class="type">SocketChannel</span> <span class="variable">accept</span> <span class="operator">=</span> serverSocketChannel.accept();</span><br><span class="line">    <span class="keyword">if</span> (accept != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="comment">//申请20大小的buffer</span></span><br><span class="line">        <span class="type">ByteBuffer</span> <span class="variable">byteBuffer</span> <span class="operator">=</span> ByteBuffer.allocate(<span class="number">20</span>);</span><br><span class="line">        <span class="comment">//设置为非阻塞</span></span><br><span class="line">        accept.configureBlocking(<span class="literal">false</span>);</span><br><span class="line">        <span class="comment">//创建线程处理业务</span></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">//此方法不是阻塞的，读取客户端发送的数据，并写入buffer</span></span><br><span class="line">                <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">                    <span class="keyword">while</span> (accept.read(byteBuffer) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                        <span class="comment">//初始化读取位置</span></span><br><span class="line">                        byteBuffer.flip();</span><br><span class="line">                        System.out.println(<span class="keyword">new</span> <span class="title class_">String</span>(byteBuffer.array()));</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>​	<code>byteBuffer.flip()</code>此方法需要在写入之后调用，如下图：</p>
 <p>​	写入：从<code>position</code>开始到<code>limit</code></p>
 <p>​	读取：和写入一样，但由于写入此时<code>position</code>等于3，所以需要调用<code>flip</code>方法，将<code>limit</code>变成<code>position</code>，而<code>position</code>置为0。</p>
-<p><img src="/2023-12-17-Netty%E6%A1%86%E6%9E%B6/ByteBuffer.png" alt="ByteBuffer"></p>
+<p><img src="/personalBlog/2023-12-17-Netty%E6%A1%86%E6%9E%B6/ByteBuffer.png" alt="ByteBuffer"></p>
 <h5 id="IO多路复用"><a href="#IO多路复用" class="headerlink" title="IO多路复用"></a>IO多路复用</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ServerSocketChannel</span> <span class="variable">serverSocketChannel</span> <span class="operator">=</span> ServerSocketChannel.open();</span><br><span class="line"><span class="type">SocketAddress</span> <span class="variable">socketAddress</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">InetSocketAddress</span>(<span class="number">9001</span>);</span><br><span class="line">serverSocketChannel.socket().bind(socketAddress);</span><br><span class="line"><span class="comment">//必须设置为非阻塞</span></span><br><span class="line">serverSocketChannel.configureBlocking(<span class="literal">false</span>);</span><br><span class="line"><span class="type">Selector</span> <span class="variable">selector</span> <span class="operator">=</span> Selector.open();</span><br><span class="line"><span class="comment">//接收连接事件</span></span><br><span class="line">serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);</span><br><span class="line"><span class="comment">//select方法阻塞，若有事件发生则返回</span></span><br><span class="line"><span class="comment">//selectNow不会阻塞</span></span><br><span class="line"><span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (selector.select() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">//事件发生的selectKey</span></span><br><span class="line">        Set&lt;SelectionKey&gt; selectionKeys = selector.selectedKeys();</span><br><span class="line">        Iterator&lt;SelectionKey&gt; selectionKeyIterator = selectionKeys.iterator();</span><br><span class="line">        <span class="keyword">while</span> (selectionKeyIterator.hasNext()) &#123;</span><br><span class="line">            <span class="type">SelectionKey</span> <span class="variable">selectionKey</span> <span class="operator">=</span> selectionKeyIterator.next();</span><br><span class="line">            <span class="comment">//连接事件，有客户端连接</span></span><br><span class="line">            <span class="keyword">if</span> (selectionKey.isAcceptable()) &#123;</span><br><span class="line">                <span class="comment">//因为已经确定有连接事件了，所以直接获取就可以</span></span><br><span class="line">                <span class="type">SocketChannel</span> <span class="variable">socketChannel</span> <span class="operator">=</span> serverSocketChannel.accept();</span><br><span class="line">                <span class="comment">//非阻塞</span></span><br><span class="line">                socketChannel.configureBlocking(<span class="literal">false</span>);</span><br><span class="line">                <span class="comment">//将读注册到selector中</span></span><br><span class="line">                socketChannel.register(selector, SelectionKey.OP_READ);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//可读，客户端有发送的数据</span></span><br><span class="line">            <span class="keyword">if</span> (selectionKey.isReadable()) &#123;</span><br><span class="line">                <span class="comment">//模拟创建线程执行业务逻辑</span></span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">                    <span class="comment">//通过selector获取对应的channel</span></span><br><span class="line">                    <span class="type">SocketChannel</span> <span class="variable">socketChannel</span> <span class="operator">=</span> (SocketChannel) selectionKey.channel();</span><br><span class="line">                    <span class="type">ByteBuffer</span> <span class="variable">byteBuffer</span> <span class="operator">=</span> ByteBuffer.allocate(<span class="number">20</span>);</span><br><span class="line">                    <span class="comment">//将数据读到buffer中</span></span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        socketChannel.read(byteBuffer);</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                    System.out.println(<span class="keyword">new</span> <span class="title class_">String</span>(byteBuffer.array()));</span><br><span class="line">                &#125;).start();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//需要从集合中移除，因为此集合在应用层创建</span></span><br><span class="line">            selectionKeyIterator.remove();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="Netty入门"><a href="#Netty入门" class="headerlink" title="Netty入门"></a>Netty入门</h2><h3 id="Reactor模型"><a href="#Reactor模型" class="headerlink" title="Reactor模型"></a>Reactor模型</h3><h4 id="简介-1"><a href="#简介-1" class="headerlink" title="简介"></a>简介</h4><p>Reactor模式（反应堆模式）是一种基于事件驱动的模式，适合做海量数据的事件，属于同步非阻塞的一种NIO实现模式。对IO线程处理的过程分而治之，基于<code>IO多路复用模型</code>对IO事件进行注册以及监听，将监听到的事件交由相应的处理器进行处理。</p>
@@ -1376,18 +1376,18 @@
 <li>当某个事件源发生事件之后，Reactor将事件分发给对应的处理器</li>
 <li>处理器处理相应的事件</li>
 </ol>
-<h3 id="Netty的Reactor线程模型"><a href="#Netty的Reactor线程模型" class="headerlink" title="Netty的Reactor线程模型"></a>Netty的Reactor线程模型</h3><h4 id="Reactor单线程模型"><a href="#Reactor单线程模型" class="headerlink" title="Reactor单线程模型"></a>Reactor单线程模型</h4><p><img src="/2023-12-17-Netty%E6%A1%86%E6%9E%B6/reactor1.png" alt="reactor1"></p>
+<h3 id="Netty的Reactor线程模型"><a href="#Netty的Reactor线程模型" class="headerlink" title="Netty的Reactor线程模型"></a>Netty的Reactor线程模型</h3><h4 id="Reactor单线程模型"><a href="#Reactor单线程模型" class="headerlink" title="Reactor单线程模型"></a>Reactor单线程模型</h4><p><img src="/personalBlog/2023-12-17-Netty%E6%A1%86%E6%9E%B6/reactor1.png" alt="reactor1"></p>
 <p>Reactor单线程模型整个过程使用的都是一个用户线程，从轮询监听客户端连接、读、写等事件，到处理读写等事件，都使用一个线程完成。</p>
 <p><strong>缺点:</strong></p>
 <ul>
 <li>无法重复利用服务器的多核CPU，并且监听事件和处理事件逻辑高度耦合。</li>
 <li>处理业务逻辑时，耗时比较长时，无法处理下一个客户的连接或读写等请求。</li>
 </ul>
-<h4 id="Reactor多线程模型"><a href="#Reactor多线程模型" class="headerlink" title="Reactor多线程模型"></a>Reactor多线程模型</h4><p><img src="/2023-12-17-Netty%E6%A1%86%E6%9E%B6/reactor2.png" alt="reactor2"></p>
+<h4 id="Reactor多线程模型"><a href="#Reactor多线程模型" class="headerlink" title="Reactor多线程模型"></a>Reactor多线程模型</h4><p><img src="/personalBlog/2023-12-17-Netty%E6%A1%86%E6%9E%B6/reactor2.png" alt="reactor2"></p>
 <p>为了提高处理事件的速度，创建了一个Worker线程池，异步处理读、写等事件，并将处理的结果返回给上层。</p>
 <p><strong>缺点：</strong></p>
 <p>虽然业务处理逻辑重复利用了多核CPU资源，但在进行读、写系统调用时，用户线程仍处于阻塞状态，无法处理下一个客户端连接，影响系统的并发性以及吞吐量。</p>
-<h4 id="主从Reactor多线程模型"><a href="#主从Reactor多线程模型" class="headerlink" title="主从Reactor多线程模型"></a>主从Reactor多线程模型</h4><p><img src="/2023-12-17-Netty%E6%A1%86%E6%9E%B6/reactor3.png" alt="reactor3"></p>
+<h4 id="主从Reactor多线程模型"><a href="#主从Reactor多线程模型" class="headerlink" title="主从Reactor多线程模型"></a>主从Reactor多线程模型</h4><p><img src="/personalBlog/2023-12-17-Netty%E6%A1%86%E6%9E%B6/reactor3.png" alt="reactor3"></p>
 <p>将客户端的连接事件交给Reactor主线程负责，读写事件交由Reactor从线程负责，业务逻辑处理依旧是一个Worker线程池。主从模式相较于Reactor多线程模型，将阻塞的读、写系统调用与客户端监听事件解耦。让主线程专注于客户端连接事件，而从线程专注读写事件。这样可以同一时间内接收更多的用户连接，进而提高系统性能。</p>
 <p>Reactor主线程、Reactor从线程可升级为线程池。</p>
 <h3 id="Netty入门使用"><a href="#Netty入门使用" class="headerlink" title="Netty入门使用"></a>Netty入门使用</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.netty<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>netty-all<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.1.28.Final<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
@@ -1408,7 +1408,7 @@
     
     <footer class="article-footer">
        
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">服务器</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/personalBlog/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">服务器</a></li></ul>
 
     </footer>
   </div>
@@ -1430,7 +1430,7 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/12/11/2023/linux/2023-11-20-%E7%94%A8Shell%E5%AE%9E%E7%8E%B0%E5%A4%87%E4%BB%BDMysql%E7%9A%84Binlog%E6%97%A5%E5%BF%97/"
+  <a class="article-title" href="/personalBlog/2023/12/11/2023/linux/2023-11-20-%E7%94%A8Shell%E5%AE%9E%E7%8E%B0%E5%A4%87%E4%BB%BDMysql%E7%9A%84Binlog%E6%97%A5%E5%BF%97/"
     >用Shell实现备份Mysql数据</a> 
 </h2>
  
@@ -1439,11 +1439,11 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/12/11/2023/linux/2023-11-20-%E7%94%A8Shell%E5%AE%9E%E7%8E%B0%E5%A4%87%E4%BB%BDMysql%E7%9A%84Binlog%E6%97%A5%E5%BF%97/" class="article-date">
+      <a href="/personalBlog/2023/12/11/2023/linux/2023-11-20-%E7%94%A8Shell%E5%AE%9E%E7%8E%B0%E5%A4%87%E4%BB%BDMysql%E7%9A%84Binlog%E6%97%A5%E5%BF%97/" class="article-date">
   <time datetime="2023-12-12T07:00:00.000Z" itemprop="datePublished">2023-12-11</time>
 </a> 
   <div class="article-category">
-    <a class="article-category-link" href="/categories/Shell/">Shell</a>
+    <a class="article-category-link" href="/personalBlog/categories/Shell/">Shell</a>
   </div>
    
     </div>
@@ -1507,7 +1507,7 @@
     
     <footer class="article-footer">
        
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%84%9A%E6%9C%AC/" rel="tag">脚本</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/personalBlog/tags/%E8%84%9A%E6%9C%AC/" rel="tag">脚本</a></li></ul>
 
     </footer>
   </div>
@@ -1529,7 +1529,7 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/11/16/2023/linux/2023-11-11-Shell%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/"
+  <a class="article-title" href="/personalBlog/2023/11/16/2023/linux/2023-11-11-Shell%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/"
     >Shell教程</a> 
 </h2>
  
@@ -1538,11 +1538,11 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/11/16/2023/linux/2023-11-11-Shell%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/" class="article-date">
+      <a href="/personalBlog/2023/11/16/2023/linux/2023-11-11-Shell%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/" class="article-date">
   <time datetime="2023-11-17T07:00:00.000Z" itemprop="datePublished">2023-11-16</time>
 </a> 
   <div class="article-category">
-    <a class="article-category-link" href="/categories/Shell/">Shell</a>
+    <a class="article-category-link" href="/personalBlog/categories/Shell/">Shell</a>
   </div>
    
     </div>
@@ -1553,7 +1553,7 @@
 <p>Shell指的是一种应用程序，可以通过此程序访问操作系统内核服务。</p>
 <p>Shell脚本则是一种为Shell编写的脚本程序。Shell和Shell Script（Shell脚本是两个不同的概念）。本文主要记录Shell脚本编程。</p>
 <p>一个图看懂Shell在Linux系统中扮演的角色：</p>
-<p><img src="/2023-11-11-Shell%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/Shell%E8%A7%92%E8%89%B2%E5%9B%BE.png" alt="Shell角色图"></p>
+<p><img src="/personalBlog/2023-11-11-Shell%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/Shell%E8%A7%92%E8%89%B2%E5%9B%BE.png" alt="Shell角色图"></p>
 <h2 id="Shell环境"><a href="#Shell环境" class="headerlink" title="Shell环境"></a>Shell环境</h2><p>Linux的Shell种类很多，常见的有：</p>
 <ul>
 <li>Bourne Shell（&#x2F;usr&#x2F;bin&#x2F;sh或&#x2F;bin&#x2F;sh）</li>
@@ -1997,7 +1997,7 @@
     
     <footer class="article-footer">
        
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%84%9A%E6%9C%AC/" rel="tag">脚本</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/personalBlog/tags/%E8%84%9A%E6%9C%AC/" rel="tag">脚本</a></li></ul>
 
     </footer>
   </div>
@@ -2019,7 +2019,7 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/11/14/2023/linux/2023-11-11-Linux%E7%AE%80%E4%BB%8B/"
+  <a class="article-title" href="/personalBlog/2023/11/14/2023/linux/2023-11-11-Linux%E7%AE%80%E4%BB%8B/"
     >Linux简介</a> 
 </h2>
  
@@ -2028,11 +2028,11 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/11/14/2023/linux/2023-11-11-Linux%E7%AE%80%E4%BB%8B/" class="article-date">
+      <a href="/personalBlog/2023/11/14/2023/linux/2023-11-11-Linux%E7%AE%80%E4%BB%8B/" class="article-date">
   <time datetime="2023-11-15T07:00:00.000Z" itemprop="datePublished">2023-11-14</time>
 </a> 
   <div class="article-category">
-    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+    <a class="article-category-link" href="/personalBlog/categories/Linux/">Linux</a>
   </div>
    
     </div>
@@ -2066,10 +2066,10 @@
 </li>
 </ul>
 <h3 id="内核引导"><a href="#内核引导" class="headerlink" title="内核引导"></a>内核引导</h3><p>计算机打开电源后，会对BIOS（基本输入输出系统）进行开机自检，按照BIOS设置的启动设备（一般是硬盘）进行启动。操作系统接管硬件之后，会读入 &#x2F;boot 目录下的内核文件。</p>
-<p><img src="/visio/Linux%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B1.png" alt="Linux启动流程1"></p>
+<p><img src="/personalBlog/visio/Linux%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B1.png" alt="Linux启动流程1"></p>
 <h3 id="运行init"><a href="#运行init" class="headerlink" title="运行init"></a>运行init</h3><p>init程序会去读取配置文件 &#x2F;etc&#x2F;inittab。用来引导启动其它进程。</p>
-<p><img src="/2023-11-11-Linux%E7%AE%80%E4%BB%8B/Linux%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B2-1699885230158.png" alt="Linux启动流程2"></p>
-<h4 id="运行级别"><a href="#运行级别" class="headerlink" title="运行级别"></a>运行级别</h4><p><img src="/2023-11-11-Linux%E7%AE%80%E4%BB%8B/Linux%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B3.png" alt="Linux启动流程3"></p>
+<p><img src="/personalBlog/2023-11-11-Linux%E7%AE%80%E4%BB%8B/Linux%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B2-1699885230158.png" alt="Linux启动流程2"></p>
+<h4 id="运行级别"><a href="#运行级别" class="headerlink" title="运行级别"></a>运行级别</h4><p><img src="/personalBlog/2023-11-11-Linux%E7%AE%80%E4%BB%8B/Linux%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B3.png" alt="Linux启动流程3"></p>
 <p>Linux系统有7个运行级别，根据不同的场景，从而分配不同的开机启动程序。</p>
 <ul>
 <li>运行级别0：系统的停机状态，若设置为此运行级别，则系统将不能启动。</li>
@@ -2082,7 +2082,7 @@
 </ul>
 <h3 id="系统初始化"><a href="#系统初始化" class="headerlink" title="系统初始化"></a>系统初始化</h3><p>Init会调用执行 &#x2F;etc&#x2F;rc.d&#x2F;rc.sysinit，而rc.sysinit是一个bash shell脚本，主要完成一些系统初始化的工作。激活交换分区、检查磁盘、加载硬件模块以及其它需要优先执行的任务。&#x2F;etc&#x2F;rc.d&#x2F;rc5.d&#x2F;目录中的启动脚本其实是一些连接文件，真正的rc启动脚本在&#x2F;etc&#x2F;rc.d&#x2F;init.d&#x2F;下。</p>
 <p>我们可以在&#x2F;etc&#x2F;rc.d&#x2F;init.d下添加我们自定义的启动脚本。</p>
-<p><img src="/2023-11-11-Linux%E7%AE%80%E4%BB%8B/Linux%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B4.png" alt="Linux启动流程4"></p>
+<p><img src="/personalBlog/2023-11-11-Linux%E7%AE%80%E4%BB%8B/Linux%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B4.png" alt="Linux启动流程4"></p>
 <h3 id="建立终端"><a href="#建立终端" class="headerlink" title="建立终端"></a>建立终端</h3><p>rc执行之后，返回init。这个时候基本环境已经设置好了，各种的守护线程也已经启动。init会打开6个终端，供用户登录使用。</p>
 <p>tty1、tty2、tty3、tty4、tty5、tty6。</p>
 <p>使用快捷键Ctrl + Alt + F1 ~ F6 在命令行界面之间切换。</p>
@@ -2094,13 +2094,13 @@
 <li>ssh登录</li>
 <li>图形化界面登录</li>
 </ul>
-<p><img src="/2023-11-11-Linux%E7%AE%80%E4%BB%8B/Linux%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B5.png" alt="Linux启动流程5"></p>
+<p><img src="/personalBlog/2023-11-11-Linux%E7%AE%80%E4%BB%8B/Linux%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B5.png" alt="Linux启动流程5"></p>
 <h3 id="Linux关机"><a href="#Linux关机" class="headerlink" title="Linux关机"></a>Linux关机</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">将数据从内存刷新到磁盘</span></span><br><span class="line">sync</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">关机</span>   </span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">-h now：立马关机</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">-r now：立马重启</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">-h 23:00：今天的23:00关机</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">-h +12 十二分钟后关机</span></span><br><span class="line">shutdown  </span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">重启</span></span><br><span class="line">reboot</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">关闭系统</span></span><br><span class="line">halt</span><br></pre></td></tr></table></figure>
 
 <h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><p>登录系统之后，输入以下命令：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls /</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231113230019357.png" alt="image-20231113230019357"></p>
+<p><img src="/personalBlog/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231113230019357.png" alt="image-20231113230019357"></p>
 <p>因为不是新安装的虚拟机，可能存在后续添加的目录，这里只记录重要的目录。</p>
 <ul>
 <li><p><strong>&#x2F;bin</strong>：<br>存放经常使用的程序或命令</p>
@@ -2155,47 +2155,47 @@
 <h2 id="远程登录"><a href="#远程登录" class="headerlink" title="远程登录"></a>远程登录</h2><p>一般项目中使用的服务器都是云服务器，而云服务器都是布置到各个厂商的机房，你不能去机房使用服务器，而需要使用远程连接的方式去访问服务器，一般使用SSH的连接方式，默认端口为22。</p>
 <p>Windows连接Linux服务器的工具有： SecureCRT、 Putty、Xshell等。我使用的是SecureCRT或Xshell，可根据个人喜好选择。这里使用SecureCRT。</p>
 <h3 id="使用账号密码登录"><a href="#使用账号密码登录" class="headerlink" title="使用账号密码登录"></a>使用账号密码登录</h3><p>点击软件的快速连接，输入连接的Hostname、Username，点击Connect按钮，会弹出密码弹框，输入密码即可。</p>
-<p><img src="/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114191747587.png" alt="image-20231114191747587"></p>
-<p><img src="/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114192218902.png" alt="image-20231114192218902"></p>
+<p><img src="/personalBlog/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114191747587.png" alt="image-20231114191747587"></p>
+<p><img src="/personalBlog/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114192218902.png" alt="image-20231114192218902"></p>
 <p>连接之后，可以设置我们的偏好。比如设置字体大小、编码。</p>
-<p><img src="/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114192404243.png" alt="image-20231114192404243"></p>
+<p><img src="/personalBlog/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114192404243.png" alt="image-20231114192404243"></p>
 <h3 id="使用秘钥验证机制登录Linux"><a href="#使用秘钥验证机制登录Linux" class="headerlink" title="使用秘钥验证机制登录Linux"></a>使用秘钥验证机制登录Linux</h3><ol>
 <li>SecureCRT打开Session Options，创建Identity文件。</li>
 </ol>
-<p><img src="/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114200820413.png" alt="image-20231114200820413"></p>
+<p><img src="/personalBlog/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114200820413.png" alt="image-20231114200820413"></p>
 <ol start="2">
 <li>Key type选择RSA</li>
 </ol>
-<p><img src="/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114200900580.png" alt="image-20231114200900580"></p>
+<p><img src="/personalBlog/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114200900580.png" alt="image-20231114200900580"></p>
 <ol start="3">
 <li>可以忽略此不走，直接下一步</li>
 </ol>
-<p><img src="/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114201044519.png" alt="image-20231114201044519"></p>
+<p><img src="/personalBlog/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114201044519.png" alt="image-20231114201044519"></p>
 <ol start="4">
 <li>设置Key的长度</li>
 </ol>
-<p><img src="/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114201432225.png" alt="image-20231114201432225"></p>
+<p><img src="/personalBlog/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114201432225.png" alt="image-20231114201432225"></p>
 <ol start="5">
 <li>选择OpenSSH Key format，并指令私钥保存的地方</li>
 </ol>
-<p><img src="/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114201759637.png" alt="image-20231114201759637"></p>
+<p><img src="/personalBlog/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114201759637.png" alt="image-20231114201759637"></p>
 <ol start="6">
 <li>使用账号密码登录Linux服务器，上传刚刚生成的公钥文件，可以使用 FileZilla 软件上传。</li>
 </ol>
-<p><img src="/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114202430930.png" alt="image-20231114202430930"></p>
+<p><img src="/personalBlog/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114202430930.png" alt="image-20231114202430930"></p>
 <ol start="7">
 <li>进入 &#x2F;root&#x2F;.ssh 目录，创建 authorized_keys文件（如果有就不需要创建），将刚刚上传的秘钥内容拼接到 authorized_keys 文件之后。</li>
 </ol>
-<p><img src="/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114202752952.png" alt="image-20231114202752952"></p>
+<p><img src="/personalBlog/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114202752952.png" alt="image-20231114202752952"></p>
 <ol start="8">
 <li>使用秘钥登录，进入Session Options 配置刚刚生成的秘钥文件（其实已经自动配置了），连接即可。</li>
 </ol>
-<p><img src="/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114202905317.png" alt="image-20231114202905317"></p>
+<p><img src="/personalBlog/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114202905317.png" alt="image-20231114202905317"></p>
 <ol start="9">
 <li>验证是否为秘钥方式登录，打开Trace Options选择，点击连接可以查看本地登录日志。</li>
 </ol>
-<p><img src="/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114203106720.png" alt="image-20231114203106720"></p>
-<p><img src="/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114203220987.png" alt="image-20231114203220987"></p>
+<p><img src="/personalBlog/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114203106720.png" alt="image-20231114203106720"></p>
+<p><img src="/personalBlog/2023-11-11-Linux%E7%AE%80%E4%BB%8B/image-20231114203220987.png" alt="image-20231114203220987"></p>
 <h2 id="文件属性"><a href="#文件属性" class="headerlink" title="文件属性"></a>文件属性</h2><p>Linux是一种多用户的服务器，为了保护系统的安全，Linux系统对于不同用户访问同一个文件或目录做出了不同的规定。</p>
 <ul>
 <li>chown (change owner) ： 修改所属用户与组。</li>
@@ -2214,7 +2214,7 @@
 </ul>
 <p>上面的data的目录的属性drwxr-xr-x，第一个<strong>d</strong>代表data为目录，后面以三个字符为一组，<strong>r</strong>代表可读、<strong>w</strong>代表可写、x代表可执行，如果没有权限就会出现-号。</p>
 <p>后面跟的 root root 分别为 所有和所属组。一般权限对root用户无效</p>
-<p><img src="/2023-11-11-Linux%E7%AE%80%E4%BB%8B/Linux%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7.png" alt="Linux文件属性"></p>
+<p><img src="/personalBlog/2023-11-11-Linux%E7%AE%80%E4%BB%8B/Linux%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7.png" alt="Linux文件属性"></p>
 <p>从左到右使用0-9表示。</p>
 <p>0位表示文件类型，1-3表示确定属主（此文件的所有者）拥有文件的权限。4-6表示确定属组（所有者的同组用户）拥有文件的权限、7-9表示其他用户拥有文件的权限。</p>
 <p>1、4、7表示读权限，有权限时使用r表示，没有则使用-表示。</p>
@@ -2408,7 +2408,7 @@
     
     <footer class="article-footer">
        
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/personalBlog/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统</a></li></ul>
 
     </footer>
   </div>
@@ -2430,7 +2430,7 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/11/10/2023/web/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/"
+  <a class="article-title" href="/personalBlog/2023/11/10/2023/web/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/"
     >RocketMQ高阶</a> 
 </h2>
  
@@ -2439,11 +2439,11 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/11/10/2023/web/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/" class="article-date">
+      <a href="/personalBlog/2023/11/10/2023/web/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/" class="article-date">
   <time datetime="2023-11-11T07:00:00.000Z" itemprop="datePublished">2023-11-10</time>
 </a> 
   <div class="article-category">
-    <a class="article-category-link" href="/categories/Web%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/">Web的那些事</a>
+    <a class="article-category-link" href="/personalBlog/categories/Web%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/">Web的那些事</a>
   </div>
    
     </div>
@@ -2526,7 +2526,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master rocketmq-all-5.0.0-bin-release]# jps</span><br><span class="line">5073 BrokerStartup</span><br><span class="line">4547 NamesrvStartup</span><br><span class="line">5081 Jps</span><br></pre></td></tr></table></figure>
 
 <p>使用控制台查看集群信息</p>
-<p><img src="/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231105214537995.png" alt="image-20231105214537995"></p>
+<p><img src="/personalBlog/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231105214537995.png" alt="image-20231105214537995"></p>
 <h4 id="多Master多Slave异步复制-1"><a href="#多Master多Slave异步复制-1" class="headerlink" title="多Master多Slave异步复制"></a><strong>多Master多Slave异步复制</strong></h4><table>
 <thead>
 <tr>
@@ -2558,12 +2558,12 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nohup bin/mqbroker -c conf/2m-2s-async/broker-a.properties &gt;master-a.log 2&gt;&amp;1 &amp;  #129 </span><br><span class="line">nohup bin/mqbroker -c conf/2m-2s-async/broker-b-s.properties &gt;slave-b-s.log 2&gt;&amp;1 &amp;  #129</span><br><span class="line">nohup bin/mqbroker -c conf/2m-2s-async/broker-b.properties &gt;master-b.log 2&gt;&amp;1 &amp;  #130  </span><br><span class="line">nohup bin/mqbroker -c conf/2m-2s-async/broker-a-s.properties &gt;slave-a-s.log 2&gt;&amp;1 &amp;  #130  </span><br></pre></td></tr></table></figure>
 
 <p>可能出现问题：</p>
-<p><img src="/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231105220523168.png" alt="image-20231105220523168"></p>
+<p><img src="/personalBlog/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231105220523168.png" alt="image-20231105220523168"></p>
 <p><strong>runbroker.sh</strong> 修改Broker   （<strong>runserver.sh</strong> 修改nameServer）</p>
 <p>修改 JAVA_OPT</p>
-<p><img src="/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231105221715272.png" alt="image-20231105221715272"></p>
+<p><img src="/personalBlog/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231105221715272.png" alt="image-20231105221715272"></p>
 <p>控制台查看集群</p>
-<p><img src="/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231105221852409.png" alt="image-20231105221852409"></p>
+<p><img src="/personalBlog/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231105221852409.png" alt="image-20231105221852409"></p>
 <h4 id="主从自动切换-Controller架构"><a href="#主从自动切换-Controller架构" class="headerlink" title="主从自动切换(Controller架构)"></a><strong>主从自动切换(Controller架构)</strong></h4><table>
 <thead>
 <tr>
@@ -2651,17 +2651,17 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">129</span></span><br><span class="line">nohup ./bin/mqbroker -c /home/chirs/rocketmq/rocketmq-all-5.0.0-bin-release/conf/controller/cluster-3n-independent/broker-a.conf &gt;dledger_broker.log  2&gt;&amp;1 &amp;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">130</span></span><br><span class="line">nohup ./bin/mqbroker -c /home/chirs/rocketmq/rocketmq-all-5.0.0-bin-release/conf/controller/cluster-3n-independent/broker-s1.conf &gt;dledger_broker.log  2&gt;&amp;1 &amp;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">131</span></span><br><span class="line">nohup ./bin/mqbroker -c /home/chirs/rocketmq/rocketmq-all-5.0.0-bin-release/conf/controller/cluster-3n-independent/broker-s2.conf &gt;dledger_broker.log  2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
 
 <p><strong>查看是否启动</strong></p>
-<p><img src="/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231109233721406.png" alt="image-20231109233721406"></p>
+<p><img src="/personalBlog/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231109233721406.png" alt="image-20231109233721406"></p>
 <p><strong>控制台查看集群信息</strong></p>
-<p><img src="/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231110214932933.png" alt="image-20231110214932933"></p>
+<p><img src="/personalBlog/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231110214932933.png" alt="image-20231110214932933"></p>
 <p><strong>关闭Master，验证是否可以自动切换</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">129节点执行</span></span><br><span class="line">./bin/mqshutdown broker</span><br></pre></td></tr></table></figure>
 
 <p><strong>控制台再次查看集群信息</strong></p>
 <p>131节点重新变为Master</p>
-<p><img src="/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231110215601834.png" alt="image-20231110215601834"></p>
+<p><img src="/personalBlog/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231110215601834.png" alt="image-20231110215601834"></p>
 <p>启动129节点的Broker，再次查看控制台，129节点变成了Slave</p>
-<p><img src="/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231110215737295.png" alt="image-20231110215737295"></p>
+<p><img src="/personalBlog/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231110215737295.png" alt="image-20231110215737295"></p>
  
       <!-- reward -->
       
@@ -2672,7 +2672,7 @@
     
     <footer class="article-footer">
        
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/personalBlog/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
 
     </footer>
   </div>
@@ -2694,7 +2694,7 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/11/02/2023/web/2023-11-02-RocketMQ-%E8%BF%9B%E9%98%B6/"
+  <a class="article-title" href="/personalBlog/2023/11/02/2023/web/2023-11-02-RocketMQ-%E8%BF%9B%E9%98%B6/"
     >RocketMQ进阶</a> 
 </h2>
  
@@ -2703,11 +2703,11 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/11/02/2023/web/2023-11-02-RocketMQ-%E8%BF%9B%E9%98%B6/" class="article-date">
+      <a href="/personalBlog/2023/11/02/2023/web/2023-11-02-RocketMQ-%E8%BF%9B%E9%98%B6/" class="article-date">
   <time datetime="2023-11-03T06:00:00.000Z" itemprop="datePublished">2023-11-02</time>
 </a> 
   <div class="article-category">
-    <a class="article-category-link" href="/categories/Web%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/">Web的那些事</a>
+    <a class="article-category-link" href="/personalBlog/categories/Web%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/">Web的那些事</a>
   </div>
    
     </div>
@@ -2771,7 +2771,7 @@
 <p><a target="_blank" rel="noopener" href="https://gitee.com/apache/rocketmq/blob/master/docs/cn/RocketMQ_Example.md">https://gitee.com/apache/rocketmq/blob/master/docs/cn/RocketMQ_Example.md</a></p>
 <p>RocketMQ控制台：</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/apache/rocketmq-externals/releases/tag/rocketmq-console-1.0.0">https://github.com/apache/rocketmq-externals/releases/tag/rocketmq-console-1.0.0</a></p>
-<p><img src="/2023-10-25-RocketMq%E8%BF%9B%E9%98%B6/image-20231028185721769.png" alt="image-20231028185721769"></p>
+<p><img src="/personalBlog/2023-10-25-RocketMq%E8%BF%9B%E9%98%B6/image-20231028185721769.png" alt="image-20231028185721769"></p>
 <p><strong>RocketService</strong>：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">RocketService</span>&lt;V&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发送异步消息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">asyncSend</span><span class="params">(String routeKey, Object object, SendCallback sendCallback)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 同步发送消息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    SendResult <span class="title function_">syncSend</span><span class="params">(String routeKey, Object object)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 同步顺序发送</span></span><br><span class="line"><span class="comment">     * 通过对 hasKey 的处理，保证将消息放到相同的 queue中，实现FIFO</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">syncSendOrderly</span><span class="params">(String routeKey, Object object, String hasKey)</span>;</span><br><span class="line">    </span><br><span class="line">     <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 只发送一次</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">sendOneWay</span><span class="params">(String routeKey, Object object)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 异步延时队列</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">asyncSend</span><span class="params">(String routeKey, Object object, SendCallback sendCallback, Long timeout, <span class="type">int</span> delayLevel)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 事务消息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    TransactionSendResult <span class="title function_">sendMessageInTransaction</span><span class="params">(String routeKey, Object object, Object arg)</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -2790,9 +2790,9 @@
 
 <p>查看控制台，每次都会将消息放到一个队列中</p>
 <p>第一次发送：</p>
-<p><img src="/2023-10-25-RocketMq%E8%BF%9B%E9%98%B6/image-20231028230231362.png" alt="image-20231028230231362"></p>
+<p><img src="/personalBlog/2023-10-25-RocketMq%E8%BF%9B%E9%98%B6/image-20231028230231362.png" alt="image-20231028230231362"></p>
 <p>第二次发送：</p>
-<p><img src="/2023-10-25-RocketMq%E8%BF%9B%E9%98%B6/image-20231028230331926.png" alt="image-20231028230331926"></p>
+<p><img src="/personalBlog/2023-10-25-RocketMq%E8%BF%9B%E9%98%B6/image-20231028230331926.png" alt="image-20231028230331926"></p>
 <h3 id="延时消息实例"><a href="#延时消息实例" class="headerlink" title="延时消息实例"></a><strong>延时消息实例</strong></h3><p><strong>一般用于延时订单关闭或延时通知场景</strong></p>
 <p>发送消息（30S之后发送消息）:</p>
 <p>支持18个延时时间：1s、5s、10s、30s、1m、2m、3m、4m、5m、6m、7m、8m、9m、10m、20m、30m、1h、2h</p>
@@ -2802,7 +2802,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@RocketMQMessageListener(</span></span><br><span class="line"><span class="meta">        topic = &quot;movieInfo&quot;,</span></span><br><span class="line"><span class="meta">        consumerGroup = &quot;dubbo-producer-group&quot;,</span></span><br><span class="line"><span class="meta">        selectorExpression = &quot;insert || orderly || delay&quot;,</span></span><br><span class="line"><span class="meta">        selectorType = SelectorType.TAG,</span></span><br><span class="line"><span class="meta">        consumeMode = ConsumeMode.CONCURRENTLY, </span></span><br><span class="line"><span class="meta">        messageModel = MessageModel.CLUSTERING)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MovieInfoMqListener</span> <span class="keyword">implements</span> <span class="title class_">RocketMQListener</span>&lt;RocketMqBaseDTO&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onMessage</span><span class="params">(RocketMqBaseDTO message)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;收到消息 &quot;</span> + message.getMovieInfoDTO().getMovieName());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>延时消息先放入Topic为<strong>SCHEDULE_TOPIC_XXXX</strong>中</p>
-<p><img src="/2023-10-25-RocketMq%E8%BF%9B%E9%98%B6/image-20231028234748956.png" alt="image-20231028234748956"></p>
+<p><img src="/personalBlog/2023-10-25-RocketMq%E8%BF%9B%E9%98%B6/image-20231028234748956.png" alt="image-20231028234748956"></p>
 <h3 id="事务消息实例"><a href="#事务消息实例" class="headerlink" title="事务消息实例"></a><strong>事务消息实例</strong></h3><p>可用于分布式事务场景，例如用户下单支付成功之后，需要进行添加成长值、清除购物车、减库存等操作。对于分布式应用来说，不能像单体应用那样处理同一个数据库，分布式应用都有各自的数据库，这就要设计跨库事务操作了。RocketMQ提供了HALF消息来解决分布式事务，实现分布式事务的最终一致性。</p>
 <ol>
 <li>用户下单并支付</li>
@@ -2811,10 +2811,10 @@
 <li>若第3步提交本地事务状态到MQ失败（可能由于网络原因），MQ进行事务状态回查，执行第3步操作</li>
 <li>提交commit到MQ，会员服务消费消息。 提交rollback到MQ，消息无法被下游服务消费</li>
 </ol>
-<p><img src="/2023-10-25-RocketMq%E8%BF%9B%E9%98%B6/2023-10-25-RocketMq%E8%BF%9B%E9%98%B6-1698939106345.png" alt="2023-10-25-RocketMq进阶"></p>
+<p><img src="/personalBlog/2023-10-25-RocketMq%E8%BF%9B%E9%98%B6/2023-10-25-RocketMq%E8%BF%9B%E9%98%B6-1698939106345.png" alt="2023-10-25-RocketMq进阶"></p>
 <p><strong>consumer</strong>、<strong>service</strong>模块添加整合<strong>mysql</strong>—略</p>
 <p>创建三张表  <strong>订单表</strong>、<strong>成长值记录表</strong>、<strong>事务记录表</strong></p>
-<p><img src="/2023-10-25-RocketMq%E8%BF%9B%E9%98%B6/image-20231102220822301.png" alt="image-20231102220822301"></p>
+<p><img src="/personalBlog/2023-10-25-RocketMq%E8%BF%9B%E9%98%B6/image-20231102220822301.png" alt="image-20231102220822301"></p>
 <ul>
 <li><p><strong>模拟用户下单</strong>（使用<strong>Connection</strong>连接数据库）</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">insertOrder</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">Connection</span> <span class="variable">connection</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            connection = DriverManager.getConnection(<span class="string">&quot;jdbc:mysql://localhost:3306/easy_mall_oms?useUnicode=true&amp;characterEncoding=UTF-8&amp;useSSL=false&amp;serverTimezone=Asia/Shanghai&quot;</span>, <span class="string">&quot;root&quot;</span>, <span class="string">&quot;123&quot;</span>);</span><br><span class="line">            <span class="type">String</span> <span class="variable">orderSn</span> <span class="operator">=</span> UUID.randomUUID().toString();</span><br><span class="line">            <span class="type">BigDecimal</span> <span class="variable">payAmount</span> <span class="operator">=</span> BigDecimal.valueOf(<span class="number">100</span>);</span><br><span class="line">            <span class="comment">//生成订单</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;insert oms_order (member_id,order_sn,pay_amount,status) values(15,?,?,0)&quot;</span>;</span><br><span class="line">            <span class="type">PreparedStatement</span> <span class="variable">preparedStatement</span> <span class="operator">=</span> connection.prepareStatement(sql);</span><br><span class="line">            preparedStatement.setString(<span class="number">1</span>, orderSn);</span><br><span class="line">            preparedStatement.setBigDecimal(<span class="number">2</span>, payAmount);</span><br><span class="line">            <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> preparedStatement.executeUpdate();</span><br><span class="line">            <span class="keyword">if</span> (i &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;订单插入失败&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (connection != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    connection.close();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
@@ -2838,7 +2838,7 @@
     
     <footer class="article-footer">
        
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/personalBlog/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
 
     </footer>
   </div>
@@ -2860,7 +2860,7 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/10/21/2023/web/2023-10-28-RocketMq-%E5%85%A5%E9%97%A8/"
+  <a class="article-title" href="/personalBlog/2023/10/21/2023/web/2023-10-28-RocketMq-%E5%85%A5%E9%97%A8/"
     >RocketMQ入门</a> 
 </h2>
  
@@ -2869,11 +2869,11 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/10/21/2023/web/2023-10-28-RocketMq-%E5%85%A5%E9%97%A8/" class="article-date">
+      <a href="/personalBlog/2023/10/21/2023/web/2023-10-28-RocketMq-%E5%85%A5%E9%97%A8/" class="article-date">
   <time datetime="2023-10-22T06:00:00.000Z" itemprop="datePublished">2023-10-21</time>
 </a> 
   <div class="article-category">
-    <a class="article-category-link" href="/categories/Web%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/">Web的那些事</a>
+    <a class="article-category-link" href="/personalBlog/categories/Web%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/">Web的那些事</a>
   </div>
    
     </div>
@@ -2930,7 +2930,7 @@
 <p>为消息设置的标志，用于同一主题下区分不同类型的消息。来自同一业务单元的消息，可以根据不同业务目的在同一主题下设置不同标签。标签能够有效地保持代码的清晰度和连贯性，并优化RocketMQ提供的查询系统。消费者可以根据Tag实现对不同子主题的不同消费逻辑，实现更好的扩展性。</p>
 </li>
 </ol>
-<h3 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h3><p><img src="/2023-10-28-RocketMq-%E5%85%A5%E9%97%A8/rocketMq-1697899448070.png" alt="rocketMq-1697899448070"></p>
+<h3 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h3><p><img src="/personalBlog/2023-10-28-RocketMq-%E5%85%A5%E9%97%A8/rocketMq-1697899448070.png" alt="rocketMq-1697899448070"></p>
 <ul>
 <li>Producer：消息发布的角色，支持分布式集群方式部署。Producer通过MQ的负载均衡模块选择相应的Broker集群队列进行消息投递，投递的过程支持快速失败并且低延迟。</li>
 <li>Consumer：消息消费的角色，支持分布式集群方式部署。支持以push推，pull拉两种模式对消息进行消费。同时也支持集群方式和广播方式的消费，它提供实时消息订阅机制，可以满足大多数用户的需求。</li>
@@ -2949,7 +2949,7 @@
 <ol>
 <li>创建<strong>RocketMQ-core</strong>模块</li>
 </ol>
-<p><img src="/2023-10-28-RocketMq-%E5%85%A5%E9%97%A8/image-20231022114714733.png" alt="image-20231022114714733"></p>
+<p><img src="/personalBlog/2023-10-28-RocketMq-%E5%85%A5%E9%97%A8/image-20231022114714733.png" alt="image-20231022114714733"></p>
 <p>pom.xml:</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span> <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.chris<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>test<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">relativePath</span>&gt;</span>../pom.xml<span class="tag">&lt;/<span class="name">relativePath</span>&gt;</span>  <span class="comment">&lt;!-- lookup parent from repository --&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.chris.RocketMQ<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>RocketMQ-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;parent.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>RocketMQ-core<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">description</span>&gt;</span>RocketMQ-core<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">java.version</span>&gt;</span>8<span class="tag">&lt;/<span class="name">java.version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.RocketMQ<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>RocketMQ-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.2.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
@@ -2992,12 +2992,12 @@
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.chris.RocketMQ<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>RocketMQ-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;parent.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="启动！看效果"><a href="#启动！看效果" class="headerlink" title="启动！看效果"></a>启动！看效果</h2><p>使用<strong>postman</strong>发起请求<strong>Post</strong>请求访问<strong>localhost:42977&#x2F;movie&#x2F;insertMovieInfo</strong>接口：</p>
-<p><img src="/2023-10-28-RocketMq-%E5%85%A5%E9%97%A8/image-20231022122005760.png" alt="image-20231022122005760"></p>
+<p><img src="/personalBlog/2023-10-28-RocketMq-%E5%85%A5%E9%97%A8/image-20231022122005760.png" alt="image-20231022122005760"></p>
 <p>查看Idea控制台</p>
 <p><strong>MovieInfoController</strong>类：</p>
-<p><img src="/2023-10-28-RocketMq-%E5%85%A5%E9%97%A8/image-20231022211033933.png" alt="image-20231022211033933"></p>
+<p><img src="/personalBlog/2023-10-28-RocketMq-%E5%85%A5%E9%97%A8/image-20231022211033933.png" alt="image-20231022211033933"></p>
 <p><strong>MovieInfoMqListener</strong>类：</p>
-<p><img src="/2023-10-28-RocketMq-%E5%85%A5%E9%97%A8/image-20231022211056976.png" alt="image-20231022211056976"></p>
+<p><img src="/personalBlog/2023-10-28-RocketMq-%E5%85%A5%E9%97%A8/image-20231022211056976.png" alt="image-20231022211056976"></p>
  
       <!-- reward -->
       
@@ -3008,7 +3008,7 @@
     
     <footer class="article-footer">
        
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/personalBlog/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
 
     </footer>
   </div>
@@ -3024,7 +3024,7 @@
   
   <nav class="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
+    <span class="page-number current">1</span><a class="page-number" href="/personalBlog/page/2/">2</a><a class="page-number" href="/personalBlog/page/3/">3</a><a class="page-number" href="/personalBlog/page/4/">4</a><a class="extend next" rel="next" href="/personalBlog/page/2/">下一页</a>
   </nav>
   
 </section>
@@ -3088,29 +3088,29 @@
 <nav class="navbar">
   
   <div class="logo">
-    <a href="/"><img src="/images/ayer-side.svg" alt="C"></a>
+    <a href="/personalBlog/"><img src="/images/ayer-side.svg" alt="C"></a>
   </div>
   
   <ul class="nav nav-main">
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/">主页</a>
+      <a class="nav-item-link" href="/personalBlog/">主页</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/archives">归档</a>
+      <a class="nav-item-link" href="/personalBlog/archives">归档</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/categories">分类</a>
+      <a class="nav-item-link" href="/personalBlog/categories">分类</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/tags">标签</a>
+      <a class="nav-item-link" href="/personalBlog/tags">标签</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+      <a class="nav-item-link" href="/personalBlog/tags/%E6%97%85%E8%A1%8C/">旅行</a>
     </li>
     
     <li class="nav-item">
@@ -3118,11 +3118,11 @@
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/friends">友链</a>
+      <a class="nav-item-link" href="/personalBlog/friends">友链</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/2019/about">关于我</a>
+      <a class="nav-item-link" href="/personalBlog/2019/about">关于我</a>
     </li>
     
   </ul>
@@ -3136,7 +3136,7 @@
       </a>
       
       
-      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+      <a class="nav-item-link" target="_blank" href="/personalBlog/atom.xml" title="RSS Feed">
         <i class="ri-rss-line"></i>
       </a>
       
@@ -3159,22 +3159,22 @@
   <div class="reward-box">
     
     <div class="reward-item">
-      <img class="reward-img" src="/images/alipay.jpg">
+      <img class="reward-img" src="/personalBlog/images/alipay.jpg">
       <span class="reward-type">支付宝</span>
     </div>
     
     
     <div class="reward-item">
-      <img class="reward-img" src="/images/wechat.jpg">
+      <img class="reward-img" src="/personalBlog/images/wechat.jpg">
       <span class="reward-type">微信</span>
     </div>
     
   </div>
 </div>
     
-<script src="/js/jquery-3.6.0.min.js"></script>
+<script src="/personalBlog/js/jquery-3.6.0.min.js"></script>
  
-<script src="/js/lazyload.min.js"></script>
+<script src="/personalBlog/js/lazyload.min.js"></script>
 
 <!-- Tocbot -->
 
@@ -3185,7 +3185,7 @@
 />
 <script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
 
-<script src="/dist/main.js"></script>
+<script src="/personalBlog/dist/main.js"></script>
 
 <!-- ImageViewer -->
  <!-- Root element of PhotoSwipe. Must have class pswp. -->
@@ -3300,7 +3300,7 @@
 
 <!-- busuanzi  -->
  
-<script src="/js/busuanzi-2.3.pure.min.js"></script>
+<script src="/personalBlog/js/busuanzi-2.3.pure.min.js"></script>
  
 <!-- ClickLove -->
 
@@ -3310,7 +3310,7 @@
 
 <!-- CodeCopy -->
  
-<link rel="stylesheet" href="/css/clipboard.css">
+<link rel="stylesheet" href="/personalBlog/css/clipboard.css">
  <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
 <script>
   function wait(callback, seconds) {

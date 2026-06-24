@@ -16,13 +16,13 @@
       
       <link rel="shortcut icon" href="/favicon.ico" />
        
-<link rel="stylesheet" href="/dist/main.css">
+<link rel="stylesheet" href="/personalBlog/dist/main.css">
 
       
-<link rel="stylesheet" href="/css/fonts/remixicon.css">
+<link rel="stylesheet" href="/personalBlog/css/fonts/remixicon.css">
 
       
-<link rel="stylesheet" href="/css/custom.css">
+<link rel="stylesheet" href="/personalBlog/css/custom.css">
  
       <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
        
@@ -41,7 +41,7 @@
           font-size: 1.6rem;
         }
       </style>
-    <link rel="alternate" href="/atom.xml" title="C" type="application/atom+xml">
+    <link rel="alternate" href="/personalBlog/atom.xml" title="C" type="application/atom+xml">
 </head>
   </html>
 </html>
@@ -73,11 +73,11 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/01/17/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E7%A7%92%E6%9D%80/" class="article-date">
+      <a href="/personalBlog/2023/01/17/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E7%A7%92%E6%9D%80/" class="article-date">
   <time datetime="2023-01-18T04:35:00.000Z" itemprop="datePublished">2023-01-17</time>
 </a> 
   <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%9E%8E%E8%83%A1%E9%97%B9/">瞎胡闹</a>
+    <a class="article-category-link" href="/personalBlog/categories/%E7%9E%8E%E8%83%A1%E9%97%B9/">瞎胡闹</a>
   </div>
   
 <div class="word_count">
@@ -112,13 +112,13 @@
 <p>电商项目最能体现出技术要求的就是秒杀功能了，可以全方位的体现出后端的技术栈。如分布式锁、消息队列、分布式事务、缓存、限流等。秒杀也是电商项目中的一大特色，本电商项目中首先在秒杀的前几天，通过定时任务拉取需要秒杀的商品，将商品信息保存到缓存中。然后前端用户可以获取即将要秒杀的产品，在秒杀开始时进行秒杀。<span id="more"></span></p>
 </li>
 <li><p>定时拉取</p>
-<p>通过定时任务定期获取需要秒杀的商品信息，秒杀的商品信息在平台端维护。如下图，添加秒杀场次。直接使用了生成器的生成的修改接口，前端页面可以优化启用状态为开关样式，此后不在累赘，本项目只是学习技术，这些细节的东西，由于没有具体的业务需求并且只是本人学习的产物，并没有商业化一般的美观。<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E7%A7%92%E6%9D%80/1673159036986-044c6947-5c62-4787-be82-ead7810b3422.png" alt="image.png"><br>新增场次的关联商品<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E7%A7%92%E6%9D%80/1673170074925-e8b05f92-1349-419f-8fe3-4fe386da8e7d.png" alt="image.png"><br>定时拉取3天后的秒杀数据，第一步首先保存要秒杀的商品信息到Redis，Key为开始时间和结束时间，Value为秒杀Id-SkuId。</p>
+<p>通过定时任务定期获取需要秒杀的商品信息，秒杀的商品信息在平台端维护。如下图，添加秒杀场次。直接使用了生成器的生成的修改接口，前端页面可以优化启用状态为开关样式，此后不在累赘，本项目只是学习技术，这些细节的东西，由于没有具体的业务需求并且只是本人学习的产物，并没有商业化一般的美观。<br><img src="/personalBlog/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E7%A7%92%E6%9D%80/1673159036986-044c6947-5c62-4787-be82-ead7810b3422.png" alt="image.png"><br>新增场次的关联商品<br><img src="/personalBlog/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E7%A7%92%E6%9D%80/1673170074925-e8b05f92-1349-419f-8fe3-4fe386da8e7d.png" alt="image.png"><br>定时拉取3天后的秒杀数据，第一步首先保存要秒杀的商品信息到Redis，Key为开始时间和结束时间，Value为秒杀Id-SkuId。</p>
 </li>
 </ol>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">saveSessionInfos</span><span class="params">(List&lt;SeckillSessionWithSkusVo&gt; sessions)</span> &#123;</span><br><span class="line"></span><br><span class="line">        sessions.forEach(session -&gt; &#123;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//获取当前活动的开始和结束时间的时间戳</span></span><br><span class="line">            <span class="type">long</span> <span class="variable">startTime</span> <span class="operator">=</span> session.getStartTime().getTime();</span><br><span class="line">            <span class="type">long</span> <span class="variable">endTime</span> <span class="operator">=</span> session.getEndTime().getTime();</span><br><span class="line"></span><br><span class="line">            <span class="comment">//存入到Redis中的key</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> SESSION__CACHE_PREFIX + startTime + <span class="string">&quot;_&quot;</span> + endTime;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//判断Redis中是否有该信息，如果没有才进行添加</span></span><br><span class="line">            <span class="type">Boolean</span> <span class="variable">hasKey</span> <span class="operator">=</span> redisTemplate.hasKey(key);</span><br><span class="line">            <span class="comment">//缓存活动信息</span></span><br><span class="line">            <span class="keyword">if</span> (hasKey != <span class="literal">null</span> &amp;&amp; !hasKey) &#123;</span><br><span class="line">                <span class="comment">//获取到活动中所有商品的skuId</span></span><br><span class="line">                List&lt;String&gt; skuIds = session.getRelationSkus().stream()</span><br><span class="line">                        .map(item -&gt; item.getPromotionSessionId() + <span class="string">&quot;-&quot;</span> + item.getSkuId().toString()).collect(Collectors.toList());</span><br><span class="line">                redisTemplate.opsForList().leftPushAll(key, skuIds);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>Redis中保存的数据结构：<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E7%A7%92%E6%9D%80/1673167861105-97bf428c-cea7-4ee4-a7da-9dba283f3b51.png" alt="image.png"><br>第二步，需要将秒杀的商品信息保存到Redis中。<br>1.生成随机码。为了防止在秒杀开始的时候，一些技术人员可以通过一些渠道知道即将秒杀的URL，那样的话就可以写程序去自动秒杀。所以需要在秒杀的时候生成一个随机码，随机码在开始秒杀的时候才会获取到。<br>2.缓存商品信息，并将随机码一并保存到Redis。其中Key为Id-SkuId，也就是上一步保存的秒杀信息的Value，这样可以更快的拿到需要秒杀的商品信息。Value就是商品信息。<br>3.保存库存到Redis中。使用分布式锁，设置信号量，即保存商品的库存。其中Kesy为秒杀需要的随机码，Value为库存数量。秒杀服务一般会部署多个服务，所以要以分布式锁的方式设置库存数据。一般来说还需要在保存秒杀信息以及保存秒杀的商品信息的外层添加分布式锁即可，我这里没有加，需要根据相应的情境去考虑需不需要分布式锁的参与。</p>
+<p>Redis中保存的数据结构：<br><img src="/personalBlog/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E7%A7%92%E6%9D%80/1673167861105-97bf428c-cea7-4ee4-a7da-9dba283f3b51.png" alt="image.png"><br>第二步，需要将秒杀的商品信息保存到Redis中。<br>1.生成随机码。为了防止在秒杀开始的时候，一些技术人员可以通过一些渠道知道即将秒杀的URL，那样的话就可以写程序去自动秒杀。所以需要在秒杀的时候生成一个随机码，随机码在开始秒杀的时候才会获取到。<br>2.缓存商品信息，并将随机码一并保存到Redis。其中Key为Id-SkuId，也就是上一步保存的秒杀信息的Value，这样可以更快的拿到需要秒杀的商品信息。Value就是商品信息。<br>3.保存库存到Redis中。使用分布式锁，设置信号量，即保存商品的库存。其中Kesy为秒杀需要的随机码，Value为库存数量。秒杀服务一般会部署多个服务，所以要以分布式锁的方式设置库存数据。一般来说还需要在保存秒杀信息以及保存秒杀的商品信息的外层添加分布式锁即可，我这里没有加，需要根据相应的情境去考虑需不需要分布式锁的参与。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">saveSessionSkuInfo</span><span class="params">(List&lt;SeckillSessionWithSkusVo&gt; sessions)</span> &#123;</span><br><span class="line"></span><br><span class="line">        sessions.forEach(session -&gt; &#123;</span><br><span class="line">            <span class="comment">//准备hash操作，绑定hash</span></span><br><span class="line">            BoundHashOperations&lt;String, Object, Object&gt; operations = redisTemplate.boundHashOps(SECKILL_CHARE_PREFIX);</span><br><span class="line">            session.getRelationSkus().forEach(seckillSkuVo -&gt; &#123;</span><br><span class="line">                <span class="comment">//生成随机码</span></span><br><span class="line">                <span class="type">String</span> <span class="variable">token</span> <span class="operator">=</span> UUID.randomUUID().toString().replace(<span class="string">&quot;-&quot;</span>, <span class="string">&quot;&quot;</span>);</span><br><span class="line">                <span class="type">String</span> <span class="variable">redisKey</span> <span class="operator">=</span> seckillSkuVo.getPromotionSessionId().toString() + <span class="string">&quot;-&quot;</span> + seckillSkuVo.getSkuId().toString();</span><br><span class="line">                Boolean has;</span><br><span class="line">                <span class="keyword">if</span> ((has = operations.hasKey(redisKey)) != <span class="literal">null</span> &amp;&amp; !has) &#123;</span><br><span class="line"></span><br><span class="line">                    <span class="comment">//缓存我们商品信息</span></span><br><span class="line">                    <span class="type">SeckillSkuRedisTo</span> <span class="variable">redisTo</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SeckillSkuRedisTo</span>();</span><br><span class="line">                    <span class="type">Long</span> <span class="variable">skuId</span> <span class="operator">=</span> seckillSkuVo.getSkuId();</span><br><span class="line">                    <span class="comment">//1、先查询sku的基本信息，调用远程服务</span></span><br><span class="line">                    <span class="type">R</span> <span class="variable">info</span> <span class="operator">=</span> productFeignService.getSkuInfo(skuId);</span><br><span class="line">                    <span class="keyword">if</span> (R.isOk(info)) &#123;</span><br><span class="line">                        <span class="type">SkuInfoVo</span> <span class="variable">skuInfo</span> <span class="operator">=</span> JSON.parseObject(JSON.toJSONString(info.get(<span class="string">&quot;skuInfo&quot;</span>)), <span class="keyword">new</span> <span class="title class_">TypeReference</span>&lt;SkuInfoVo&gt;() &#123;</span><br><span class="line">                        &#125;);</span><br><span class="line">                        redisTo.setSkuInfo(skuInfo);</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="comment">//2、sku的秒杀信息</span></span><br><span class="line">                    BeanUtils.copyProperties(seckillSkuVo, redisTo);</span><br><span class="line"></span><br><span class="line">                    <span class="comment">//3、设置当前商品的秒杀时间信息</span></span><br><span class="line">                    redisTo.setStartTime(session.getStartTime().getTime());</span><br><span class="line">                    redisTo.setEndTime(session.getEndTime().getTime());</span><br><span class="line"></span><br><span class="line">                    <span class="comment">//4、设置商品的随机码（防止恶意攻击）</span></span><br><span class="line">                    redisTo.setRandomCode(token);</span><br><span class="line"></span><br><span class="line">                    <span class="comment">//序列化json格式存入Redis中</span></span><br><span class="line">                    <span class="type">String</span> <span class="variable">seckillValue</span> <span class="operator">=</span> JSON.toJSONString(redisTo);</span><br><span class="line">                    operations.put(seckillSkuVo.getPromotionSessionId().toString() + <span class="string">&quot;-&quot;</span> + seckillSkuVo.getSkuId().toString(), seckillValue);</span><br><span class="line"></span><br><span class="line">                    <span class="comment">//如果当前这个场次的商品库存信息已经上架就不需要上架</span></span><br><span class="line">                    <span class="comment">//5、使用库存作为分布式Redisson信号量（限流）</span></span><br><span class="line">                    <span class="comment">// 使用库存作为分布式信号量</span></span><br><span class="line">                    <span class="type">RSemaphore</span> <span class="variable">semaphore</span> <span class="operator">=</span> redissonClient.getSemaphore(SKU_STOCK_SEMAPHORE + token);</span><br><span class="line">                    <span class="comment">// 商品可以秒杀的数量作为信号量</span></span><br><span class="line">                    semaphore.trySetPermits(seckillSkuVo.getSeckillCount());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>Redis中保存的商品信息的数据结构：<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E7%A7%92%E6%9D%80/1673168989741-41e8c8bf-618f-4c40-9c98-bd555e623750.png" alt="image.png"><br>Redis中保存的库存的数据结构<br><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E7%A7%92%E6%9D%80/1673169539631-49526fba-df41-4006-938e-a28d4fd8c472.png" alt="image.png"></p>
+<p>Redis中保存的商品信息的数据结构：<br><img src="/personalBlog/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E7%A7%92%E6%9D%80/1673168989741-41e8c8bf-618f-4c40-9c98-bd555e623750.png" alt="image.png"><br>Redis中保存的库存的数据结构<br><img src="/personalBlog/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E7%A7%92%E6%9D%80/1673169539631-49526fba-df41-4006-938e-a28d4fd8c472.png" alt="image.png"></p>
 <ol start="3">
 <li><p>获取信息</p>
 <p>一般的，用户需要在商城的页面上能看见即将要秒杀的商品信息。访问商城主页，即可看到需要秒杀的商品信息。</p>
@@ -126,7 +126,7 @@
 </ol>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;SeckillSkuRedisTo&gt; <span class="title function_">getCurrentSeckillSkus</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">long</span> <span class="variable">nowTime</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Date</span>().getTime();</span><br><span class="line">        Set&lt;String&gt; keys = redisTemplate.keys(SESSION__CACHE_PREFIX + <span class="string">&quot;*&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (keys == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (String key : keys) &#123;</span><br><span class="line">            String[] s = key.replace(SESSION__CACHE_PREFIX, <span class="string">&quot;&quot;</span>).split(<span class="string">&quot;_&quot;</span>);</span><br><span class="line">            <span class="type">long</span> <span class="variable">startTime</span> <span class="operator">=</span> Long.parseLong(s[<span class="number">0</span>]);</span><br><span class="line">            <span class="type">long</span> <span class="variable">endTime</span> <span class="operator">=</span> Long.parseLong(s[<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (startTime &lt;= nowTime &amp;&amp; endTime &gt;= nowTime) &#123;</span><br><span class="line">                List&lt;String&gt; skuKeys = redisTemplate.opsForList().range(key, -<span class="number">100</span>, <span class="number">100</span>);</span><br><span class="line">                BoundHashOperations&lt;String, String, String&gt; operations = redisTemplate.boundHashOps(SECKILL_CHARE_PREFIX);</span><br><span class="line">                <span class="keyword">if</span> (skuKeys != <span class="literal">null</span> &amp;&amp; skuKeys.size() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                    List&lt;String&gt; skus = operations.multiGet(skuKeys);</span><br><span class="line">                    <span class="keyword">if</span> (skus != <span class="literal">null</span>) &#123;</span><br><span class="line">                        <span class="keyword">return</span> skus.stream().map(item -&gt; JSON.parseObject(item, <span class="keyword">new</span> <span class="title class_">TypeReference</span>&lt;SeckillSkuRedisTo&gt;() &#123;</span><br><span class="line">                        &#125;)).collect(Collectors.toList());</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> SeckillSkuRedisTo <span class="title function_">getSkuSeckilInfo</span><span class="params">(Long skuId)</span> &#123;</span><br><span class="line">        BoundHashOperations&lt;String, String, String&gt; operations = redisTemplate.boundHashOps(SECKILL_CHARE_PREFIX);</span><br><span class="line">        Set&lt;String&gt; keys = operations.keys();</span><br><span class="line">        <span class="keyword">if</span> (keys == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">String</span> <span class="variable">pattern</span> <span class="operator">=</span> <span class="string">&quot;\\d-&quot;</span> + skuId;</span><br><span class="line">        <span class="type">long</span> <span class="variable">nowTime</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Date</span>().getTime();</span><br><span class="line">        <span class="keyword">for</span> (String key : keys) &#123;</span><br><span class="line">            <span class="keyword">if</span> (key.matches(pattern)) &#123;</span><br><span class="line">                <span class="type">Object</span> <span class="variable">o</span> <span class="operator">=</span> operations.get(key);</span><br><span class="line">                <span class="type">SeckillSkuRedisTo</span> <span class="variable">seckillSkuRedisTo</span> <span class="operator">=</span> JSON.parseObject((String) o, SeckillSkuRedisTo.class);</span><br><span class="line">                <span class="keyword">if</span> (seckillSkuRedisTo != <span class="literal">null</span>) &#123;</span><br><span class="line">                    <span class="type">Long</span> <span class="variable">endTime</span> <span class="operator">=</span> seckillSkuRedisTo.getEndTime();</span><br><span class="line">                    <span class="type">Long</span> <span class="variable">startTime</span> <span class="operator">=</span> seckillSkuRedisTo.getStartTime();</span><br><span class="line">                    <span class="keyword">if</span> (startTime &lt;= nowTime &amp;&amp; endTime &gt;= nowTime) &#123;</span><br><span class="line"></span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        seckillSkuRedisTo.setRandomCode(<span class="literal">null</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">return</span> seckillSkuRedisTo;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p><img src="/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E7%A7%92%E6%9D%80/1673170251775-21fd3d66-0152-4cbb-ab53-a086fe19bb66.png" alt="image.png"></p>
+<p><img src="/personalBlog/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E7%A7%92%E6%9D%80/1673170251775-21fd3d66-0152-4cbb-ab53-a086fe19bb66.png" alt="image.png"></p>
 <ol start="4">
 <li><p>开始秒杀</p>
 <p>秒杀信息都准备好之后，就要开始秒杀了。首先前端需要传秒杀Id-SkuId、秒杀时需要的随机码以及要秒杀的数量。首先通过秒杀的Id来获取要秒杀的商品信息，判断时间是否在秒杀区间中，判断随机码是否正确，判断秒杀的数量是否登录秒杀信息中每个用户规定的数量。并且判断改用户是否已经秒杀过了，若秒杀过则拒绝。然后符合条件的用户，通过分布式信号量锁获取秒杀的库存，然后发送MQ消息给订单服务让其下单，同时返回秒杀成功给用户。这里的一系列操作都在缓存中进行，没有使用到数据库，所以用户秒杀很快。秒杀下单完成之后，用户进行支付。</p>
@@ -211,12 +211,12 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2023/01/17/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E7%A7%92%E6%9D%80/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://chirsliq.github.io/personalBlog/2023/01/17/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E7%A7%92%E6%9D%80/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>  
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/personalBlog/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a></li></ul>
 
     </footer>
   </div>
@@ -224,7 +224,7 @@
    
   <nav class="article-nav">
     
-      <a href="/2023/01/18/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E6%B5%81%E6%B0%B4%E7%BA%BF/" class="article-nav-link">
+      <a href="/personalBlog/2023/01/18/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E6%B5%81%E6%B0%B4%E7%BA%BF/" class="article-nav-link">
         <strong class="article-nav-caption">上一篇</strong>
         <div class="article-nav-title">
           
@@ -234,7 +234,7 @@
       </a>
     
     
-      <a href="/2023/01/16/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E8%AE%A4%E8%AF%81%E6%9C%8D%E5%8A%A1/" class="article-nav-link">
+      <a href="/personalBlog/2023/01/16/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E8%AE%A4%E8%AF%81%E6%9C%8D%E5%8A%A1/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
         <div class="article-nav-title">从零开始搭建一个电商项目-认证服务（七）</div>
       </a>
@@ -313,29 +313,29 @@
 <nav class="navbar">
   
   <div class="logo">
-    <a href="/"><img src="/images/ayer-side.svg" alt="C"></a>
+    <a href="/personalBlog/"><img src="/images/ayer-side.svg" alt="C"></a>
   </div>
   
   <ul class="nav nav-main">
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/">主页</a>
+      <a class="nav-item-link" href="/personalBlog/">主页</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/archives">归档</a>
+      <a class="nav-item-link" href="/personalBlog/archives">归档</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/categories">分类</a>
+      <a class="nav-item-link" href="/personalBlog/categories">分类</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/tags">标签</a>
+      <a class="nav-item-link" href="/personalBlog/tags">标签</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+      <a class="nav-item-link" href="/personalBlog/tags/%E6%97%85%E8%A1%8C/">旅行</a>
     </li>
     
     <li class="nav-item">
@@ -343,11 +343,11 @@
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/friends">友链</a>
+      <a class="nav-item-link" href="/personalBlog/friends">友链</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/2019/about">关于我</a>
+      <a class="nav-item-link" href="/personalBlog/2019/about">关于我</a>
     </li>
     
   </ul>
@@ -361,7 +361,7 @@
       </a>
       
       
-      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+      <a class="nav-item-link" target="_blank" href="/personalBlog/atom.xml" title="RSS Feed">
         <i class="ri-rss-line"></i>
       </a>
       
@@ -384,26 +384,26 @@
   <div class="reward-box">
     
     <div class="reward-item">
-      <img class="reward-img" src="/images/alipay.jpg">
+      <img class="reward-img" src="/personalBlog/images/alipay.jpg">
       <span class="reward-type">支付宝</span>
     </div>
     
     
     <div class="reward-item">
-      <img class="reward-img" src="/images/wechat.jpg">
+      <img class="reward-img" src="/personalBlog/images/wechat.jpg">
       <span class="reward-type">微信</span>
     </div>
     
   </div>
 </div>
     
-<script src="/js/jquery-3.6.0.min.js"></script>
+<script src="/personalBlog/js/jquery-3.6.0.min.js"></script>
  
-<script src="/js/lazyload.min.js"></script>
+<script src="/personalBlog/js/lazyload.min.js"></script>
 
 <!-- Tocbot -->
  
-<script src="/js/tocbot.min.js"></script>
+<script src="/personalBlog/js/tocbot.min.js"></script>
 
 <script>
   tocbot.init({
@@ -426,7 +426,7 @@
 />
 <script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
 
-<script src="/dist/main.js"></script>
+<script src="/personalBlog/dist/main.js"></script>
 
 <!-- ImageViewer -->
  <!-- Root element of PhotoSwipe. Must have class pswp. -->
@@ -541,7 +541,7 @@
 
 <!-- busuanzi  -->
  
-<script src="/js/busuanzi-2.3.pure.min.js"></script>
+<script src="/personalBlog/js/busuanzi-2.3.pure.min.js"></script>
  
 <!-- ClickLove -->
 
@@ -551,7 +551,7 @@
 
 <!-- CodeCopy -->
  
-<link rel="stylesheet" href="/css/clipboard.css">
+<link rel="stylesheet" href="/personalBlog/css/clipboard.css">
  <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
 <script>
   function wait(callback, seconds) {
