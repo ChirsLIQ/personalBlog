@@ -115,20 +115,20 @@
 <ul>
 <li><strong>下载</strong></li>
 </ul>
-<p>官方下载地址：<a target="_blank" rel="noopener" href="https://help.sonatype.com/repomanager3/product-information/download">https://help.sonatype.com/repomanager3/product-information/download</a><br>Windows下载zip包即可，下载完成之后解压，进入到bin目录，执行  <strong>nexus.exe&#x2F;run</strong> 启动Nexus<br><img src="/personalBlog/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693834152188-026644e8-cd95-43d8-b648-6fb82e3fac0f.png" alt="1693834152188-026644e8-cd95-43d8-b648-6fb82e3fac0f"><br>访问 <a target="_blank" rel="noopener" href="http://localhost:8081/">localhost:8081&#x2F;</a> ，若想修改启动端口等参数，可以修改etc&#x2F;nexus-default.properties 文件<br>首先需要输入账号密码， 账号admin，密码在 sonatype-work&#x2F;nexus3 目录的<strong>admin.password</strong>文件查看，登录进去修改密码即可。</p>
+<p>官方下载地址：<a target="_blank" rel="noopener" href="https://help.sonatype.com/repomanager3/product-information/download">https://help.sonatype.com/repomanager3/product-information/download</a><br>Windows下载zip包即可，下载完成之后解压，进入到bin目录，执行  <strong>nexus.exe&#x2F;run</strong> 启动Nexus<br><img src="/personalBlog/images/2023/web/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693834152188-026644e8-cd95-43d8-b648-6fb82e3fac0f.png" alt="1693834152188-026644e8-cd95-43d8-b648-6fb82e3fac0f"><br>访问 <a target="_blank" rel="noopener" href="http://localhost:8081/">localhost:8081&#x2F;</a> ，若想修改启动端口等参数，可以修改etc&#x2F;nexus-default.properties 文件<br>首先需要输入账号密码， 账号admin，密码在 sonatype-work&#x2F;nexus3 目录的<strong>admin.password</strong>文件查看，登录进去修改密码即可。</p>
 <ul>
 <li><strong>Nexus仓库说明</strong></li>
 </ul>
-<p><img src="/personalBlog/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693834654282-c2169c19-af9d-462d-bd1f-9f80b698b3ee.png" alt="image.png"></p>
+<p><img src="/personalBlog/images/2023/web/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693834654282-c2169c19-af9d-462d-bd1f-9f80b698b3ee.png" alt="image.png"></p>
 <p><strong>maven-central</strong>：maven中央库，当本地库、远程库没有的jar包，会去这里下载，一般国内需要配置阿里云镜像地址 <a target="_blank" rel="noopener" href="http://maven.aliyun.com/nexus/content/groups/public/">http://maven.aliyun.com/nexus/content/groups/public/</a><br><strong>maven-releases</strong>：私有库发行版的jar包仓库，就是线上正式使用的<br><strong>maven-snapshots</strong>：私有库开发版的jar宝仓库，一般开发中使用的<br><strong>maven-public</strong>：在本地<strong>settings.xml</strong>文件需要配置的地址</p>
 <p>三种类型：<strong>proxy、group、hosted</strong><br><strong>proxy：访问Maven中央仓库的代理配置，用于去配置的maven中央仓库找jar包</strong><br><strong>hosted：一般我们的私有jar包会保存到此类型的仓库中</strong><br><strong>group：可以通过此类型的地址，访问我们设置的私有仓库</strong></p>
 <ul>
 <li><strong>尝试创建仓库</strong></li>
 </ul>
-<p>创建 <strong>proxy</strong>类型的仓库，用于去中央仓库下载jar包<br><img src="/personalBlog/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693836348282-c069a21f-9e6a-4f9c-8b91-6ce7cab9b939.png" alt="image.png"><br><img src="/personalBlog/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693836372317-045d7c50-1397-4fdd-83cb-abb92e079524.png" alt="image.png"></p>
-<p>输入仓库的名字，以及maven中央仓库地址，这里我们使用阿里云中央仓库镜像地址<br><a target="_blank" rel="noopener" href="http://maven.aliyun.com/nexus/content/groups/public/">http://maven.aliyun.com/nexus/content/groups/public/</a>，点击保存<br><img src="/personalBlog/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693836482486-e57a0d50-2440-43f3-8dd4-8f46422282d7.png" alt="image.png"></p>
-<p>创建 <strong>hosted</strong>类型的仓库，保存从maven中央仓库，以及项目分发的jar包<br><img src="/personalBlog/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693836662229-90a7d06c-19d6-440f-9e80-83351e50e4e1.png" alt="image.png"><br><img src="/personalBlog/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693837091992-60aaaf43-83b5-48e9-a3ec-9654f778698f.png" alt="image.png"></p>
-<p>创建<strong>group</strong>类型仓库，用来访问仓库<br><img src="/personalBlog/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693837157467-0601b603-29d4-48e4-8b79-caf3ca89a043.png" alt="image.png"><br><img src="/personalBlog/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693837333070-7c810155-a82b-4b5b-a040-cfa0b1b1488c.png" alt="image.png"></p>
+<p>创建 <strong>proxy</strong>类型的仓库，用于去中央仓库下载jar包<br><img src="/personalBlog/images/2023/web/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693836348282-c069a21f-9e6a-4f9c-8b91-6ce7cab9b939.png" alt="image.png"><br><img src="/personalBlog/images/2023/web/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693836372317-045d7c50-1397-4fdd-83cb-abb92e079524.png" alt="image.png"></p>
+<p>输入仓库的名字，以及maven中央仓库地址，这里我们使用阿里云中央仓库镜像地址<br><a target="_blank" rel="noopener" href="http://maven.aliyun.com/nexus/content/groups/public/">http://maven.aliyun.com/nexus/content/groups/public/</a>，点击保存<br><img src="/personalBlog/images/2023/web/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693836482486-e57a0d50-2440-43f3-8dd4-8f46422282d7.png" alt="image.png"></p>
+<p>创建 <strong>hosted</strong>类型的仓库，保存从maven中央仓库，以及项目分发的jar包<br><img src="/personalBlog/images/2023/web/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693836662229-90a7d06c-19d6-440f-9e80-83351e50e4e1.png" alt="image.png"><br><img src="/personalBlog/images/2023/web/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693837091992-60aaaf43-83b5-48e9-a3ec-9654f778698f.png" alt="image.png"></p>
+<p>创建<strong>group</strong>类型仓库，用来访问仓库<br><img src="/personalBlog/images/2023/web/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693837157467-0601b603-29d4-48e4-8b79-caf3ca89a043.png" alt="image.png"><br><img src="/personalBlog/images/2023/web/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693837333070-7c810155-a82b-4b5b-a040-cfa0b1b1488c.png" alt="image.png"></p>
 </li>
 <li><p><strong>修改配置</strong></p>
 <p>修改maven的配置文件，来连接我们创建的私有仓库<br>打开settings.xml文件，通过修改<strong>mirror</strong>方式（也可以通过profiles标签）连接我们的仓库，url是创建的group类型的仓库地址，通过页面的copy按钮可以获取到</p>
@@ -143,7 +143,7 @@
 <p><strong>3.mvn –encrypt-password  “需要加密的密码”，此命令生成的密码，就是server标签的password值。</strong></p>
 </li>
 <li><p><strong>启动测试</strong></p>
-<p>使用 <strong>maven clean install</strong>命令测试，出现以下日志就代表自己搭建成功咯<br><img src="/personalBlog/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693838610616-2bcb3dda-24bc-4bd3-9942-c9c862cd4840.png" alt="image.png"></p>
+<p>使用 <strong>maven clean install</strong>命令测试，出现以下日志就代表自己搭建成功咯<br><img src="/personalBlog/images/2023/web/%E5%88%9B%E5%BB%BAmaven%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/1693838610616-2bcb3dda-24bc-4bd3-9942-c9c862cd4840.png" alt="image.png"></p>
 </li>
 </ol>
  

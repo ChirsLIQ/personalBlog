@@ -185,7 +185,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master rocketmq-all-5.0.0-bin-release]# jps</span><br><span class="line">5073 BrokerStartup</span><br><span class="line">4547 NamesrvStartup</span><br><span class="line">5081 Jps</span><br></pre></td></tr></table></figure>
 
 <p>使用控制台查看集群信息</p>
-<p><img src="/personalBlog/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231105214537995.png" alt="image-20231105214537995"></p>
+<p><img src="/personalBlog/images/2023/web/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231105214537995.png" alt="image-20231105214537995"></p>
 <h4 id="多Master多Slave异步复制-1"><a href="#多Master多Slave异步复制-1" class="headerlink" title="多Master多Slave异步复制"></a><strong>多Master多Slave异步复制</strong></h4><table>
 <thead>
 <tr>
@@ -217,12 +217,12 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nohup bin/mqbroker -c conf/2m-2s-async/broker-a.properties &gt;master-a.log 2&gt;&amp;1 &amp;  #129 </span><br><span class="line">nohup bin/mqbroker -c conf/2m-2s-async/broker-b-s.properties &gt;slave-b-s.log 2&gt;&amp;1 &amp;  #129</span><br><span class="line">nohup bin/mqbroker -c conf/2m-2s-async/broker-b.properties &gt;master-b.log 2&gt;&amp;1 &amp;  #130  </span><br><span class="line">nohup bin/mqbroker -c conf/2m-2s-async/broker-a-s.properties &gt;slave-a-s.log 2&gt;&amp;1 &amp;  #130  </span><br></pre></td></tr></table></figure>
 
 <p>可能出现问题：</p>
-<p><img src="/personalBlog/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231105220523168.png" alt="image-20231105220523168"></p>
+<p><img src="/personalBlog/images/2023/web/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231105220523168.png" alt="image-20231105220523168"></p>
 <p><strong>runbroker.sh</strong> 修改Broker   （<strong>runserver.sh</strong> 修改nameServer）</p>
 <p>修改 JAVA_OPT</p>
-<p><img src="/personalBlog/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231105221715272.png" alt="image-20231105221715272"></p>
+<p><img src="/personalBlog/images/2023/web/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231105221715272.png" alt="image-20231105221715272"></p>
 <p>控制台查看集群</p>
-<p><img src="/personalBlog/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231105221852409.png" alt="image-20231105221852409"></p>
+<p><img src="/personalBlog/images/2023/web/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231105221852409.png" alt="image-20231105221852409"></p>
 <h4 id="主从自动切换-Controller架构"><a href="#主从自动切换-Controller架构" class="headerlink" title="主从自动切换(Controller架构)"></a><strong>主从自动切换(Controller架构)</strong></h4><table>
 <thead>
 <tr>
@@ -310,17 +310,17 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">129</span></span><br><span class="line">nohup ./bin/mqbroker -c /home/chirs/rocketmq/rocketmq-all-5.0.0-bin-release/conf/controller/cluster-3n-independent/broker-a.conf &gt;dledger_broker.log  2&gt;&amp;1 &amp;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">130</span></span><br><span class="line">nohup ./bin/mqbroker -c /home/chirs/rocketmq/rocketmq-all-5.0.0-bin-release/conf/controller/cluster-3n-independent/broker-s1.conf &gt;dledger_broker.log  2&gt;&amp;1 &amp;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">131</span></span><br><span class="line">nohup ./bin/mqbroker -c /home/chirs/rocketmq/rocketmq-all-5.0.0-bin-release/conf/controller/cluster-3n-independent/broker-s2.conf &gt;dledger_broker.log  2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
 
 <p><strong>查看是否启动</strong></p>
-<p><img src="/personalBlog/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231109233721406.png" alt="image-20231109233721406"></p>
+<p><img src="/personalBlog/images/2023/web/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231109233721406.png" alt="image-20231109233721406"></p>
 <p><strong>控制台查看集群信息</strong></p>
-<p><img src="/personalBlog/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231110214932933.png" alt="image-20231110214932933"></p>
+<p><img src="/personalBlog/images/2023/web/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231110214932933.png" alt="image-20231110214932933"></p>
 <p><strong>关闭Master，验证是否可以自动切换</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">129节点执行</span></span><br><span class="line">./bin/mqshutdown broker</span><br></pre></td></tr></table></figure>
 
 <p><strong>控制台再次查看集群信息</strong></p>
 <p>131节点重新变为Master</p>
-<p><img src="/personalBlog/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231110215601834.png" alt="image-20231110215601834"></p>
+<p><img src="/personalBlog/images/2023/web/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231110215601834.png" alt="image-20231110215601834"></p>
 <p>启动129节点的Broker，再次查看控制台，129节点变成了Slave</p>
-<p><img src="/personalBlog/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231110215737295.png" alt="image-20231110215737295"></p>
+<p><img src="/personalBlog/images/2023/web/2023-11-03-RocketMQ-%E9%AB%98%E9%98%B6/image-20231110215737295.png" alt="image-20231110215737295"></p>
  
       <!-- reward -->
       
