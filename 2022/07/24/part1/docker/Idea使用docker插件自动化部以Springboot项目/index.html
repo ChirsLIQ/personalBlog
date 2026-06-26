@@ -141,23 +141,23 @@
 </li>
 <li><p>接下来咱们切换到Idea吧</p>
 <p>首先，在项目的根目录下创建<code>DockerFile</code>，也不一定非要根目录</p>
-<p><img src="/personalBlog/Idea%E4%BD%BF%E7%94%A8docker%E6%8F%92%E4%BB%B6%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E4%BB%A5Springboot%E9%A1%B9%E7%9B%AE/image-20220724225244683.png" alt="image-20220724225244683"></p>
+<p><img src="/personalBlog/images/part1/docker/Idea%E4%BD%BF%E7%94%A8docker%E6%8F%92%E4%BB%B6%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E4%BB%A5Springboot%E9%A1%B9%E7%9B%AE/image-20220724225244683.png" alt="image-20220724225244683"></p>
 <p>并添加一下内容	</p>
 <figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 基础依赖</span></span><br><span class="line"><span class="keyword">FROM</span> java:<span class="number">8</span></span><br><span class="line"><span class="comment">##挂载点，容器内此路径会对应宿主机的某个文件夹</span></span><br><span class="line"><span class="keyword">VOLUME</span><span class="language-bash">  /project</span></span><br><span class="line"><span class="comment">## 应用构建成功后的jar文件被复制到镜像内，名字也改成了dockerdeploy.jar</span></span><br><span class="line"><span class="comment">## 注意这里的文件target/dockerdeploy-0.0.1-SNAPSHOT.jar，这个就相当于Dcokerfile的路径了 </span></span><br><span class="line"><span class="comment">## 到时候使用 docker exec -it 容器的Id /bin/bash 进去就能看见添加的jar包了</span></span><br><span class="line"><span class="keyword">ADD</span><span class="language-bash"> target/dockerdeploy-0.0.1-SNAPSHOT.jar project/dockerdeploy.jar</span></span><br><span class="line"><span class="comment">## 这就是容器运行时执行的指令咯</span></span><br><span class="line"><span class="keyword">ENTRYPOINT</span><span class="language-bash"> [<span class="string">&quot;java&quot;</span>,<span class="string">&quot;-Duser.timezone=GMT+8&quot;</span>,<span class="string">&quot;-jar&quot;</span>,<span class="string">&quot;project/dockerdeploy.jar&quot;</span>]</span></span><br></pre></td></tr></table></figure>
 
 <p>Idea安装Docker插件，在设置里面的<code>Plugins </code>搜索docker安装就行，然后重启一下Idea。</p>
 <p>连接Docker，8100是我暴露的端口号，左下角会显示是否连接成功。</p>
-<p><img src="/personalBlog/Idea%E4%BD%BF%E7%94%A8docker%E6%8F%92%E4%BB%B6%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E4%BB%A5Springboot%E9%A1%B9%E7%9B%AE/image-20220724231310359.png" alt="image-20220724231310359"></p>
+<p><img src="/personalBlog/images/part1/docker/Idea%E4%BD%BF%E7%94%A8docker%E6%8F%92%E4%BB%B6%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E4%BB%A5Springboot%E9%A1%B9%E7%9B%AE/image-20220724231310359.png" alt="image-20220724231310359"></p>
 <p> 连接好docker之后，开始配置<code>Dockerfile</code>文件,如下图所示：</p>
-<p><img src="/personalBlog/Idea%E4%BD%BF%E7%94%A8docker%E6%8F%92%E4%BB%B6%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E4%BB%A5Springboot%E9%A1%B9%E7%9B%AE/image-20220724231530106.png" alt="image-20220724231530106"></p>
+<p><img src="/personalBlog/images/part1/docker/Idea%E4%BD%BF%E7%94%A8docker%E6%8F%92%E4%BB%B6%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E4%BB%A5Springboot%E9%A1%B9%E7%9B%AE/image-20220724231530106.png" alt="image-20220724231530106"></p>
 <p>配置运行<code>Dockerfile</code>的配置，如下图。第一步名字，随便起。第二部就是上上一步创建服务实例，选择就行。第三步就是创建的<code>Dockerfile</code>文件，第四步就是生产镜像的名字，第五步就是由镜像生成的容器名，第六步就是绑定的端口号，其中<code>:</code>前面的是宿主机的端口，而后面的就是容器的端口了，需要改成项目启动的端口。访问的时候使用冒号前面的端口就好，自行理解。</p>
-<p><img src="/personalBlog/Idea%E4%BD%BF%E7%94%A8docker%E6%8F%92%E4%BB%B6%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E4%BB%A5Springboot%E9%A1%B9%E7%9B%AE/image-20220724231809046.png" alt="image-20220724231809046"></p>
+<p><img src="/personalBlog/images/part1/docker/Idea%E4%BD%BF%E7%94%A8docker%E6%8F%92%E4%BB%B6%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E4%BB%A5Springboot%E9%A1%B9%E7%9B%AE/image-20220724231809046.png" alt="image-20220724231809046"></p>
 <p>运行，会出现如下的日志信息。</p>
-<p><img src="/personalBlog/Idea%E4%BD%BF%E7%94%A8docker%E6%8F%92%E4%BB%B6%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E4%BB%A5Springboot%E9%A1%B9%E7%9B%AE/image-20220724232429765.png" alt="image-20220724232429765"></p>
+<p><img src="/personalBlog/images/part1/docker/Idea%E4%BD%BF%E7%94%A8docker%E6%8F%92%E4%BB%B6%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E4%BB%A5Springboot%E9%A1%B9%E7%9B%AE/image-20220724232429765.png" alt="image-20220724232429765"></p>
 <p>然后咱们去<code>Linux</code>服务器看看，执行<code>docker images</code>命令，会有以下结果。我命名的<code>docker_deploy</code>镜像的文件有了。</p>
-<p><img src="/personalBlog/Idea%E4%BD%BF%E7%94%A8docker%E6%8F%92%E4%BB%B6%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E4%BB%A5Springboot%E9%A1%B9%E7%9B%AE/image-20220724232647973.png" alt="image-20220724232647973"></p>
+<p><img src="/personalBlog/images/part1/docker/Idea%E4%BD%BF%E7%94%A8docker%E6%8F%92%E4%BB%B6%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E4%BB%A5Springboot%E9%A1%B9%E7%9B%AE/image-20220724232647973.png" alt="image-20220724232647973"></p>
 <p>然后在执行<code>docker ps</code>查看正在运行的容器。完工！访问 服务器IP：端口号（冒号前面的端口）&#x2F;你的control路径  就能访问项目了。</p>
-<p><img src="/personalBlog/Idea%E4%BD%BF%E7%94%A8docker%E6%8F%92%E4%BB%B6%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E4%BB%A5Springboot%E9%A1%B9%E7%9B%AE/image-20220724232825709.png" alt="image-20220724232825709"></p>
+<p><img src="/personalBlog/images/part1/docker/Idea%E4%BD%BF%E7%94%A8docker%E6%8F%92%E4%BB%B6%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E4%BB%A5Springboot%E9%A1%B9%E7%9B%AE/image-20220724232825709.png" alt="image-20220724232825709"></p>
 </li>
 <li><p>写在最后</p>
 <ul>

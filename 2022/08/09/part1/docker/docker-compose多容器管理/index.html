@@ -114,13 +114,13 @@
 <li><p>使用Idea集成Docker-Compose</p>
 <p>首先需要下载<code>docker-compose</code>软件包，<a target="_blank" rel="noopener" href="https://github.com/docker/compose/releases/%EF%BC%8C">https://github.com/docker/compose/releases/，</a> </p>
 <p>本人使用Windows开发环境，所有下载的Windows版本，看个人所需。</p>
-<p><img src="/personalBlog/docker-compose%E5%A4%9A%E5%AE%B9%E5%99%A8%E7%AE%A1%E7%90%86/image-20220809144739677.png" alt="image-20220809144739677"></p>
+<p><img src="/personalBlog/images/part1/docker/docker-compose%E5%A4%9A%E5%AE%B9%E5%99%A8%E7%AE%A1%E7%90%86/image-20220809144739677.png" alt="image-20220809144739677"></p>
 <p>按照下列步骤，创建一个docker-compose</p>
-<p><img src="/personalBlog/docker-compose%E5%A4%9A%E5%AE%B9%E5%99%A8%E7%AE%A1%E7%90%86/image-20220809145255413.png" alt="image-20220809145255413"></p>
+<p><img src="/personalBlog/images/part1/docker/docker-compose%E5%A4%9A%E5%AE%B9%E5%99%A8%E7%AE%A1%E7%90%86/image-20220809145255413.png" alt="image-20220809145255413"></p>
 <p>步骤1是自定义名称，根据自身情况命名就行。</p>
 <p>步骤2是docker服务器实例，参考<a target="_blank" rel="noopener" href="https://wysiwyg.work/2022/07/24/part1/container/dockerfile_idea_deploy/Idea%E4%BD%BF%E7%94%A8docker%E6%8F%92%E4%BB%B6%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E4%BB%A5Springboot%E9%A1%B9%E7%9B%AE/">Idea集成docker插件，实现项目自动部署</a>。</p>
 <p>步骤3就是compose配置文件的路径。</p>
-<p><img src="/personalBlog/docker-compose%E5%A4%9A%E5%AE%B9%E5%99%A8%E7%AE%A1%E7%90%86/image-20220809144938640.png" alt="image-20220809144938640"></p>
+<p><img src="/personalBlog/images/part1/docker/docker-compose%E5%A4%9A%E5%AE%B9%E5%99%A8%E7%AE%A1%E7%90%86/image-20220809144938640.png" alt="image-20220809144938640"></p>
 </li>
 <li><p><code>docker-compose.yml</code>配置文件</p>
 <p>我这里主要演示了访问 8200和8201端口可以访问部署在docker里面的spring boot项目（详看上篇<a target="_blank" rel="noopener" href="https://wysiwyg.work/2022/07/24/part1/container/dockerfile_idea_deploy/Idea%E4%BD%BF%E7%94%A8docker%E6%8F%92%E4%BB%B6%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E4%BB%A5Springboot%E9%A1%B9%E7%9B%AE/">Idea集成docker插件，实现项目自动部署</a>）。并且将docker容器里面产生的日志挂载到宿主机上方便查看，如所示。我这里使用了本地的<code>dockerfile</code>文件构建的镜像，也可以直接使用docker服务器上已经构建好的镜像</p>

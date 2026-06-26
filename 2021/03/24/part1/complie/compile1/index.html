@@ -113,37 +113,37 @@
 <li><p>代码运行时的内存结构</p>
 <blockquote>
 <p>&emsp;&emsp;我们都知道，计算机主要由输入设备、输出设备、存储器和处理器组成，而处理器又有逻辑和控制单元（这里省略了寄存器）。如下图</p>
-<p><img src="/personalBlog/compile1/image-20210324194600894.png" alt="image-20210324194600894"></p>
+<p><img src="/personalBlog/images/part1/complie/compile1/image-20210324194600894.png" alt="image-20210324194600894"></p>
 <span id="more"></span>&emsp;&emsp;我们从图中看到，中央处理器又分为逻辑单元和控制单元。逻辑单元的作用就是进行基本的逻辑运算（加减乘除与或），控制单元则主要控制的是计算机的读写、中断和取指等操作。而执行代码的时候，正是CPU进行一系列逻辑运算的时候。我们拿一段C语言代码，看看计算机是怎么运行它的。这里主要看看运行代码的时候内存是什么样子的。
 </blockquote>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">fun</span><span class="params">(<span class="type">int</span> a,<span class="type">int</span> b)</span>;</span><br><span class="line"><span class="type">int</span> m=<span class="number">10</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    inti=<span class="number">4</span>;</span><br><span class="line">    <span class="type">int</span> j=<span class="number">5</span>;</span><br><span class="line">    m = fun(i,j);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> <span class="title function_">fun</span><span class="params">(<span class="type">int</span> a,<span class="type">int</span> b)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> c=<span class="number">0</span>;</span><br><span class="line">    c=a+b;</span><br><span class="line">    <span class="keyword">return</span> c;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>&emsp;&emsp;下面，我们开始吧。程序开始之前需要申请内存空间，此时的内存应该有代码区、静态数据区和动态数据区。如下图，其中动态数据区就是程序运行期间产生动态数据的地方，静态数据区主要用来保存常量（代码中的m就是常量）而代码区则用来保存我们的代码的，对于计算机来说就是机器码咯（代码中的main和fun函数）。</p>
-<p><img src="/personalBlog/compile1/image-20210325110719229.png" alt="image-20210325110719229"></p>
+<p><img src="/personalBlog/images/part1/complie/compile1/image-20210325110719229.png" alt="image-20210325110719229"></p>
 <p>&emsp;&emsp;开始执行程序吧….，是不是少了点什么？我们注意到代码中<code>main</code>函数需要调用<code>fuc</code>函数，执行完<code>fuc</code>函数之后又会跳转到<code>main</code>函数中执行，那么这里有个问题，计算机是如何知道调用完<code>fuc</code>函数之后，是如何返回<code>main</code>函数继续执行的呢？聪明的你肯定想到了，保存跳转<code>fuc</code>函数之前的地址（<code>main</code>）不就行了！所有这里还需要CPU的三个重要的寄存器用来保存运行的状态，分别是<code>EIP</code>（extended Instruction pointer）指令寄存器、<code>EBP</code>（Base pointer）基址寄存器和<code>ESP</code>（Stack  pointer）栈寄存器。</p>
 <p>&emsp;&emsp;<code>EIP</code>永远指向代码区的下一条指令。<code>EBP</code> 和<code>ESP</code>用来管理栈空间的，其中<code>EBP</code>指向栈底，<code>ESP</code>指向栈顶，如下图。其中<code>EBP</code>和<code>ESP</code>中间的灰色部分为程序加载时内核设置的位置，有兴趣可以去看看《Linux内核设计的艺术》。</p>
-<p><img src="/personalBlog/compile1/image-20210325142909034.png" alt="image-20210325142909034"></p>
+<p><img src="/personalBlog/images/part1/complie/compile1/image-20210325142909034.png" alt="image-20210325142909034"></p>
 <p>&emsp;&emsp;现在可以开始执行程序了，我们首先需要保存当前的栈底的地址，之后<code>EBP</code>和<code>ESP</code>重合了，如下图</p>
-<p><img src="/personalBlog/compile1/image-20210325145056357.png" alt="image-20210325145056357"></p>
+<p><img src="/personalBlog/images/part1/complie/compile1/image-20210325145056357.png" alt="image-20210325145056357"></p>
 <p>&emsp;&emsp;接着我们开始执行<code>main</code>函数了，首先初始化局部变量<code>i</code>和<code>j</code>，如下图（有没有发现，变量明只是用来理解的，实际运行的时候就只有值了）</p>
-<p><img src="/personalBlog/compile1/image-20210325152118133.png" alt="image-20210325152118133"></p>
+<p><img src="/personalBlog/images/part1/complie/compile1/image-20210325152118133.png" alt="image-20210325152118133"></p>
 <p>&emsp;&emsp;接下来调用<code>fuc</code>函数。首先会传递参数，将变量a、b压入栈中。这里参数压栈的参数和书写的顺序刚好相反，参数b先入栈，数值为变量j，之后参数a压入栈，数值为变量b。预留函数的返回值空间，当函数返回的时候，这里的值会传递给m。如下图(我拉长了动态数据区，本质都是一样的)。</p>
-<p><img src="/personalBlog/compile1/image-20210325152738882.png" alt="image-20210325152738882"></p>
+<p><img src="/personalBlog/images/part1/complie/compile1/image-20210325152738882.png" alt="image-20210325152738882"></p>
 <p>&emsp;&emsp;至此函数参数以及返回值已入栈完毕，接下来要开始执行<code>fuc</code>函数了。我们知道，执行函数完成之后，程序并不是立马就停止了，而是继续执行。所以我们首先需要做的就是保存当前执行的状态信息，在执行完<code>fuc</code>函数之后可以返回到正确位置继续执行。所以第一步我们应该保存当前执行指令的地址，以供函数返回时使用。然后保存<code>main</code>函数的栈底地址，这样<code>EBP</code>就能空下来，重新指向<code>fuc</code>的栈底了。如下图</p>
-<p><img src="/personalBlog/compile1/image-20210325162544863.png" alt="image-20210325162544863"></p>
+<p><img src="/personalBlog/images/part1/complie/compile1/image-20210325162544863.png" alt="image-20210325162544863"></p>
 <p>&emsp;&emsp;现在栈的主角是<code>fuc</code>函数了，首先将变量c入栈，然后执行a+b，将结果复制给c，之后返回c的值。如下图。</p>
-<p><img src="/personalBlog/compile1/image-20210325163322209.png" alt="image-20210325163322209"></p>
+<p><img src="/personalBlog/images/part1/complie/compile1/image-20210325163322209.png" alt="image-20210325163322209"></p>
 <p>&emsp;&emsp;此时<code>fuc</code>函数执行完毕，需要清栈。这里主要分为两步，第一步恢复<code>main</code>函数的栈信息，第二步需要找到<code>fun</code>函数返回的地址，程序继续执行。如下图。</p>
-<p><img src="/personalBlog/compile1/image-20210325164813844.png" alt="image-20210325164813844"></p>
+<p><img src="/personalBlog/images/part1/complie/compile1/image-20210325164813844.png" alt="image-20210325164813844"></p>
 <p>&emsp;&emsp;此时已经返回执行<code>main</code>函数了，需要将<code>fun</code>返回的值赋值给m。如图</p>
-<p><img src="/personalBlog/compile1/image-20210325165419568.png" alt="image-20210325165419568"></p>
+<p><img src="/personalBlog/images/part1/complie/compile1/image-20210325165419568.png" alt="image-20210325165419568"></p>
 </blockquote>
 </li>
 </ol>
 <blockquote>
 <p>&emsp;&emsp;至此<code>main</code>函数也执行完毕，清除栈中的所有数据。如图：</p>
-<p><img src="/personalBlog/compile1/image-20210325165735871.png" alt="image-20210325165735871"></p>
+<p><img src="/personalBlog/images/part1/complie/compile1/image-20210325165735871.png" alt="image-20210325165735871"></p>
 </blockquote>
 <ol start="2">
 <li>小结</li>

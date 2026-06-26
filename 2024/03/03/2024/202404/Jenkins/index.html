@@ -112,7 +112,7 @@
   <h2 id="CI-DI简介"><a href="#CI-DI简介" class="headerlink" title="CI&#x2F;DI简介"></a>CI&#x2F;DI简介</h2><p>CI&#x2F;DI就是持续集成与部署，持续集成（Continuous integration），持续部署（Continuous deployment）。</p>
 <p>持续集成：频繁地将代码集成到主干。通俗的来说就是将不同分支的代码提交到代码仓库，如GitLab。将非主分支合并到主分支上。并进行构建测试，确认是否正确的集成。</p>
 <p>持续部署：将集成测试完成的项目部署到对应的环境。</p>
-<p><img src="/personalBlog/Jenkins/CIDI-Jenkins-1710767035733.png" alt="CIDI-Jenkins"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/CIDI-Jenkins-1710767035733.png" alt="CIDI-Jenkins"></p>
 <p><strong>首先</strong>，开发将代码提交到代码仓库，将代码的改动合并到相应的分支。</p>
 <p><strong>下一步，</strong>Jenkins利用git、maven等插件，对提交的代码进行拉取、测试、打包等，</p>
 <p><strong>最后，</strong>将代码打包成jar&#x2F;war推送到测试、生产服务器进行部署。</p>
@@ -130,7 +130,7 @@
 
 <h3 id="启动gitlab"><a href="#启动gitlab" class="headerlink" title="启动gitlab"></a>启动gitlab</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">启动</span></span><br><span class="line">gitlab-ctl start    </span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">更新配置需要执行</span></span><br><span class="line">gitlab-ctl reconfigure</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">状态</span></span><br><span class="line">gitlab-ctl status</span><br><span class="line">gitlab-ctl stop</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看日照计</span></span><br><span class="line">gitlab-ctl tail </span><br></pre></td></tr></table></figure>
 
-<p><img src="/personalBlog/Jenkins/image-20240306210106477.png" alt="image-20240306210106477"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240306210106477.png" alt="image-20240306210106477"></p>
 <h3 id="访问"><a href="#访问" class="headerlink" title="访问"></a>访问</h3><h3 id="突发"><a href="#突发" class="headerlink" title="突发"></a>突发</h3><p>忘记密码了。。。</p>
 <ol>
 <li>使用以下命令</li>
@@ -138,13 +138,13 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab-rails console production</span><br></pre></td></tr></table></figure>
 
 <p>若出现报错</p>
-<p><img src="/personalBlog/Jenkins/image-20240319223519314.png" alt="image-20240319223519314"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240319223519314.png" alt="image-20240319223519314"></p>
 <ol start="2">
 <li>使用以下命令</li>
 </ol>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab-rails console -e production</span><br></pre></td></tr></table></figure>
 
-<p><img src="/personalBlog/Jenkins/image-20240319232241882.png" alt="image-20240319232241882"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240319232241882.png" alt="image-20240319232241882"></p>
 <ol start="3">
 <li>查看root信息 user &#x3D; User.where(id:1).first</li>
 </ol>
@@ -177,19 +177,19 @@
 
 <h3 id="访问-1"><a href="#访问-1" class="headerlink" title="访问"></a>访问</h3><p> <a target="_blank" rel="noopener" href="http://192.168.202.129:12001/">http://192.168.202.129:12001/</a></p>
 <p>输入控制台的密码串，或去 <code>/var/lib/jenkins/secrets/initialAdminPassword</code> 查看。</p>
-<p><img src="/personalBlog/Jenkins/image-20240306224436946.png" alt="image-20240306224436946"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240306224436946.png" alt="image-20240306224436946"></p>
 <p>输入管理员密码，安装插件后，创建用户名完成之后，进入主页。如下图：</p>
-<p><img src="/personalBlog/Jenkins/image-20240306230210066.png" alt="image-20240306230210066"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240306230210066.png" alt="image-20240306230210066"></p>
 <h3 id="可能遇到的问题"><a href="#可能遇到的问题" class="headerlink" title="可能遇到的问题"></a>可能遇到的问题</h3><ul>
 <li><p>插件安装不下来或受高本版jenkins的约束，可配置对应版本所需的镜像地址</p>
-<p><img src="/personalBlog/Jenkins/image-20240307221510889.png" alt="image-20240307221510889"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240307221510889.png" alt="image-20240307221510889"></p>
 <p>修改 Update Site的值   Plugin Manager  —&gt; Advanced  替换镜像源</p>
-<p><img src="/personalBlog/Jenkins/image-20240307222931941.png" alt="image-20240307222931941"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240307222931941.png" alt="image-20240307222931941"></p>
 <p><a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/"> 清华大学开源软件镜像站</a>     <a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/%EF%BC%8C%E6%89%BE%E5%AF%B9%E8%87%AA%E5%B7%B1%E5%AF%B9%E5%BA%94%E7%89%88%E6%9C%AC%E7%9A%84jenkins%E7%89%88%E6%9C%AC%EF%BC%8C%E6%88%91%E8%BF%99%E9%87%8C%E6%98%AF">https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/，找对自己对应版本的jenkins版本，我这里是</a> Jenkins 2.346.3</p>
-<p><img src="/personalBlog/Jenkins/image-20240307222906015.png" alt="image-20240307222906015"></p>
-<p><img src="/personalBlog/Jenkins/image-20240307223042572.png" alt="image-20240307223042572"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240307222906015.png" alt="image-20240307222906015"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240307223042572.png" alt="image-20240307223042572"></p>
 <p>将地址复制到 Update Site 中，点击提交</p>
-<p><img src="/personalBlog/Jenkins/image-20240307223152257.png" alt="image-20240307223152257"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240307223152257.png" alt="image-20240307223152257"></p>
 <p>全局搜索 default.json 文件，然后进入到对应的目录</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -name default.json</span><br></pre></td></tr></table></figure>
 
@@ -202,43 +202,43 @@
 <h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><h3 id="基于角色的访问权限控制"><a href="#基于角色的访问权限控制" class="headerlink" title="基于角色的访问权限控制"></a>基于角色的访问权限控制</h3><ul>
 <li>安装<strong>Role-based Authorization Strategy</strong>插件</li>
 </ul>
-<p><img src="/personalBlog/Jenkins/image-20240318213047763.png" alt="image-20240318213047763"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240318213047763.png" alt="image-20240318213047763"></p>
 <ul>
 <li>全局安全配置</li>
 </ul>
-<p><img src="/personalBlog/Jenkins/image-20240318213412000.png" alt="image-20240318213412000"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240318213412000.png" alt="image-20240318213412000"></p>
 <ul>
 <li>修改安全配置为 Role-Based Strategy</li>
 </ul>
-<p><img src="/personalBlog/Jenkins/image-20240318213734803.png" alt="image-20240318213734803"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240318213734803.png" alt="image-20240318213734803"></p>
 <ul>
 <li>创建用户</li>
 </ul>
-<p><img src="/personalBlog/Jenkins/image-20240318214032455.png" alt="image-20240318214032455"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240318214032455.png" alt="image-20240318214032455"></p>
 <ul>
 <li>创建两个用户chris、chris1</li>
 </ul>
-<p><img src="/personalBlog/Jenkins/image-20240318214149950.png" alt="image-20240318214149950"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240318214149950.png" alt="image-20240318214149950"></p>
 <ul>
 <li>创建角色</li>
 </ul>
-<p><img src="/personalBlog/Jenkins/image-20240318214523287.png" alt="image-20240318214523287"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240318214523287.png" alt="image-20240318214523287"></p>
 <p>角色分为 <strong>Global roles</strong>、<strong>Item roles</strong>、<strong>Agent roles</strong></p>
 <p> <strong>Global roles</strong>：管理员等高级用户可以创建基于全局的角色</p>
 <p><strong>Item roles：</strong>针对项目锁拥有的角色</p>
 <p><strong>Agent roles</strong>：代理角色，与各个节点相关</p>
 <p>创建 grole 角色，默认和管理员拥有相同的权利</p>
-<p><img src="/personalBlog/Jenkins/image-20240318215859841.png" alt="image-20240318215859841"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240318215859841.png" alt="image-20240318215859841"></p>
 <ul>
 <li>分配角色</li>
 </ul>
 <p>将用户 <strong>chris</strong> 赋予 <strong>grole</strong> 角色</p>
-<p><img src="/personalBlog/Jenkins/image-20240318220215471.png" alt="image-20240318220215471"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240318220215471.png" alt="image-20240318220215471"></p>
 <h3 id="凭证管理"><a href="#凭证管理" class="headerlink" title="凭证管理"></a>凭证管理</h3><p>我们需要jenkins从git上拉取我们提交的代码，git肯定是需要访问凭证信息的，此时我们可以创建一个连接git的凭证，在拉取项目代码时可以使用。</p>
 <p>安装 <strong>Credentials Binding</strong> 插件，我这里已经安装了，跳过。安装完之后，会有一个凭证管理入口</p>
-<p><img src="/personalBlog/Jenkins/image-20240318221524020.png" alt="image-20240318221524020"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240318221524020.png" alt="image-20240318221524020"></p>
 <p>点击进去之后，添加凭证</p>
-<p><img src="/personalBlog/Jenkins/image-20240318221642606.png" alt="image-20240318221642606"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240318221642606.png" alt="image-20240318221642606"></p>
 <p>有五种凭证类型</p>
 <ol>
 <li>Username with password ：用户名和密码方式</li>
@@ -247,12 +247,12 @@
 <li>Secret text： 保存一个加密文本，如GitHub 的 api token</li>
 <li>Certificate： 通过证书方式</li>
 </ol>
-<p><img src="/personalBlog/Jenkins/image-20240318221700856.png" alt="image-20240318221700856"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240318221700856.png" alt="image-20240318221700856"></p>
 <h4 id="创建ssh秘钥访问git"><a href="#创建ssh秘钥访问git" class="headerlink" title="创建ssh秘钥访问git"></a>创建ssh秘钥访问git</h4><ol>
 <li>安装git插件</li>
 </ol>
 <p>搜索git安装即可</p>
-<p><img src="/personalBlog/Jenkins/image-20240318224632530.png" alt="image-20240318224632530"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240318224632530.png" alt="image-20240318224632530"></p>
 <p>jenkins服务器上也需要安装git</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装命令</span></span><br><span class="line">yum install git -y</span><br><span class="line">git --version</span><br></pre></td></tr></table></figure>
 
@@ -261,37 +261,37 @@
 </ol>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa </span><br><span class="line">cd ~/.ssh</span><br></pre></td></tr></table></figure>
 
-<p><img src="/personalBlog/Jenkins/image-20240318222917544.png" alt="image-20240318222917544"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240318222917544.png" alt="image-20240318222917544"></p>
 <p><strong>id_rsa</strong>：私钥文件</p>
 <p><strong>id_rsa.pub</strong>：公钥文件</p>
 <ol start="3">
 <li>将生成的私钥文件内容，放到jenkins上，即创建凭证</li>
 </ol>
-<p><img src="/personalBlog/Jenkins/image-20240318223224391.png" alt="image-20240318223224391"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240318223224391.png" alt="image-20240318223224391"></p>
 <ol start="4">
 <li>将生成的公钥内容放到gitlab中</li>
 </ol>
-<p><img src="/personalBlog/Jenkins/image-20240328212010255.png" alt="image-20240328212010255"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240328212010255.png" alt="image-20240328212010255"></p>
 <ol start="5">
 <li>创建一个freestyle项目</li>
 </ol>
-<p><img src="/personalBlog/Jenkins/image-20240328212131000.png" alt="image-20240328212131000"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240328212131000.png" alt="image-20240328212131000"></p>
 <ol start="6">
 <li>输入gitlab仓库的项目地址，并选择需要使用的秘钥信息，注意Branches to build选择对应的分支。</li>
 </ol>
-<p><img src="/personalBlog/Jenkins/image-20240328220805266.png" alt="image-20240328220805266"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240328220805266.png" alt="image-20240328220805266"></p>
 <ol start="7">
 <li>保存之后，点击 build now</li>
 </ol>
-<p><img src="/personalBlog/Jenkins/image-20240328221116373.png" alt="image-20240328221116373"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240328221116373.png" alt="image-20240328221116373"></p>
 <ol start="8">
 <li>查看构建的历史</li>
 </ol>
-<p><img src="/personalBlog/Jenkins/image-20240328221438397.png" alt="image-20240328221438397"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240328221438397.png" alt="image-20240328221438397"></p>
 <ol start="9">
 <li>访问jenkins部署的服务器，<code>/var/lib/jenkins/workspace </code>,发现项目已经拉下来了，项目名就是创建的 <code>freestyle</code> 项目名称</li>
 </ol>
-<p><img src="/personalBlog/Jenkins/image-20240328221555344.png" alt="image-20240328221555344"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240328221555344.png" alt="image-20240328221555344"></p>
 <h3 id="Maven管理"><a href="#Maven管理" class="headerlink" title="Maven管理"></a>Maven管理</h3><ol>
 <li>安装maven</li>
 </ol>
@@ -319,75 +319,75 @@
 <ul>
 <li>配置JDK</li>
 </ul>
-<p><img src="/personalBlog/Jenkins/image-20240402215555459.png" alt="image-20240402215555459"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240402215555459.png" alt="image-20240402215555459"></p>
 <ul>
 <li>配置Maven</li>
 </ul>
-<p><img src="/personalBlog/Jenkins/image-20240402215936543.png" alt="image-20240402215936543"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240402215936543.png" alt="image-20240402215936543"></p>
 <ul>
 <li>添加配置（记得创建一个maven项目哦）</li>
 </ul>
-<p><img src="/personalBlog/Jenkins/image-20240402220914939.png" alt="image-20240402220914939"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240402220914939.png" alt="image-20240402220914939"></p>
 <ul>
 <li>添加mvn打包命令</li>
 </ul>
-<p><img src="/personalBlog/Jenkins/image-20240402221036314.png" alt="image-20240402221036314"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240402221036314.png" alt="image-20240402221036314"></p>
 <ul>
 <li>配置环境变量，不然build时候找不到命令</li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#将输出的环境变量进行配置</span><br><span class="line">echo $PATH</span><br></pre></td></tr></table></figure>
 
-<p><img src="/personalBlog/Jenkins/image-20240402231302996.png" alt="image-20240402231302996"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240402231302996.png" alt="image-20240402231302996"></p>
 <ul>
 <li>开始Build</li>
 </ul>
-<p><img src="/personalBlog/Jenkins/image-20240402221101106.png" alt="image-20240402221101106"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240402221101106.png" alt="image-20240402221101106"></p>
 <ul>
 <li>拉代码，执行maven命令</li>
 </ul>
-<p><img src="/personalBlog/Jenkins/image-20240402233949999.png" alt="image-20240402233949999"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240402233949999.png" alt="image-20240402233949999"></p>
 <ul>
 <li>可以查看maven本地仓库，依赖包已经下载</li>
 </ul>
-<p><img src="/personalBlog/Jenkins/image-20240402233155798.png" alt="image-20240402233155798"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240402233155798.png" alt="image-20240402233155798"></p>
 <h4 id="出现的问题"><a href="#出现的问题" class="headerlink" title="出现的问题"></a>出现的问题</h4><p>查看日志，发现报错</p>
-<p><img src="/personalBlog/Jenkins/image-20240402230710997.png" alt="image-20240402230710997"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240402230710997.png" alt="image-20240402230710997"></p>
 <p>配置Git的目录，根据自己安装的目录修改</p>
-<p><img src="/personalBlog/Jenkins/image-20240402230759324.png" alt="image-20240402230759324"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240402230759324.png" alt="image-20240402230759324"></p>
 <h4 id="补一句"><a href="#补一句" class="headerlink" title="补一句"></a>补一句</h4><p>我们可以在maven打完包之后，使用java命令启动jar包即可。</p>
 <h3 id="部署Jar包"><a href="#部署Jar包" class="headerlink" title="部署Jar包"></a>部署Jar包</h3><ol>
 <li>创建一个maven项目</li>
 </ol>
-<p><img src="/personalBlog/Jenkins/image-20240404195903044.png" alt="image-20240404195903044"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240404195903044.png" alt="image-20240404195903044"></p>
 <ol start="2">
 <li>配置项目路径，注意分支</li>
 </ol>
-<p><img src="/personalBlog/Jenkins/image-20240404200408800.png" alt="image-20240404200408800"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240404200408800.png" alt="image-20240404200408800"></p>
 <ol start="3">
 <li><p>构建命令</p>
 <p><strong>Run only if build succeeds</strong>：在构建成功时执行后续步骤</p>
 </li>
 </ol>
-<p><img src="/personalBlog/Jenkins/image-20240404201654697.png" alt="image-20240404201654697"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240404201654697.png" alt="image-20240404201654697"></p>
 <ol start="4">
 <li>安装 Publish Over SSH 插件</li>
 </ol>
 <ul>
 <li>若部署的服务器跟jenkins不在同一服务器，需要下载</li>
 </ul>
-<p><img src="/personalBlog/Jenkins/image-20240404201332208.png" alt="image-20240404201332208"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240404201332208.png" alt="image-20240404201332208"></p>
 <ul>
 <li>配置远程服务器信息以及密码等信息</li>
 </ul>
 <p>Passphrase： 如果生成秘钥的时候输入了密码，就在这里输入，否则留空</p>
 <p>Path to Key： Jenkins 所在服务器秘钥(id_rsa)的路径，和下面的Key二选一（&#x2F;root&#x2F;.ssh&#x2F;id_rsa）</p>
 <p>Key： Jenkins 所在服务器秘钥(id_rsa)的路内容，和上面的Path to Key二选一</p>
-<p><img src="/personalBlog/Jenkins/image-20240404202955835.png" alt="image-20240404202955835"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240404202955835.png" alt="image-20240404202955835"></p>
 <ul>
 <li>配置远程服务器</li>
 </ul>
 <p>Remote Directory：访问的远程服务器目录</p>
-<p><img src="/personalBlog/Jenkins/image-20240404203852234.png" alt="image-20240404203852234"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240404203852234.png" alt="image-20240404203852234"></p>
 <ol start="5">
 <li>添加 post-build step <code>Send files or execute commands over SSH</code></li>
 </ol>
@@ -398,18 +398,18 @@
 <p><strong>注：这里执行命令的时候进入到了jar包的目录，然后以后台方式启动</strong></p>
 <p><strong>如果没有进入到目录，命令启动jar没用</strong></p>
 <p><strong>如果不是后台运行，jenkins会卡主</strong></p>
-<p><img src="/personalBlog/Jenkins/image-20240404211332717.png" alt="image-20240404211332717"></p>
-<p><img src="/personalBlog/Jenkins/image-20240404214736207.png" alt="image-20240404214736207"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240404211332717.png" alt="image-20240404211332717"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240404214736207.png" alt="image-20240404214736207"></p>
 <ol start="6">
 <li>开始构建</li>
 </ol>
-<p><img src="/personalBlog/Jenkins/image-20240404220009316.png" alt="image-20240404220009316"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240404220009316.png" alt="image-20240404220009316"></p>
 <ol start="7">
 <li>远程服务器上查看jar包以及是否执行</li>
 </ol>
 <p>完工！</p>
-<p><img src="/personalBlog/Jenkins/image-20240404220050542.png" alt="image-20240404220050542"></p>
-<p><img src="/personalBlog/Jenkins/image-20240404220132116.png" alt="image-20240404220132116"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240404220050542.png" alt="image-20240404220050542"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240404220132116.png" alt="image-20240404220132116"></p>
 <h3 id="流水线"><a href="#流水线" class="headerlink" title="流水线"></a>流水线</h3><h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>将原先一个任务做完的事情，拆分为多个子任务执行，以流水线的方式执行。</p>
 <p>由于拆分为多个子任务，可以观察每个子任务执行的状态，并在出现问题的时候，可以迅速查询出问题点，提高效率。</p>
 <h4 id="功能特性"><a href="#功能特性" class="headerlink" title="功能特性"></a>功能特性</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">代码实现：以代码的形式实现，不仅可以被纳入版本控制，还可以通过编辑代码实现目标效果。</span><br><span class="line">可持续性：任务的执行，不受jenkins等其他环境的限制。</span><br><span class="line">操作灵活：子任务可以随意终止和继续</span><br><span class="line">  多功能：支持复杂CD要求，包括fork/join子进程，循环和并行执行工作的能力</span><br><span class="line">  可扩展：支持DSL的自定义扩展以及与其他插件集成。</span><br></pre></td></tr></table></figure>
@@ -417,11 +417,11 @@
 <h4 id="两种实现方式"><a href="#两种实现方式" class="headerlink" title="两种实现方式"></a>两种实现方式</h4><h5 id="脚本式pipeline"><a href="#脚本式pipeline" class="headerlink" title="脚本式pipeline"></a>脚本式pipeline</h5><p>基于groovy的DSL语言实现，提供了大量的灵活性和可拓展性。因为jenkins的基于java实现的，所以很早引入了groovy作为DSL。如果使用groovy来编写jenkins file，这对与小白是有难度的，所以就有了声明式pipeline出现。</p>
 <h5 id="声明式pipeline"><a href="#声明式pipeline" class="headerlink" title="声明式pipeline"></a>声明式pipeline</h5><p>适合没有编程经验的初学者，并得到了官方越来越多的支持。</p>
 <h4 id="实践-1"><a href="#实践-1" class="headerlink" title="实践"></a>实践</h4><p>创建流水线项目，如果没有改选择，则需要下载<strong>Pipeline</strong>的插件</p>
-<p><img src="/personalBlog/Jenkins/image-20240405121904524.png" alt="image-20240405121904524"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240405121904524.png" alt="image-20240405121904524"></p>
 <p>两种定义方式</p>
-<p>Pipeline Script：直接把脚本内容写到脚本对话框中<br>Pipeline script from SCM ：Source Control Management–源代码控制管理，即从gitlab&#x2F;github&#x2F;git上获得pipeline脚本–JenkisFile<br><img src="/personalBlog/Jenkins/image-20240405173614254.png" alt="image-20240405173614254"></p>
+<p>Pipeline Script：直接把脚本内容写到脚本对话框中<br>Pipeline script from SCM ：Source Control Management–源代码控制管理，即从gitlab&#x2F;github&#x2F;git上获得pipeline脚本–JenkisFile<br><img src="/personalBlog/images/2024/202404/Jenkins/image-20240405173614254.png" alt="image-20240405173614254"></p>
 <p>刚开始不会写脚本咋办呢，可以使用 <a target="_blank" rel="noopener" href="http://192.168.202.129:12001/job/pipeline_test/pipeline-syntax">Pipeline Syntax</a> 来生成。</p>
-<p><img src="/personalBlog/Jenkins/image-20240405173929240.png" alt="image-20240405173929240"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240405173929240.png" alt="image-20240405173929240"></p>
 <h5 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h5><p>从Git仓库拉取代码，使用Maven进行构建，打包并运行，先上最终脚本</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">pipeline &#123;</span><br><span class="line">    agent any</span><br><span class="line"></span><br><span class="line">    stages &#123;</span><br><span class="line">        stage(&#x27;Git Pull&#x27;) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                echo &quot;开始拉取代码...&quot;</span><br><span class="line">                git credentialsId: &#x27;git-ssh&#x27;, url: &#x27;git@192.168.202.129:jenkins_group/first-test-project.git&#x27;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage(&#x27;Maven clean package&#x27;) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                echo &quot;maven clean package...&quot;</span><br><span class="line">                sh &#x27;mvn clean package&#x27;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage(&#x27;deploy project&#x27;) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                echo &quot;deploy project...&quot;</span><br><span class="line">                sshPublisher(publishers: [sshPublisherDesc(configName: &#x27;192.168.202.130&#x27;, transfers: [sshTransfer(cleanRemote: false, excludes: &#x27;&#x27;, execCommand: &#x27;&#x27;&#x27;cd /home/jenkins_project</span><br><span class="line">java -jar demo-0.0.1-SNAPSHOT.jar &gt;application.log  2&gt;&amp;1 &amp;</span><br><span class="line">echo &quot;部署成功&quot;&#x27;&#x27;&#x27;, execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: &#x27;[, ]+&#x27;, remoteDirectory: &#x27;&#x27;, remoteDirectorySDF: false, removePrefix: &#x27;target&#x27;, sourceFiles: &#x27;target/demo-0.0.1-SNAPSHOT.jar&#x27;)], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -429,8 +429,8 @@
 <li>拉取代码</li>
 </ul>
 <p>选择Git选项，输入代码地址，分支，以及认证方式生成脚本</p>
-<p><img src="/personalBlog/Jenkins/image-20240407213947990.png" alt="image-20240407213947990"></p>
-<p><img src="/personalBlog/Jenkins/image-20240407214020022.png" alt="image-20240407214020022"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240407213947990.png" alt="image-20240407213947990"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240407214020022.png" alt="image-20240407214020022"></p>
 <ul>
 <li>Maven构建</li>
 </ul>
@@ -439,17 +439,17 @@
 <li>上传到远程服务器部署</li>
 </ul>
 <p>选择下图的选项，剩下的配置信息跟构建Maven项目一致</p>
-<p><img src="/personalBlog/Jenkins/image-20240407215342415.png" alt="image-20240407215342415"></p>
-<p><img src="/personalBlog/Jenkins/image-20240407215512301.png" alt="image-20240407215512301"></p>
-<p><img src="/personalBlog/Jenkins/image-20240407215542806.png" alt="image-20240407215542806"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240407215342415.png" alt="image-20240407215342415"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240407215512301.png" alt="image-20240407215512301"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240407215542806.png" alt="image-20240407215542806"></p>
 <ul>
 <li>开始Build</li>
 </ul>
-<p><img src="/personalBlog/Jenkins/image-20240407220257195.png" alt="image-20240407220257195"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240407220257195.png" alt="image-20240407220257195"></p>
 <p>可以看到每一步的执行时间</p>
-<p><img src="/personalBlog/Jenkins/image-20240407220336738.png" alt="image-20240407220336738"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240407220336738.png" alt="image-20240407220336738"></p>
 <h3 id="触发器"><a href="#触发器" class="headerlink" title="触发器"></a>触发器</h3><p>我们配置项目的时候，会有如下图所示的选项</p>
-<p><img src="/personalBlog/Jenkins/image-20240407220750837.png" alt="image-20240407220750837"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240407220750837.png" alt="image-20240407220750837"></p>
 <p><strong>Build whenever a SNAPSHOT dependency is built</strong>：</p>
 <p>当job依赖的快照版本被build时，执行本job。</p>
 <p>**Trigger builds remotely (e.g., from scripts)**：</p>
@@ -463,16 +463,16 @@
 <h4 id="实例-1"><a href="#实例-1" class="headerlink" title="实例"></a>实例</h4><p>这里演示一下构建完任务之后，构建后续的任务。</p>
 <p><strong>创建一个Freestyle项目（A2）进行Install：</strong></p>
 <p><strong>Trigger only if build is stable</strong>：只有构建稳定时触发</p>
-<p><img src="/personalBlog/Jenkins/image-20240407224320458.png" alt="image-20240407224320458"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240407224320458.png" alt="image-20240407224320458"></p>
 <p>使用Shell脚本对A1项目进行构建：</p>
-<p><img src="/personalBlog/Jenkins/image-20240407224409538.png" alt="image-20240407224409538"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240407224409538.png" alt="image-20240407224409538"></p>
 <p><strong>创建一个Freestyle项目（A1）用于Git拉取项目代码：</strong></p>
-<p><img src="/personalBlog/Jenkins/image-20240407223401524.png" alt="image-20240407223401524"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240407223401524.png" alt="image-20240407223401524"></p>
 <p><strong>开始构建A1：</strong></p>
 <p>拉取代码之后，触发构建A2：</p>
-<p><img src="/personalBlog/Jenkins/image-20240407224511067.png" alt="image-20240407224511067"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240407224511067.png" alt="image-20240407224511067"></p>
 <p>查看A2执行情况，也成功触发：</p>
-<p><img src="/personalBlog/Jenkins/image-20240407224551066.png" alt="image-20240407224551066"></p>
+<p><img src="/personalBlog/images/2024/202404/Jenkins/image-20240407224551066.png" alt="image-20240407224551066"></p>
  
       <!-- reward -->
       
