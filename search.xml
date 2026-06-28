@@ -1,883 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Linux简介</title>
-    <url>/personalBlog/2023/11/14/2023/linux/2023-11-11-Linux%E7%AE%80%E4%BB%8B/</url>
-    <content><![CDATA[简介Linux 内核最初只是由芬兰人林纳斯·托瓦兹（Linus Torvalds）在赫尔辛基大学上学时出于个人爱好而编写的。
-Linux 是一套免费使用和自由传播的类 Unix 操作系统，是一个基于 POSIX 和 UNIX 的多用户、多任务、支持多线程和多 CPU 的操作系统。
-Linux 能运行主要的 UNIX 工具软件、应用程序和网络协议。它支持 32 位和 64 位硬件。Linux 继承了 Unix 以网络为核心的设计思想，是一个性能稳定的多用户网络操作系统。
-发行版
-目前市场比较有名的发行版：Ubuntu、RedHat、CentOS、Debian、Fedora、SuSE、OpenSUSE、Arch Linux、SolusOS 等。
-Linux vs WindowsWindows界面统一，驱动程序丰富，版本更新频繁。使用比较简单，很适合普通人群使用。比较多的用于办公室办公、学习等。
-Linux的界面风格随发行版，可能也互不兼容。GNU&#x2F;Linux 的终端机是从 UNIX 传承下来，基本命令和操作方法也几乎一致。比较多的用于服务器。
-下载Centos官网：https://www.centos.org/download/
-阿里云：https://mirrors.aliyun.com/centos/7/isos/x86_64
-
-CentOS-7.0-x86_64-DVD-1503-01.iso : 标准安装版，一般下载这个就可以了（推荐）
-CentOS-7.0-x86_64-NetInstall-1503-01.iso : 网络安装镜像（从网络安装或者救援系统）
-CentOS-7.0-x86_64-Everything-1503-01.iso: 对完整版安装盘的软件进行补充，集成所有软件。（包含centos7的一套完整的软件包，可以用来安装系统或者填充本地镜像）
-CentOS-7.0-x86_64-GnomeLive-1503-01.iso: GNOME桌面版
-CentOS-7.0-x86_64-KdeLive-1503-01.iso: KDE桌面版
-CentOS-7.0-x86_64-livecd-1503-01.iso : 光盘上运行的系统，类拟于winpe
-CentOS-7.0-x86_64-minimal-1503-01.iso : 精简版，自带的软件最少
-
-启动过程init程序的类型
-SysV: init, CentOS 5之前, 配置文件： &#x2F;etc&#x2F;inittab。
-
-Upstart: init,CentOS 6, 配置文件： &#x2F;etc&#x2F;inittab, &#x2F;etc&#x2F;init&#x2F;*.conf。
-
-Systemd： systemd, CentOS 7,配置文件： &#x2F;usr&#x2F;lib&#x2F;systemd&#x2F;system、 &#x2F;etc&#x2F;systemd&#x2F;system。
-
-
-内核引导计算机打开电源后，会对BIOS（基本输入输出系统）进行开机自检，按照BIOS设置的启动设备（一般是硬盘）进行启动。操作系统接管硬件之后，会读入 &#x2F;boot 目录下的内核文件。
-
-运行initinit程序会去读取配置文件 &#x2F;etc&#x2F;inittab。用来引导启动其它进程。
-
-运行级别
-Linux系统有7个运行级别，根据不同的场景，从而分配不同的开机启动程序。
-
-运行级别0：系统的停机状态，若设置为此运行级别，则系统将不能启动。
-运行级别1：单用户的工作状态，只有root权限，适用于系统维护，并且不能远程登录。
-运行级别2：多用户的状态。没有NFS。
-运行级别3：完全的多用户状态，有NFS。登录后进入控制台模式。
-运行级别4：保留。
-运行级别5：登录后进入GUI模式，也就是图形界面。
-运行级别6：系统重启模式，若设置此级别，则系统陷入重启循环。
-
-系统初始化Init会调用执行 &#x2F;etc&#x2F;rc.d&#x2F;rc.sysinit，而rc.sysinit是一个bash shell脚本，主要完成一些系统初始化的工作。激活交换分区、检查磁盘、加载硬件模块以及其它需要优先执行的任务。&#x2F;etc&#x2F;rc.d&#x2F;rc5.d&#x2F;目录中的启动脚本其实是一些连接文件，真正的rc启动脚本在&#x2F;etc&#x2F;rc.d&#x2F;init.d&#x2F;下。
-我们可以在&#x2F;etc&#x2F;rc.d&#x2F;init.d下添加我们自定义的启动脚本。
-
-建立终端rc执行之后，返回init。这个时候基本环境已经设置好了，各种的守护线程也已经启动。init会打开6个终端，供用户登录使用。
-tty1、tty2、tty3、tty4、tty5、tty6。
-使用快捷键Ctrl + Alt + F1 ~ F6 在命令行界面之间切换。
-在命令行界面使用快捷键Ctrl + Alt + F7切回图形化界面。
-如果使用的VM虚拟机，命令行之间切换使用Alt + Space + F1F6。在图形化界面使用Alt + Shift + Ctrl + F1F6 切换到命令行界面。
-用户登录系统一般来说登录方式有三种：
-
-命令行
-ssh登录
-图形化界面登录
-
-
-Linux关机#将数据从内存刷新到磁盘sync#关机   #-h now：立马关机#-r now：立马重启#-h 23:00：今天的23:00关机#-h +12 十二分钟后关机shutdown  #重启reboot#关闭系统halt
-
-目录结构登录系统之后，输入以下命令：
-ls /
-
-
-因为不是新安装的虚拟机，可能存在后续添加的目录，这里只记录重要的目录。
-
-&#x2F;bin：存放经常使用的程序或命令
-
-&#x2F;boot：存放系统的内核文件，包含连接文件、镜像文件。
-
-&#x2F;dev ：Device(设备) 的缩写, 存放Linux的外部设备。
-
-&#x2F;etc：存放所有系统需要的配置文件以及子目录列表，不能轻易更改，可能导致系统无法正常启动。
-
-&#x2F;home：用户的主目录，以用户的账号命名。
-
-&#x2F;lib：Library(库) 的缩写，存放基本的代码库（c++库），与Windows里面的DLL文件相似。
-
-&#x2F;media：linux 系统会自动识别一些设备，例如U盘、光驱等等，当识别后，Linux 会把识别的设备挂载到这个目录下。
-
-&#x2F;mnt：系统提供该目录是为了让用户临时挂载别的文件系统的，我们可以将自己的U盘等设备挂载到&#x2F;mnt目录，这样就可以查看数据了。
-
-&#x2F;opt： Optional(可选) 的缩写，默认为空，额外安装的软件可以放在里面。
-
-&#x2F;proc：Processes(进程) 的缩写，&#x2F;proc 是一种伪文件系统，也就是虚拟的目录，是系统内存的映射，我们可以通过访问此目录，获取系统信息。可以通过此目录，来获取进程的Id。此目录的内容在内存上，可以直接修改某些文件。
-下面的命令可以屏蔽主机的ping命令，使别人无法ping你的机器（icmp_echo_ignore_all的值默认为0）：
-echo 1 &gt; /proc/sys/net/ipv4/icmp_echo_ignore_all
-
-&#x2F;root：系统管理员用户的主目录。
-
-&#x2F;sbin：只能系统管理员使用的命令或者程序。
-
-&#x2F;srv： 该目录存放一些服务启动之后需要提取的数据。
-
-&#x2F;sys：
-这是 Linux2.6 内核的一个很大的变化。该目录下安装了 2.6 内核中新出现的一个文件系统 sysfs 。
-sysfs 文件系统集成了下面3种文件系统的信息：针对进程信息的 proc 文件系统、针对设备的 devfs 文件系统以及针对伪终端的 devpts 文件系统。
-该文件系统是内核设备树的一个直观反映。
-当一个内核对象被创建的时候，对应的文件和目录也在内核对象子系统中被创建。
-
-&#x2F;tmp：Temporary(临时) 的缩写，存放临时文件。
-
-&#x2F;usr：unix shared resources(共享资源) 的缩写，用户的很多应用程序和文件都放在这个目录下，类似于 windows 下的 program files 目录。
-
-&#x2F;usr&#x2F;bin：系统用户使用的应用程序。
-
-&#x2F;usr&#x2F;sbin：超级用户使用的比较高级的管理程序和系统守护程序。
-
-&#x2F;usr&#x2F;src：内核源代码默认的放置目录。
-
-&#x2F;var：Variable(变量) 的缩写，存放经常修改的数据，比如日志文件就在此目录下。
-
-&#x2F;run：临时文件，用来存储系统启动以来的信息。当系统重启之后，这个目录下的文件应该被删除或者清除。
-
-
-远程登录一般项目中使用的服务器都是云服务器，而云服务器都是布置到各个厂商的机房，你不能去机房使用服务器，而需要使用远程连接的方式去访问服务器，一般使用SSH的连接方式，默认端口为22。
-Windows连接Linux服务器的工具有： SecureCRT、 Putty、Xshell等。我使用的是SecureCRT或Xshell，可根据个人喜好选择。这里使用SecureCRT。
-使用账号密码登录点击软件的快速连接，输入连接的Hostname、Username，点击Connect按钮，会弹出密码弹框，输入密码即可。
-
-
-连接之后，可以设置我们的偏好。比如设置字体大小、编码。
-
-使用秘钥验证机制登录Linux
-SecureCRT打开Session Options，创建Identity文件。
-
-
-
-Key type选择RSA
-
-
-
-可以忽略此不走，直接下一步
-
-
-
-设置Key的长度
-
-
-
-选择OpenSSH Key format，并指令私钥保存的地方
-
-
-
-使用账号密码登录Linux服务器，上传刚刚生成的公钥文件，可以使用 FileZilla 软件上传。
-
-
-
-进入 &#x2F;root&#x2F;.ssh 目录，创建 authorized_keys文件（如果有就不需要创建），将刚刚上传的秘钥内容拼接到 authorized_keys 文件之后。
-
-
-
-使用秘钥登录，进入Session Options 配置刚刚生成的秘钥文件（其实已经自动配置了），连接即可。
-
-
-
-验证是否为秘钥方式登录，打开Trace Options选择，点击连接可以查看本地登录日志。
-
-
-
-文件属性Linux是一种多用户的服务器，为了保护系统的安全，Linux系统对于不同用户访问同一个文件或目录做出了不同的规定。
-
-chown (change owner) ： 修改所属用户与组。
-chmod (change mode) ： 修改用户的权限。
-
-使用 ll 命令查看文件属性以及所属的用户和组
-[root@192 /]# lllrwxrwxrwx.   1 root root     7 8月  25 2019 bin -&gt; usr/bindr-xr-xr-x.   5 root root  4096 11月  8 2022 bootdrwxr-xr-x    4 root root    57 9月  25 2022 data-rw-r--r--    1 root root   700 11月 14 19:22 derby.logdrwxr-xr-x   20 root root  3380 11月 14 19:21 devdrwxr-xr-x. 153 root root 12288 11月 14 19:21 etc
-
-文件的第一个属性代表此文件是目录、文件或者链接文件等
-
-d为目录，如上面的boot目录
-- 为文件，如上面的derby.log文件
-若是 l 则表示为链接文档(link file)
-若是 b 则表示为装置文件里面的可供储存的接口设备(可随机存取装置)
-若是 c 则表示为装置文件里面的串行端口设备，例如键盘、鼠标(一次性读取装置)
-
-上面的data的目录的属性drwxr-xr-x，第一个d代表data为目录，后面以三个字符为一组，r代表可读、w代表可写、x代表可执行，如果没有权限就会出现-号。
-后面跟的 root root 分别为 所有和所属组。一般权限对root用户无效
-
-从左到右使用0-9表示。
-0位表示文件类型，1-3表示确定属主（此文件的所有者）拥有文件的权限。4-6表示确定属组（所有者的同组用户）拥有文件的权限、7-9表示其他用户拥有文件的权限。
-1、4、7表示读权限，有权限时使用r表示，没有则使用-表示。
-2、8、7表示写权限。3、6、9表示可执行权限。
-
-chgrp 更改文件属组
-chgrp [-R] 属组名 文件名
-
-参数可选 -R：表示递归更改
-
-chown 更改所有者以及所属组
-chown [–R] 所有者 文件名chown [-R] 所有者:属组名 文件名
-
-更改 derby.log 文件的所有者以及所属组为 chris 账号
-chown chris:chris derby.log
-
-chmod 更改文件9个属性
-chmod [-R] xyz 文件或目录
-
-记住r、w、x的分数表
-
-r:4
-w:2
-x:1
-
-更改derby.log权限为-rwx—r–
-# 7= 4+2+1;---=0+0+0;4=4+0+0chmod 704  derby.log
-
-使用符号类型修改权限
-u：代表user 用户
-g：代表group 组
-o：代表other 其他
-a：代表所有
-+：代表加入权限
--： 代表除去权限
-&#x3D;： 代表设定权限
-更改derby.log权限为-rwx—r–：
-chmod u=+r+w+x,g=-r-w-x,o=+r derby.log
-
-derby.log所有都去掉读权限
-chmod a-r derby.log
-
-用户和用户组管理用户管理
-添加用户账号useradd
-useradd 选项 用户名
-
-
--c comment 指定一段注释性描述。
--d 目录 指定用户主目录，如果此目录不存在，则同时使用-m选项，可以创建主目录。
--g 用户组 指定用户所属的用户组。
--G 用户组，用户组 指定用户所属的附加组。
--s Shell文件 指定用户的登录Shell。
--u 用户号 指定用户的用户号，如果同时有-o选项，则可以重复使用其他用户的标识号。
-
-创建chris用户，指定用户主目录为 &#x2F;home&#x2F;chris，-m参数表示若不存在chris目录，则创建。
-useradd -d /home/chris -m chris
-
-增加用户账号就是在&#x2F;etc&#x2F;passwd文件中为新用户增加一条记录，同时更新其他系统文件如&#x2F;etc&#x2F;shadow, &#x2F;etc&#x2F;group等
-
-删除账号
-userdel 选项 用户名
-
-常用的选项为 -r，表示跟主目录一起删除。
-
-修改账号
-usermod 选项 用户名
-
-常用的选项和useradd命令选择一致。
-修改chris用户的登录shell为ksh，主目录为c，所属组为test。
-usermod -s /bin/ksh -d /home/c -g test chris
-
-设置用户的登录shell可以限制登录用户所要访问功能，比如设置成 &#x2F;bin&#x2F;nologin ，用户即使登录上去也使用不了Linux。
-
-用户口令管理
-新创建的账号口令默认是没有的，需要指定口令后才可以使用。
-passwd 选项 用户名
-
-
--l 锁定口令，即禁用账号。
--u 口令解锁。
--d 使账号无口令。
--f 强迫用户下次登录时修改口令。
-
-
-
-用户组管理
-添加用户组
-groupadd 选项 用户组
-
-
--g GID 指定新用户组的组标识号（GID）。
--o 一般与-g选项同时使用，表示新用户组的GID可以与系统已有用户组的GID相同。
-
-添加名为chris的用户组，新组的组标识号是在当前已有的最大组标识号的基础上加1。
-groupadd chris
-
-修改用户组
-groupmod 选项 用户组
-
-
--g GID 为用户组指定新的组标识号。
--o 与-g选项同时使用，用户组的新GID可以与系统已有用户组的GID相同。
--n新用户组 将用户组的名字改为新名字
-
-修改chris组名为chris1
-groupmod -n chris1
-
-删除用户组
-groupdel 用户组
-
-切换用户组
-若一个用户有多个组，而不同组有不同的权限，需要用到其他权限的时候，可以进行切换用户组。
-下面的命令是将当前用户切换到chris1用户组，前提是chris1用户组确实是该用户的所属组或者附加组。
-newgrp chris1
-
-与账号有关的系统文件与账号有关的系统文件有 &#x2F;etc&#x2F;passwd, &#x2F;etc&#x2F;shadow, &#x2F;etc&#x2F;group等。
-
-&#x2F;etc&#x2F;passwd
-[root@192 ~]# cat /etc/passwdroot:x:0:0:root:/root:/bin/bashbin:x:1:1:bin:/bin:/sbin/nologindaemon:x:2:2:daemon:/sbin:/sbin/nologinadm:x:3:4:adm:/var/adm:/sbin/nologinlp:x:4:7:lp:/var/spool/lpd:/sbin/nologinsync:x:5:0:sync:/sbin:/bin/syncshutdown:x:6:0:shutdown:/sbin:/sbin/shutdownhalt:x:7:0:halt:/sbin:/sbin/haltmail:x:8:12:mail:/var/spool/mail:/sbin/nologinoperator:x:11:0:operator:/root:/sbin/nologingames:x:12:100:games:/usr/games:/sbin/nologinftp:x:14:50:FTP User:/var/ftp:/sbin/nologinnobody:x:99:99:Nobody:/:/sbin/nologin
-
-保存的格式为：
-用户名:口令:用户标识号:组标识号:注释性描述:主目录:登录Shell
-
-此文件的口令只保留特殊字符，如 x 等，加密后的口令放在了&#x2F;etc&#x2F;shadow文件中
-
-&#x2F;etc&#x2F;group
-[root@192 ~]# vi /etc/grouproot:x:0:bin:x:1:daemon:x:2:
-
-保存的格式为：
-组名:口令:组标识号:组内用户列表
-
-
-“组名”是用户组的名称，由字母或数字构成。与&#x2F;etc&#x2F;passwd中的登录名一样，组名不应重复。
-“口令”字段存放的是用户组加密后的口令字。一般Linux 系统的用户组都没有口令，即这个字段一般为空，或者是*。
-“组标识号”与用户标识号类似，也是一个整数，被系统内部用来标识组。
-“组内用户列表”是属于这个组的所有用户的列表，不同用户之间用逗号(,)分隔。这个用户组可能是用户的主组，也可能是附加组。
-
-
-
-磁盘管理Linux磁盘管理的常用命令有 df、du、fdisk。
-
-df（英文全称：disk free）：列出文件系统的整体磁盘使用量
-du（英文全称：disk used）：检查磁盘空间使用量
-fdisk：用于磁盘分区
-
-1.df命令
-检查磁盘空间的占用情况
-df [选项] [目录或文件名]
-
-
--a ：列出所有的文件系统，包括系统特有的 &#x2F;proc 等文件系统；
--k ：以 KBytes 的容量显示各文件系统；
--m ：以 MBytes 的容量显示各文件系统；
--h ：以人们较易阅读的 GBytes, MBytes, KBytes 等格式自行显示；
--H ：以 M&#x3D;1000K 取代 M&#x3D;1024K 的进位方式；
--T ：显示文件系统类型, 连同该 partition 的 filesystem 名称 (例如 ext3) 也列出；
--i ：不用硬盘容量，而以 inode 的数量来显示
-
-使用易读的方式显示磁盘容量	
-df -h
-
-2.du命令
-与df命令不同的是，du命令是对文件和目录磁盘使用空间的查看
-du [选项] [目录或文件名]
-
-
--a ：列出所有的文件与目录容量，因为默认仅统计目录底下的文件量而已。
--h ：以人们较易读的容量格式 (G&#x2F;M) 显示；
--s ：仅显示指定目录或文件的总大小，而不显示其子目录的大小。
--S ：包括子目录下的总计，与 -s 有点差别。
--k ：以 KBytes 列出容量显示；
--m ：以 MBytes 列出容量显示；
-
-3.fdisk命令
-fdisk是Linux磁盘分区的操作工具
-fdisk [-l] 装置名称
-
--l ：输出后面接的装置所有的分区内容。若仅有 fdisk -l 时， 则系统将会把整个系统内能够搜寻到的装置的分区均列出来。
-列出所有分区
-[root@192 ~]# fdisk -l磁盘 /dev/sda：37.6 GB, 37580963840 字节，73400320 个扇区Units = 扇区 of 1 * 512 = 512 bytes扇区大小(逻辑/物理)：512 字节 / 512 字节I/O 大小(最小/最佳)：512 字节 / 512 字节磁盘标签类型：dos磁盘标识符：0x000db098   设备 Boot      Start         End      Blocks   Id  System/dev/sda1   *        2048     2099199     1048576   83  Linux/dev/sda2         2099200    41943039    19921920   8e  Linux LVM/dev/sda3        41943040    73400319    15728640   83  Linux磁盘 /dev/mapper/centos-root：33.3 GB, 33281802240 字节，65003520 个扇区Units = 扇区 of 1 * 512 = 512 bytes扇区大小(逻辑/物理)：512 字节 / 512 字节I/O 大小(最小/最佳)：512 字节 / 512 字节磁盘 /dev/mapper/centos-swap：2147 MB, 2147483648 字节，4194304 个扇区Units = 扇区 of 1 * 512 = 512 bytes扇区大小(逻辑/物理)：512 字节 / 512 字节I/O 大小(最小/最佳)：512 字节 / 512 字节
-
-
-
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>操作系统</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Shell教程</title>
-    <url>/personalBlog/2023/11/16/2023/linux/2023-11-11-Shell%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/</url>
-    <content><![CDATA[简介Shell是一个用C语言编写的程序，是用户使用Linux的桥梁。Shell既是命令语言，也是程序设计语言。
-Shell指的是一种应用程序，可以通过此程序访问操作系统内核服务。
-Shell脚本则是一种为Shell编写的脚本程序。Shell和Shell Script（Shell脚本是两个不同的概念）。本文主要记录Shell脚本编程。
-一个图看懂Shell在Linux系统中扮演的角色：
-
-Shell环境Linux的Shell种类很多，常见的有：
-
-Bourne Shell（&#x2F;usr&#x2F;bin&#x2F;sh或&#x2F;bin&#x2F;sh）
-Bourne Again Shell（&#x2F;bin&#x2F;bash）
-C Shell（&#x2F;usr&#x2F;bin&#x2F;csh）
-K Shell（&#x2F;usr&#x2F;bin&#x2F;ksh）
-Shell for Root（&#x2F;sbin&#x2F;sh）
-…….
-
-变量定义变量，等号两边不能有空格:
-name=&quot;c&quot;
-
-
-命名只能使用英文字母，数字和下划线，首个字符不能以数字开头。
-中间不能有空格，可以使用下划线 _。
-不能使用标点符号。
-不能使用bash里的关键字（可用help命令查看保留关键字）。
-
-使用变量$name
-name=&quot;c&quot;echo $namename=&quot;c1&quot;echo $name
-
-只读变量使用readonly声明
-name=&quot;c&quot;readonly nameecho $name   #会提示变量只读
-
-删除变量
-name=&quot;c&quot;unset nameecho $name #无输出
-
-字符串单引号name=&#x27;c&#x27;
-
-单引号里面的内容都会原样输出，即使转义也不行。可以进行字符串拼接
-双引号name=&quot;c&quot;
-
-双引号可以出现变量，并且可以进行转义。
-name=&quot;c&quot;str=&quot;hi,\&quot;$name\&quot;!&quot;
-
-获取字符串长度name=&quot;ccc&quot;echo $&#123;#name&#125;  #输出3
-
-$&#123;#name&#125; 等价于 $&#123;#name[0]&#125;
-截取字符串name=&quot;my name is c&quot;echo $&#123;name:1:3&#125;  #输出y n
-
-查找字符串匹配 name 字符串中n出现的索引，注意是 &#96; 反引号
-name=&quot;my name is c&quot;echo `expr index &quot;$&#123;name&#125;&quot; n`  #输出4
-
-注释单行注释以 # 开头的行就是注释，被解释器忽略
-以 #! 开头，声明脚本使用哪个解释器
-# 这是一行注释# 这是一行注释
-
-多行注释Here文档：表示一个空命令，用于执行后面的Here文档，&lt;&lt;EOF 表示Here文档。
-:&lt;&lt;EOF这是一行注释这是一行注释这是一行注释EOF
-
-不一定非要用EOF，可以使用其它符号，delimiter用于标注的分隔符，结尾在加一个分隔符即可。
-:&lt;&lt;delimiter这是一行注释这是一行注释这是一行注释delimiter
-
-直接使用 : 号
-: &#x27;这是一行注释这是一行注释这是一行注释&#x27;
-
-传递的参数脚本内获取参数的格式$n，其中$0为执行的文件名，$1为执行的第一个参数，以此类推。
-特殊字符
-
-
-
-$#
-传递到脚本的参数个数
-
-
-
-$*
-以一个单字符串显示所有向脚本传递的参数
-
-
-$$
-脚本运行的当前进程ID号
-
-
-$!
-后台运行的最后一个进程ID号
-
-
-$@
-*与$相同，只不过不是以但字符串的方式返回，而是分别返回
-
-
-$-
-显示Shell使用的当前选项，与set命令相同
-
-
-$？
-显示最后的退出状态。0表示没有错误，其它任何值表示有错
-
-
-数组Bash Shell只支持一维数组，下标从0开始。
-定义数组#定义方式1array_name=(&quot;A&quot;,&quot;B&quot;,C)#定义方式2array_name[0]=&quot;A&quot;array_name[1]=&quot;B&quot;array_name[2]=C
-
-读取数组echo &quot;第一个元素：$&#123;array_name[0]&#125;&quot;echo &quot;第二个元素：$&#123;array_name[1]&#125;&quot;
-
-关联数组语法： declare -A array_name
--A选项就是声明一个关联数组，关联数组的key是唯一的。
-声明一个关联数组 animal
-declare -A animal([&quot;dog&quot;]=&quot;This is a dog&quot; [&quot;cat&quot;]=&quot;This is a cat&quot;)
-
-或者
-declare -A animalanimal[&quot;dog&quot;]=&quot;This is a dog&quot;animal[&quot;cat&quot;]=&quot;This is a cat&quot;
-
-访问关联数组的值
-echo $&#123;animal[&quot;dog&quot;]&#125;
-
-获取数组的所有元素使用 @ 或 *
-#!/bin/bash# author:chris# url:www.wysiwyg.workarray_name[0]=&quot;A&quot;array_name[1]=&quot;B&quot;array_name[2]=Cecho &quot;数组的元素：$&#123;array_name[*]&#125;&quot;  #输出 A B Cecho &quot;数组的元素：$&#123;array_name[@]&#125;&quot;  #输出 A B Cdeclare -A animalanimal[&quot;dog&quot;]=&quot;This is a dog&quot;animal[&quot;cat&quot;]=&quot;This is a cat&quot;echo &quot;数组的元素：$&#123;animal[*]&#125;&quot;echo &quot;数组的元素：$&#123;animal[@]&#125;&quot; #都输出 This is a cat This is a dog#加 ! 可以输出所有的键declare -A animalanimal[&quot;dog&quot;]=&quot;This is a dog&quot;animal[&quot;cat&quot;]=&quot;This is a cat&quot;echo &quot;数组的元素：$&#123;!animal[*]&#125;&quot;echo &quot;数组的元素：$&#123;!animal[@]&#125;&quot; 
-
-获取数组的长度使用 # 号
-echo &quot;$&#123;#array_name[*]&#125;&quot;
-
-运算符Shell支持多种运算符：
-
-算数运算符
-关系运算符
-布尔运算符
-字符串运算符
-文件测试运算符
-
-算数运算符a&#x3D;10,b&#x3D;20
-
-
-
-运算符
-说明
-例子
-
-
-
-+
-加
-expr $a + $b结果为30
-
-
--
-减
-expr $a - $b结果为-10
-
-
-*
-乘
-expr $a \* $b结果为200
-
-
-&#x2F;
-除
-expr $b / $a结果为2
-
-
-%
-区域
-expr $a % $b结果为10
-
-
-&#x3D;
-赋值
-a &#x3D; $b 把20赋值给a
-
-
-&#x3D;&#x3D;
-相等
-[ $a &#x3D;&#x3D; $b ] 结果为 false
-
-
-!&#x3D;
-不相等
-[ $a !&#x3D; $b ] 结果为true
-
-
-expr 是表达式计算，注意由于 * 是Linux的关键字，所以需要使用转义字符，或者使用 $(())进行计算，运算符旁边也不需要空格。
-注意表达式两边要有空格
-#!/bin/basha=10b=20ret=`expr $a + $b`echo &quot;a + b：$ret&quot;ret=`expr $a - $b`echo &quot;a - b：$ret&quot;ret=`expr $a \* $b`echo &quot;a * b：$ret&quot;ret=$((a * b))echo &quot;a * b：$ret&quot;#注意[ ]里面与运算符两边都有加空格if [ $a == $b ]then 	echo &quot;a 等于 b&quot;fi	if [ $a != $b ]then 	echo &quot;a 不等于 b&quot;fi
-
-脚本执行结果
-a + b：30a - b：-10a * b：200a * b：200a 不等于 b
-
-关系运算符a&#x3D;10,b&#x3D;20
-
-
-
-运算符
-说明
-例子
-
-
-
--eq
-两个值是否相等
-[ $a -eq $b ]  或 test [$a] -eq [$b]  返回 false
-
-
--ne
-两个值是否不相等
-[ $a -ne $b ]  true
-
-
--gt
-左边值是否大于右边值
-[ $a -gt $b ]  false
-
-
--lt
-左边值是否小于右边值
-[ $a -lt $b ]  false
-
-
--ge
-左边值是否大于等于右边值
-[ $a -ge $b ]  false
-
-
--le
-左边值是否小于等于右边值
-[ $a -le $b ]  true
-
-
-布尔运算符a&#x3D;10,b&#x3D;20
-
-
-
-运算符
-说明
-举例
-
-
-
-!
-非运算
-[ ! false ] true。
-
-
--o
-或运算，有一个表达式为 true 则返回 true。
-[ $a -lt 15 -o $b -gt 50 ] true。
-
-
--a
-与运算，两个表达式都为 true 才返回 true。
-[ $a -lt 15 -a $b -gt 50] false。
-
-
-逻辑运算符a&#x3D;10,b&#x3D;20
-
-
-
-运算符
-说明
-举例
-
-
-
-&amp;&amp;
-逻辑的 AND
-[[ $a -lt 50 &amp;&amp; $b -gt 50 ]] false
-
-
-||
-逻辑的 OR
-[[ $a -lt 50 || $b -gt 50 ]] true
-
-
-字符串运算符字符串a&#x3D;”abc”，b&#x3D;”qwe”
-
-
-
-运算符
-说明
-举例
-
-
-
-&#x3D;
-两个字符串是否相等
-[ $a &#x3D; $b ] false。
-
-
-!&#x3D;
-两个字符串是否不相等
-[ $a !&#x3D; $b ] true。
-
-
--n
-字符串长度是否不为 0
-[ -n “$b” ] true。
-
-
--z
-字符串长度是否为0
-[ -z $b ] false。
-
-
-$
-字符串是否不为空
-[ $b ] true。
-
-
-文件测试运算符
-
-
-操作符
-说明
-
-
-
--b file
-检测文件是否是块设备文件
-
-
--c file
-检测文件是否是字符设备文件
-
-
--d file
-检测文件是否是目录
-
-
--f file
-检测文件是否是普通文件（既不是目录，也不是设备文件）
-
-
--g file
-检测文件是否设置了 SGID 位
-
-
--k file
-检测文件是否设置了粘着位(Sticky Bit)
-
-
--p file
-检测文件是否是有名管道
-
-
--u file
-检测文件是否设置了 SUID 位
-
-
--r file
-检测文件是否可读
-
-
--w file
-检测文件是否可写
-
-
--x file
-检测文件是否可执行
-
-
--s file
-检测文件是否为空（文件大小是否大于0）
-
-
--e file
-检测文件（包括目录）是否存在
-
-
-流程控制if else语法格式：
-# if语法if conditionthen   command   ...fi   #if elseif conditionthen   command   ...else      command   ...fi#if else-if elseif conditionthen   command   ...elif condition  then   command   ...else      command   ...fi
-
-也可以写成一行，用 ; 号隔开
-for循环for var in val val...valdo    command   ...done   #无限循环for (( ; ; ))do    command   ...done 
-
-例子：
-#!/bin/bashfor var in my name is cdo  echo $&#123;var&#125;done  
-
-while循环while conditiondo   command   ...done#无限循环while true    do   command   ...done
-
-util循环until conditiondo   command   ...done
-
-case … esac类似于其他语言的switch case 语句。) 表示case分支，;; 表示break
-case 值 in模式1)  command   ...  ;;模式2)  command   ...  ;; *)   #匹配所有，括号里面可以使用一些运算符  command   ...   break   #可以使用 break 或 continue 命令  ;;esac
-
-函数定义function funname()&#123;   action;      return int;&#125;
-
-function 关键字可以省略。
-return返回值也可省略，若没有显示的使用return，则使用最后一条命令的结果作为返回值，范围(0-255)
-函数参数funname()`&#123;  echo &quot;第一个参数为 $1&quot;  echo &quot;第一个参数为 $2&quot;  echo &quot;第一个参数为 $`&#123;10&#125;&quot;  echo &quot;参数个数 $#&quot;  echo &quot;输出所有参数 $*&quot;&#125;funname 1 2 3 4 5 6 7 8 9 10
-
-取第10个以及大于10个以上传入的参数时，需要使用 &#123;&#125;，参数获取的方式与Linux传递的参数获取方式基本相同。
-输入输出重定向Linux可以将终端或者文件方式输入的内容，转到另一个目标中去。
-Linux有关重定向有三种与之关联的文件描述符：
-
-0：指标准输入(STDIN)
-1：指标准输出(STDOUT)
-2.：指标准错误输出(STDERR)
-
-输出重定向command &gt; file
-
-将 echo 的值重定向 test 文件中：
-echo &quot;输出重定向测试&quot; &gt; test
-
-若 test 文件有内容，使用拼接的方式，使用 &gt;&gt;：
-echo &quot;输出重定向，拼接测试&quot; &gt;&gt; test
-
-输入重定向command &lt; file
-
-将 test 文件内容 重定向给 cat，并显示：
-cat &lt; test
-
-组合操作只将命令的 标准错误 输出到 error 文件：
-command 2&gt;error
-
-将 标准输出到log文件：
-command &gt;log 2&gt;&amp;1
-
-将 test 文件重定向输入给 cat 重定向输出给 test1文件
-cat &lt; test &gt; test1
-
-Here 文档前面多行注释提到过Here文档，我们也可以使用Here文档，将内容重定向到交互式脚本或者程序。
-command &lt;&lt; delimiter    documentdelimiter
-
-使用 wc 统计Here文档的行数，注意最后的 EOF 需要顶格书写
-wc -l &lt;&lt; EOF  document  document  documentEOF3  #输出3行
-
-&#x2F;dev&#x2F;null文件若不想将命令的输出显示到屏幕上，可以将命令的结果 重定向到 &#x2F;dev&#x2F;null 中
-command &gt; /dev/null 
-
-文件包含一个shell脚本中可以包含另一个shell脚本，格式如下：
-#第一种. filename#第二种source filename
-
-实例：
-test1.sh:
-#!/bin/bashname=&quot;c&quot;
-
-PS：使用Here文档将内容写入 test1.sh：
-cat &lt;&lt; eof &gt;test1.sh #!/bin/bashname=&quot;c&quot;eof
-
-test2.sh:
-#!/bin/bash. ./test1.sh   # source ./test1.sh echo &quot;name: $&#123;name&#125;&quot;
-
-[root@192 ~]# chmod +x test2.sh [root@192 ~]# ./test2.sh name: c
-
-]]></content>
-      <categories>
-        <category>Shell</category>
-      </categories>
-      <tags>
-        <tag>脚本</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>用Shell实现备份Mysql数据</title>
-    <url>/personalBlog/2023/12/11/2023/linux/2023-11-20-%E7%94%A8Shell%E5%AE%9E%E7%8E%B0%E5%A4%87%E4%BB%BDMysql%E7%9A%84Binlog%E6%97%A5%E5%BF%97/</url>
-    <content><![CDATA[需求Mysql版本：5.7.38      Linux系统：7.0
-服务器A：192.168.202.129   服务器B：192.168.202.130
-初始化192.168.202.129
-全量:
-根目录：/home/backup/all
-备份数据保存位置：/home/backup/all/data
-日志保存位置：/home/backup/all/bak.log
-增量：
-根目录：/home/backup/incr
-备份数据保存位置：/home/backup/incr/data
-日志保存位置：/home/backup/incr/bak.log
-下次开始备份的序列号：/home/backup/incr/sn
-临时保存备份的增量binlog日志：/home/backup/incr/cp_binglog
-192.168.202.130
-全量:
-备份数据目录：/home/backup/all/&#123;date&#125;
-日期home/backup/all 目录，增量也是。
-增量：
-备份数据目录：/home/backup/incr/&#123;date&#125;
-全量
-每七天进行一次全量备份，并刷新binlog日志，保存下一次增量开始备份的序列。
-打包sql文件为tar包，使用md5sum生成tar包的效验值，将效验文件与tar包一起打包压缩。
-使用scp将129服务器上压缩的tar.gz包拷贝到130服务器。
-ssh连接130服务器，解压压缩包，使用md5sum效验文件完整性。
-
-增量
-若当天存在全量备份，则直接退出。
-首先生成新的binlog日志，然后获取此次需要同步的binlog序列号，获取mysql目录下的binlog日志，先拷贝到本地的临时目录。将所有增量的binlog日志打成tar包，使用md5sum生成效验文件，并一起打包压缩。
-使用scp将129服务器上压缩的tar.gz包拷贝到130服务器。
-ssh连接130服务器，解压压缩包，使用md5sum效验文件完整性。
-
-清理过期文件​	清理超过指定时间的备份文件
-定时每天执行脚本
-# For details see man 4 crontabs# Example of job definition:# .---------------- minute (0 - 59)# |  .------------- hour (0 - 23)# |  |  .---------- day of month (1 - 31)# |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...# |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat# |  |  |  |  |# *  *  *  *  * user-name  command to be executed
-
-方式一：
-进入/etc/cron.d目录，创建mysqldump.sh文件，赋予644权限。
-/var/log/cron 可查看定时器执行日志。
-#每天凌晨3点执行 XXX 替换成数据库备份脚本，绝对路径0 0 3 1 * ? root  sh XXX.sh   
-
-方式二：
-直接修改 /etc/crontab，内容一致
-准备安装expect用于ssh交互yum -y install expect
-
-scp免密登录#129上执行，将生成的公钥复制到 130的 /root/.ssh/authorized_keysssh-keygen -t rsa
-
-脚本#/bin/bash#Description: mysql binlog备份#Author: chris#Created Time: 2023/11/22 21:45db_user=&#x27;root&#x27;db_pwd=&#x27;123456&#x27;#备份目录base_dir=&quot;/home/backup&quot;#全量  7天一次全量all_dir=&quot;$&#123;base_dir&#125;/all&quot;#增量  1天一次增量incr_dir=&quot;$&#123;base_dir&#125;/incr&quot;date=`date +%Y%m%d`copy_ip_addr=192.168.202.130interval_day=7expired_day=32incr_log=$incr_dir/bak.logall_log=$all_dir/bak.log#存放备份数据的目录incr_data=$incr_dir/dataall_data=$all_dir/data#保存最后一个复制的binglog序列号last_binlog_sn=$incr_dir/sn#临时存放binlog文件的目录cp_binglog_dir=$incr_dir/cp_binglog#init()&#123;if [ ! -d $&#123;incr_data&#125; ]then  mkdir -p $incr_datafiif [ ! -d $&#123;all_data&#125; ]then  mkdir -p $all_datafiif [ ! -d $&#123;all_dir&#125; ]then  mkdir -p $all_dirfiif [ ! -d $&#123;incr_dir&#125; ]then  mkdir -p $incr_dirfiif [ ! -d $&#123;cp_binglog_dir&#125; ]then  mkdir -p $cp_binglog_dirfiif [ ! -f $&#123;incr_log&#125; ]then  touch $&#123;incr_log&#125;fiif [ ! -f $&#123;all_log&#125; ]then  touch $all_logfiif [ ! -f $&#123;last_binlog_sn&#125; ];then  touch $&#123;last_binlog_sn&#125;  chmod 740 $&#123;last_binlog_sn&#125;fi&#125;log()&#123;  echo &quot;[`date &#x27;+%Y-%m-%d %H:%M:%S&#x27;`]:$1&quot;&#125;last_dump_file=`find $&#123;all_data&#125;/ -type f -mtime -$&#123;interval_day&#125; |wc -l`allBackup()&#123;# 通过文件名拿到最后一次备份的时间# last_date=ls $&#123;all_dir&#125; | tail -1 | awk -F &quot;_&quot; &#123;&#x27;print $2&#x27;&#125; | awk -F &quot;.&quot; &#123;&#x27;print $1&#x27;&#125;#不为空if [ $&#123;last_dump_file&#125; -gt 0 ]then   log &quot;mysqldump has done $&#123;last_dump_file&#125;&quot;&gt;&gt;  $all_log  returnfi log &quot;begin mysqldump -&gt; $&#123;all_data&#125;/all_$&#123;date&#125;.sql&quot; &gt;&gt; $all_log#全量#-A备份所有数据库 或 --all-databases#--quick 不缓存，直接导出#--flush-logs dump时生成新的binlog日志#--master-data=2 配合--flush-logs使用，只生成一次日志，不然每个数据库都会生成一次日志。 dump出的文件中，保存 binlog 和 pos点，并注释生成的这行信息。增量备份需要使用#          --master-data=1 dump出的文件中，不注释这行信息，恢复时会执行#--single-transaction 保证导出开始和结束的数据一致性，仅InnoDB。与--lock-tables选项互斥，相当于开启可重复读，在事务开始、事务结束的时候，多次select查询的值都是一样的。#--default-character-set 设置字符集为 utf8mb4，根据数据库原始的字符集确定，SHOW VARIABLES LIKE &#x27;character_set%&#x27;查询支持的字符集cd $&#123;all_data&#125;mysqldump -u$&#123;db_user&#125; -p$&#123;db_pwd&#125; -A --quick --flush-logs --master-data=2 --single-transaction --default-character-set=utf8mb4 &gt; all_$&#123;date&#125;.sql    if [ $? -eq 0 ];then     log &quot;mysqldump $&#123;all_data&#125;/all_$&#123;date&#125;.sql success&quot; &gt;&gt;$all_log  else      log &quot;mysqldump $&#123;all_data&#125;/all_$&#123;date&#125;.sql error&quot; &gt;&gt;$all_log     exit 1  fi    if [ ! -d $&#123;date&#125; ];then    mkdir -p $&#123;date&#125;  fi  next_sn=`grep &quot;MASTER_LOG_FILE=&#x27;*&#x27;&quot; all_$&#123;date&#125;.sql | awk -v flag=&quot;&#x27;&quot; -F &quot;.&quot; &#x27;&#123;split($2,arr,flag)&#125; END &#123;print arr[1]&#125;&#x27;`  echo $next_sn &gt; $&#123;last_binlog_sn&#125;  log &quot;mysqldump then save max binglog_sn and  sn= $&#123;next_sn&#125;&quot; &gt;&gt; $all_log  tar -cf $&#123;date&#125;/all_backup_$&#123;date&#125;.tar all_$&#123;date&#125;.sql  rm -f all_$&#123;date&#125;.sql  cd $&#123;date&#125;  # cd 到目录里面在md5sum  md5sum all_backup_$&#123;date&#125;.tar &gt; all_md5sum.txt  cd $&#123;all_data&#125;  tar -zcf all_backup_$&#123;date&#125;.tar.gz  $&#123;date&#125;  scp all_backup_$&#123;date&#125;.tar.gz  @$&#123;copy_ip_addr&#125;:$all_dir  if [ $? -eq 0 ];then     log &quot;scp  $&#123;all_data&#125;/all_backup_$&#123;date&#125;.tar.gz success and rm&quot; &gt;&gt;$all_log     rm -fr $&#123;all_data&#125;/all_backup_$&#123;date&#125;.tar.gz  else      log &quot;scp  $&#123;all_data&#125;/all_backup_$&#123;date&#125;.tar.gz error&quot; &gt;&gt;$all_log     exit 1  fi  #yum -y install expect 安裝  /usr/bin/expect&lt;&lt;EOF  spawn ssh root@$&#123;copy_ip_addr&#125;  expect &#123;     &quot;*Last login&quot;     &#123;send &quot;cd $all_dir\r&quot;&#125;  &#125;  expect &quot;*]#&quot; &#123;     send &quot;tar -zxf all_backup_$&#123;date&#125;.tar.gz\r     rm -f all_backup_$&#123;date&#125;.tar.gz\r     cd $&#123;date&#125;\r     md5sum -c all_md5sum.txt\r&quot;  &#125;  expect eofEOF  if [ $? -eq 0 ]  then    log &quot;md5sum check $&#123;copy_ip_addr&#125; $all_dir/all_backup_$&#123;date&#125;.tar.gz success&quot; &gt;&gt;$all_log    rm -rf $&#123;incr_data&#125;/*  else    log &quot;md5sum check $&#123;copy_ip_addr&#125; $all_dir/all_backup_$&#123;date&#125;.tar.gz fail&quot; &gt;&gt;$all_log    exit 1  fi&#125;binlog_path=&quot;/var/lib/mysql&quot;last_dump_file=`find $&#123;all_data&#125;/ -type f -mtime -$&#123;interval_day&#125; | wc -l`#last_dump_file=`find $&#123;all_data&#125;/ -type d | wc -l`incrBackup()&#123;#没有全量备份，则进行增量if [ $last_dump_file -gt 0 ]then  log &quot;has mysqldump $last_dump_file and return&quot; &gt;&gt; $&#123;incr_log&#125;  return 0fi#刷新日志mysql -u$db_user -p$db_pwd -e &quot;flush logs&quot;last_sn=`cat $&#123;last_binlog_sn&#125;`if [ -z $last_sn ];then  $last_sn=000ficount=`cat $&#123;binlog_path&#125;/mysql-bin.index |wc -l`index=0#跟java的不一样，有多少个数据就循环多少次   for content in `cat $&#123;binlog_path&#125;/mysql-bin.index`do   index=$((index+1))   sn=`echo $content | awk -F &quot;.&quot; &#x27;&#123;print $2&#125;&#x27;`   if [ $last_sn ] &amp;&amp; [ $sn -ge $last_sn ] || [ -z $last_sn ];then      # 跳过最新的      if [ $index -lt $count ];then      cp $content  $cp_binglog_dir      log &quot;$content -&gt; $cp_binglog_dir cp done&quot; &gt;&gt; $&#123;incr_log&#125;      fi   fi   if [ $index -ge $count ];then     echo $sn &gt; $&#123;last_binlog_sn&#125;     log &quot;save max binglog_sn and  sn= $&#123;sn&#125;&quot; &gt;&gt; $&#123;incr_log&#125;   fidonefile_count=`ls $cp_binglog_dir |wc -l`if [ $file_count -gt 0 ];then  cd $&#123;incr_data&#125;  #创建压缩目录  if [ ! -d $&#123;date&#125; ];then    mkdir -p $&#123;date&#125;  fi  # 建议使用相对路径打包，绝对路径打包，解压出来的包也会带上路径，并且少了开始的/  # cp_binglog 保存复制binlog的文件  cd $incr_dir    tar -cf incr_backup_$&#123;date&#125;.tar cp_binglog/*  mv -f incr_backup_$&#123;date&#125;.tar $&#123;incr_data&#125;/$&#123;date&#125;/  rm -fr $cp_binglog_dir/*  cd $&#123;incr_data&#125;/$&#123;date&#125;  md5sum  incr_backup_$&#123;date&#125;.tar &gt;incr_md5sum.txt  cd $&#123;incr_data&#125;  tar -zcf incr_backup_$&#123;date&#125;.tar.gz $&#123;date&#125;  scp incr_backup_$&#123;date&#125;.tar.gz @$&#123;copy_ip_addr&#125;:$incr_dir  if [ $? -eq 0 ];then    log &quot;$&#123;incr_data&#125;/incr_backup_$&#123;date&#125;.tar.gz  scp success and rm&quot; &gt;&gt; $&#123;incr_log&#125;    rm -f $&#123;incr_data&#125;/incr_backup_$&#123;date&#125;.tar.gz  else    log &quot;$&#123;incr_data&#125;/incr_backup_$&#123;date&#125;.tar.gz  scp error&quot; &gt;&gt; $&#123;incr_log&#125;  fi    /usr/bin/expect &lt;&lt;incrEOF  spawn ssh root@$&#123;copy_ip_addr&#125;  expect &#123;     &quot;*Last login&quot;     &#123;send &quot;cd $incr_dir\r&quot;&#125;  &#125;  expect &quot;*]#&quot; &#123;     send &quot;tar -zxf incr_backup_$&#123;date&#125;.tar.gz\r     rm -f incr_backup_$&#123;date&#125;.tar.gz\r     cd $&#123;date&#125;\r     md5sum -c incr_md5sum.txt\r&quot;  &#125;  expect eofincrEOF  if [ $? -eq 0 ]  then   log &quot;md5sum check $&#123;copy_ip_addr&#125; $incr_dir/incr_backup_$&#123;date&#125;.tar.gz success&quot; &gt;&gt;$&#123;incr_log&#125;  else   log &quot;md5sum check $&#123;copy_ip_addr&#125; $incr_dir/incr_backup_$&#123;date&#125;.tar.gz error&quot; &gt;&gt;$&#123;incr_log&#125;  fi else   log &quot;no incr log to cp&quot; &gt;&gt;$&#123;incr_log&#125;fi# 远程copy  记得配置免密登录# ssh-keygen -t rsa  将生成的公钥复制到 130 /root/.ssh/authorized_keys&#125;clearExpiredFile()&#123;log &quot;delete $all_data expired file: &quot;&gt;&gt; &#123;all_log&#125;echo `find $all_data/* -type f -mtime +$expired_day -exec ls \;` &gt;&gt; &#123;all_log&#125;find $all_data/* -type f -mtime +$expired_day -exec rm -rf &#123;&#125; \;log &quot;delete $incr_data expired file: &quot;&gt;&gt; &#123;incr_log&#125;echo `find $incr_data/* -type f -mtime +$expired_day -exec ls \;` &gt;&gt;&#123;incr_log&#125;find $incr_data/* -type f -mtime +$expired_day -exec rm -rf &#123;&#125; \;&#125;#初始化init#全量allBackup#增量incrBackup#清楚过期文件clearExpiredFile
-]]></content>
-      <categories>
-        <category>Shell</category>
-      </categories>
-      <tags>
-        <tag>脚本</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>将一个目录下所有TXT文档内的单词出现频次倒序输出到文件</title>
     <url>/personalBlog/2023/07/19/2023/web/2023-07-19-%E5%B0%86%E4%B8%80%E4%B8%AA%E7%9B%AE%E5%BD%95%E4%B8%8B%E6%89%80%E6%9C%89TXT%E6%96%87%E6%A1%A3%E5%86%85%E7%9A%84%E5%8D%95%E8%AF%8D%E5%87%BA%E7%8E%B0%E9%A2%91%E6%AC%A1%E5%80%92%E5%BA%8F%E8%BE%93%E5%87%BA%E5%88%B0%E6%96%87%E4%BB%B6/</url>
     <content><![CDATA[直接上代码
@@ -1757,6 +880,1582 @@ maven-central：maven中央库，当本地库、远程库没有的jar包，会�
       </tags>
   </entry>
   <entry>
+    <title>Jenkins</title>
+    <url>/personalBlog/2024/03/03/2024/202404/Jenkins/</url>
+    <content><![CDATA[CI&#x2F;DI简介CI&#x2F;DI就是持续集成与部署，持续集成（Continuous integration），持续部署（Continuous deployment）。
+持续集成：频繁地将代码集成到主干。通俗的来说就是将不同分支的代码提交到代码仓库，如GitLab。将非主分支合并到主分支上。并进行构建测试，确认是否正确的集成。
+持续部署：将集成测试完成的项目部署到对应的环境。
+
+首先，开发将代码提交到代码仓库，将代码的改动合并到相应的分支。
+下一步，Jenkins利用git、maven等插件，对提交的代码进行拉取、测试、打包等，
+最后，将代码打包成jar&#x2F;war推送到测试、生产服务器进行部署。
+使用到的软件：
+Java版本：1.8  
+虚拟机 Centos7
+Git版本：2.37.2 ，用于代码版本管控
+GitLab版本：16.9.1 ，用于代码仓库  
+Jenkins版本：2.346.3 ，适配JDK1.8，用于程序集成与部署
+GitLab安装官网地址：https://gitlab.cn/install/
+安装依赖ssh如果只是本地网络访问GitLab可以忽略：
+yum install -y curl policycoreutils-python openssh-server perlsystemctl enable sshdsystemctl start sshd
+
+开始安装curl -fsSL https://get.gitlab.cn | /bin/bash#设置访问路径EXTERNAL_URL=&quot;192.168.202.129&quot; yum install -y gitlab-jh#配置文件，更改访问路径 EXTERNAL_URLvim /etc/gitlab/gitlab.rb
+
+启动gitlab#启动gitlab-ctl start    #更新配置需要执行gitlab-ctl reconfigure#状态gitlab-ctl statusgitlab-ctl stop#查看日照计gitlab-ctl tail 
+
+
+访问突发忘记密码了。。。
+
+使用以下命令
+
+gitlab-rails console production
+
+若出现报错
+
+
+使用以下命令
+
+gitlab-rails console -e production
+
+
+
+查看root信息 user &#x3D; User.where(id:1).first
+
+irb(main):001:0&gt; user = User.where(id:1).first=&gt; #&lt;User id:1 @root&gt;
+
+
+修改密码 user.password &#x3D;’******‘
+
+irb(main):002:0&gt; user.password = &#x27;chris123456&#x27;=&gt; &quot;chris123456&quot;
+
+
+保存 user.save
+
+#返回ture  irb(main):004:0&gt; user.save
+
+Jenkins安装安装#注意此方法需要JDK17版本wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.reporpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.keyyum install jenkins
+
+启动systemctl start jenkinsJob for jenkins.service failed because the control process exited with error code. See &quot;systemctl status jenkins.service&quot; and &quot;journalctl -xe&quot; for details.
+
+发现报错systemctl status jenkins● jenkins.service - Jenkins Continuous Integration Server   Loaded: loaded (/usr/lib/systemd/system/jenkins.service; disabled; vendor preset: disabled)   Active: failed (Result: start-limit) since 三 2024-03-06 21:58:58 CST; 28s ago  Process: 11939 ExecStart=/usr/bin/jenkins (code=exited, status=1/FAILURE) Main PID: 11939 (code=exited, status=1/FAILURE)3月 06 21:58:58 192.168.202.129 systemd[1]: jenkins.service: main process exited, code=exited, status=1/FAILURE3月 06 21:58:58 192.168.202.129 systemd[1]: Failed to start Jenkins Continuous Integration Server.3月 06 21:58:58 192.168.202.129 systemd[1]: Unit jenkins.service entered failed state.3月 06 21:58:58 192.168.202.129 systemd[1]: jenkins.service failed.3月 06 21:58:58 192.168.202.129 systemd[1]: jenkins.service holdoff time over, scheduling restart.3月 06 21:58:58 192.168.202.129 systemd[1]: Stopped Jenkins Continuous Integration Server.3月 06 21:58:58 192.168.202.129 systemd[1]: start request repeated too quickly for jenkins.service3月 06 21:58:58 192.168.202.129 systemd[1]: Failed to start Jenkins Continuous Integration Server.3月 06 21:58:58 192.168.202.129 systemd[1]: Unit jenkins.service entered failed state.3月 06 21:58:58 192.168.202.129 systemd[1]: jenkins.service failed.
+
+官网上Jenkins安装需要JDK17版本，而虚拟机上JDK版本为1.8，转战方法
+使用 yum remove 安装包名卸载安装的Jenkins
+重新开始安装wget https://repo.huaweicloud.com/jenkins/redhat-stable/jenkins-2.346.3-1.1.noarch.rpmrpm -ivh jenkins-2.346.3-1.1.noarch.rpm
+
+修改配置文件修改配置文件  /etc/sysconfig/jenkins
+JENKINS_USER&#x3D;”root”
+JENKINS_PORT&#x3D;”12001”  （修改端口）
+启动Jenkinscd /etc/init.d# (restart | stop)./jenkins start 
+
+访问 http://192.168.202.129:12001/
+输入控制台的密码串，或去 /var/lib/jenkins/secrets/initialAdminPassword 查看。
+
+输入管理员密码，安装插件后，创建用户名完成之后，进入主页。如下图：
+
+可能遇到的问题
+插件安装不下来或受高本版jenkins的约束，可配置对应版本所需的镜像地址
+
+修改 Update Site的值   Plugin Manager  —&gt; Advanced  替换镜像源
+
+ 清华大学开源软件镜像站     https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/，找对自己对应版本的jenkins版本，我这里是 Jenkins 2.346.3
+
+
+将地址复制到 Update Site 中，点击提交
+
+全局搜索 default.json 文件，然后进入到对应的目录
+find / -name default.json
+
+进入之后，备份文件
+cp default.json default.json.bak
+
+下载指定版本的 update-center.json 文件，并用下载的json文件替换，并重启jenkins。之后去页面上重新刷新一下插件就好了
+wget https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/dynamic-2.346/update-center.jsonmv update-center.json default.jsoncd /etc/init.d/./jenkins stop./jenkins start
+
+实践基于角色的访问权限控制
+安装Role-based Authorization Strategy插件
+
+
+
+全局安全配置
+
+
+
+修改安全配置为 Role-Based Strategy
+
+
+
+创建用户
+
+
+
+创建两个用户chris、chris1
+
+
+
+创建角色
+
+
+角色分为 Global roles、Item roles、Agent roles
+ Global roles：管理员等高级用户可以创建基于全局的角色
+Item roles：针对项目锁拥有的角色
+Agent roles：代理角色，与各个节点相关
+创建 grole 角色，默认和管理员拥有相同的权利
+
+
+分配角色
+
+将用户 chris 赋予 grole 角色
+
+凭证管理我们需要jenkins从git上拉取我们提交的代码，git肯定是需要访问凭证信息的，此时我们可以创建一个连接git的凭证，在拉取项目代码时可以使用。
+安装 Credentials Binding 插件，我这里已经安装了，跳过。安装完之后，会有一个凭证管理入口
+
+点击进去之后，添加凭证
+
+有五种凭证类型
+
+Username with password ：用户名和密码方式
+SSH Username with private key： 使用 SSH 用户和密钥
+Secret file： 需要保密的文本文件，使用时 Jenkins 会将文件复制到一个临时目录中，再将文件路径设置到一个变量中，等构建结束后，所复制的 Secret file 就会被删除
+Secret text： 保存一个加密文本，如GitHub 的 api token
+Certificate： 通过证书方式
+
+
+创建ssh秘钥访问git
+安装git插件
+
+搜索git安装即可
+
+jenkins服务器上也需要安装git
+# 安装命令yum install git -ygit --version
+
+
+在jenkins所在服务器生成公私钥对
+
+ssh-keygen -t rsa cd ~/.ssh
+
+
+id_rsa：私钥文件
+id_rsa.pub：公钥文件
+
+将生成的私钥文件内容，放到jenkins上，即创建凭证
+
+
+
+将生成的公钥内容放到gitlab中
+
+
+
+创建一个freestyle项目
+
+
+
+输入gitlab仓库的项目地址，并选择需要使用的秘钥信息，注意Branches to build选择对应的分支。
+
+
+
+保存之后，点击 build now
+
+
+
+查看构建的历史
+
+
+
+访问jenkins部署的服务器，/var/lib/jenkins/workspace ,发现项目已经拉下来了，项目名就是创建的 freestyle 项目名称
+
+
+Maven管理
+安装maven
+
+wget https://dlcdn.apache.org/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gztar -xzf apache-maven-3.9.6-bin.tar.gz
+
+
+配置环境变量
+
+vim /etc/profile#添加以下内容export MAVEN_HOME=/home/maven/apache-maven-3.9.6export PATH=$PATH:$MAVEN_HOME/bin#生效配置source /etc/profile#测试mvn -v
+
+
+创建maven的代码仓库以及配置settings.xml
+
+修改maven的conf的settings.xml配置文件
+localRepository标签，修改本地仓库地址：
+&lt;localRepository&gt;/home/maven/maven_repo&lt;/localRepository&gt;
+
+添加阿里云镜像：
+&lt;mirror&gt;    &lt;id&gt;aliyunmaven&lt;/id&gt;    &lt;mirrorOf&gt;*&lt;/mirrorOf&gt;    &lt;name&gt;aliyun&lt;/name&gt;    &lt;url&gt;https://maven.aliyun.com/repository/public&lt;/url&gt;&lt;/mirror&gt;
+
+
+配置jenkins
+
+Global Tool Configuration
+
+配置JDK
+
+
+
+配置Maven
+
+
+
+添加配置（记得创建一个maven项目哦）
+
+
+
+添加mvn打包命令
+
+
+
+配置环境变量，不然build时候找不到命令
+
+#将输出的环境变量进行配置echo $PATH
+
+
+
+开始Build
+
+
+
+拉代码，执行maven命令
+
+
+
+可以查看maven本地仓库，依赖包已经下载
+
+
+出现的问题查看日志，发现报错
+
+配置Git的目录，根据自己安装的目录修改
+
+补一句我们可以在maven打完包之后，使用java命令启动jar包即可。
+部署Jar包
+创建一个maven项目
+
+
+
+配置项目路径，注意分支
+
+
+
+构建命令
+Run only if build succeeds：在构建成功时执行后续步骤
+
+
+
+
+安装 Publish Over SSH 插件
+
+
+若部署的服务器跟jenkins不在同一服务器，需要下载
+
+
+
+配置远程服务器信息以及密码等信息
+
+Passphrase： 如果生成秘钥的时候输入了密码，就在这里输入，否则留空
+Path to Key： Jenkins 所在服务器秘钥(id_rsa)的路径，和下面的Key二选一（&#x2F;root&#x2F;.ssh&#x2F;id_rsa）
+Key： Jenkins 所在服务器秘钥(id_rsa)的路内容，和上面的Path to Key二选一
+
+
+配置远程服务器
+
+Remote Directory：访问的远程服务器目录
+
+
+添加 post-build step Send files or execute commands over SSH
+
+Source files：源文件 
+Remove prefix：删除前缀 ，这里删除target，只传jar包
+Remote directory：上传到服务器的目录
+Exec command：执行的脚本
+注：这里执行命令的时候进入到了jar包的目录，然后以后台方式启动
+如果没有进入到目录，命令启动jar没用
+如果不是后台运行，jenkins会卡主
+
+
+
+开始构建
+
+
+
+远程服务器上查看jar包以及是否执行
+
+完工！
+
+
+流水线概念将原先一个任务做完的事情，拆分为多个子任务执行，以流水线的方式执行。
+由于拆分为多个子任务，可以观察每个子任务执行的状态，并在出现问题的时候，可以迅速查询出问题点，提高效率。
+功能特性代码实现：以代码的形式实现，不仅可以被纳入版本控制，还可以通过编辑代码实现目标效果。可持续性：任务的执行，不受jenkins等其他环境的限制。操作灵活：子任务可以随意终止和继续  多功能：支持复杂CD要求，包括fork/join子进程，循环和并行执行工作的能力  可扩展：支持DSL的自定义扩展以及与其他插件集成。
+
+两种实现方式脚本式pipeline基于groovy的DSL语言实现，提供了大量的灵活性和可拓展性。因为jenkins的基于java实现的，所以很早引入了groovy作为DSL。如果使用groovy来编写jenkins file，这对与小白是有难度的，所以就有了声明式pipeline出现。
+声明式pipeline适合没有编程经验的初学者，并得到了官方越来越多的支持。
+实践创建流水线项目，如果没有改选择，则需要下载Pipeline的插件
+
+两种定义方式
+Pipeline Script：直接把脚本内容写到脚本对话框中Pipeline script from SCM ：Source Control Management–源代码控制管理，即从gitlab&#x2F;github&#x2F;git上获得pipeline脚本–JenkisFile
+刚开始不会写脚本咋办呢，可以使用 Pipeline Syntax 来生成。
+
+实例从Git仓库拉取代码，使用Maven进行构建，打包并运行，先上最终脚本
+pipeline &#123;    agent any    stages &#123;        stage(&#x27;Git Pull&#x27;) &#123;            steps &#123;                echo &quot;开始拉取代码...&quot;                git credentialsId: &#x27;git-ssh&#x27;, url: &#x27;git@192.168.202.129:jenkins_group/first-test-project.git&#x27;            &#125;        &#125;        stage(&#x27;Maven clean package&#x27;) &#123;            steps &#123;                echo &quot;maven clean package...&quot;                sh &#x27;mvn clean package&#x27;            &#125;        &#125;        stage(&#x27;deploy project&#x27;) &#123;            steps &#123;                echo &quot;deploy project...&quot;                sshPublisher(publishers: [sshPublisherDesc(configName: &#x27;192.168.202.130&#x27;, transfers: [sshTransfer(cleanRemote: false, excludes: &#x27;&#x27;, execCommand: &#x27;&#x27;&#x27;cd /home/jenkins_projectjava -jar demo-0.0.1-SNAPSHOT.jar &gt;application.log  2&gt;&amp;1 &amp;echo &quot;部署成功&quot;&#x27;&#x27;&#x27;, execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: &#x27;[, ]+&#x27;, remoteDirectory: &#x27;&#x27;, remoteDirectorySDF: false, removePrefix: &#x27;target&#x27;, sourceFiles: &#x27;target/demo-0.0.1-SNAPSHOT.jar&#x27;)], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])            &#125;        &#125;    &#125;&#125;
+
+
+拉取代码
+
+选择Git选项，输入代码地址，分支，以及认证方式生成脚本
+
+
+
+Maven构建
+
+使用 sh maven clean package 命令即可
+
+上传到远程服务器部署
+
+选择下图的选项，剩下的配置信息跟构建Maven项目一致
+
+
+
+
+开始Build
+
+
+可以看到每一步的执行时间
+
+触发器我们配置项目的时候，会有如下图所示的选项
+
+Build whenever a SNAPSHOT dependency is built：
+当job依赖的快照版本被build时，执行本job。
+**Trigger builds remotely (e.g., from scripts)**：
+触发远程构建。
+Build after other projects are built：
+当本job依赖的其它job被build时，执行本job。
+Build periodically：
+定期构建，就是设置定时器每隔一段时间进行自动构建、部署。
+Poll SCM：
+指定特定时间，比较一次源代码是否发生变更，若发生则Build。
+实例这里演示一下构建完任务之后，构建后续的任务。
+创建一个Freestyle项目（A2）进行Install：
+Trigger only if build is stable：只有构建稳定时触发
+
+使用Shell脚本对A1项目进行构建：
+
+创建一个Freestyle项目（A1）用于Git拉取项目代码：
+
+开始构建A1：
+拉取代码之后，触发构建A2：
+
+查看A2执行情况，也成功触发：
+
+]]></content>
+      <categories>
+        <category>CI/DI</category>
+      </categories>
+      <tags>
+        <tag>技术</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>用C语言介绍运行时内存结构</title>
+    <url>/personalBlog/2021/03/24/part1/complie/compile1/</url>
+    <content><![CDATA[某天，小A跑过来问：计算机是怎么运行代码的？
+我说：这个问题很难回答（以我菜鸟的身份），em…，我最近在看编译原理这本书，里面有讲到一些程序运行的过程，我把我所理解的给你说说吧。
+
+代码运行时的内存结构
+
+&emsp;&emsp;我们都知道，计算机主要由输入设备、输出设备、存储器和处理器组成，而处理器又有逻辑和控制单元（这里省略了寄存器）。如下图
+
+&emsp;&emsp;我们从图中看到，中央处理器又分为逻辑单元和控制单元。逻辑单元的作用就是进行基本的逻辑运算（加减乘除与或），控制单元则主要控制的是计算机的读写、中断和取指等操作。而执行代码的时候，正是CPU进行一系列逻辑运算的时候。我们拿一段C语言代码，看看计算机是怎么运行它的。这里主要看看运行代码的时候内存是什么样子的。
+
+int fun(int a,int b);int m=10;int main()&#123;    inti=4;    int j=5;    m = fun(i,j);    return 0;&#125;int fun(int a,int b)&#123;    int c=0;    c=a+b;    return c;&#125;
+
+
+&emsp;&emsp;下面，我们开始吧。程序开始之前需要申请内存空间，此时的内存应该有代码区、静态数据区和动态数据区。如下图，其中动态数据区就是程序运行期间产生动态数据的地方，静态数据区主要用来保存常量（代码中的m就是常量）而代码区则用来保存我们的代码的，对于计算机来说就是机器码咯（代码中的main和fun函数）。
+
+&emsp;&emsp;开始执行程序吧….，是不是少了点什么？我们注意到代码中main函数需要调用fuc函数，执行完fuc函数之后又会跳转到main函数中执行，那么这里有个问题，计算机是如何知道调用完fuc函数之后，是如何返回main函数继续执行的呢？聪明的你肯定想到了，保存跳转fuc函数之前的地址（main）不就行了！所有这里还需要CPU的三个重要的寄存器用来保存运行的状态，分别是EIP（extended Instruction pointer）指令寄存器、EBP（Base pointer）基址寄存器和ESP（Stack  pointer）栈寄存器。
+&emsp;&emsp;EIP永远指向代码区的下一条指令。EBP 和ESP用来管理栈空间的，其中EBP指向栈底，ESP指向栈顶，如下图。其中EBP和ESP中间的灰色部分为程序加载时内核设置的位置，有兴趣可以去看看《Linux内核设计的艺术》。
+
+&emsp;&emsp;现在可以开始执行程序了，我们首先需要保存当前的栈底的地址，之后EBP和ESP重合了，如下图
+
+&emsp;&emsp;接着我们开始执行main函数了，首先初始化局部变量i和j，如下图（有没有发现，变量明只是用来理解的，实际运行的时候就只有值了）
+
+&emsp;&emsp;接下来调用fuc函数。首先会传递参数，将变量a、b压入栈中。这里参数压栈的参数和书写的顺序刚好相反，参数b先入栈，数值为变量j，之后参数a压入栈，数值为变量b。预留函数的返回值空间，当函数返回的时候，这里的值会传递给m。如下图(我拉长了动态数据区，本质都是一样的)。
+
+&emsp;&emsp;至此函数参数以及返回值已入栈完毕，接下来要开始执行fuc函数了。我们知道，执行函数完成之后，程序并不是立马就停止了，而是继续执行。所以我们首先需要做的就是保存当前执行的状态信息，在执行完fuc函数之后可以返回到正确位置继续执行。所以第一步我们应该保存当前执行指令的地址，以供函数返回时使用。然后保存main函数的栈底地址，这样EBP就能空下来，重新指向fuc的栈底了。如下图
+
+&emsp;&emsp;现在栈的主角是fuc函数了，首先将变量c入栈，然后执行a+b，将结果复制给c，之后返回c的值。如下图。
+
+&emsp;&emsp;此时fuc函数执行完毕，需要清栈。这里主要分为两步，第一步恢复main函数的栈信息，第二步需要找到fun函数返回的地址，程序继续执行。如下图。
+
+&emsp;&emsp;此时已经返回执行main函数了，需要将fun返回的值赋值给m。如图
+
+
+
+
+
+&emsp;&emsp;至此main函数也执行完毕，清除栈中的所有数据。如图：
+
+
+
+小结
+
+&emsp;&emsp;计算机就是一个输入、处理和输出的设备，输入我们编写的代码到内存，处理代码逻辑（出栈入栈），输出最终结果。计算机就是在复杂，原理都还是这样。
+&emsp;
+]]></content>
+      <categories>
+        <category>编译原理</category>
+      </categories>
+      <tags>
+        <tag>技术</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Shell教程</title>
+    <url>/personalBlog/2023/11/16/2023/linux/2023-11-11-Shell%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/</url>
+    <content><![CDATA[简介Shell是一个用C语言编写的程序，是用户使用Linux的桥梁。Shell既是命令语言，也是程序设计语言。
+Shell指的是一种应用程序，可以通过此程序访问操作系统内核服务。
+Shell脚本则是一种为Shell编写的脚本程序。Shell和Shell Script（Shell脚本是两个不同的概念）。本文主要记录Shell脚本编程。
+一个图看懂Shell在Linux系统中扮演的角色：
+
+Shell环境Linux的Shell种类很多，常见的有：
+
+Bourne Shell（&#x2F;usr&#x2F;bin&#x2F;sh或&#x2F;bin&#x2F;sh）
+Bourne Again Shell（&#x2F;bin&#x2F;bash）
+C Shell（&#x2F;usr&#x2F;bin&#x2F;csh）
+K Shell（&#x2F;usr&#x2F;bin&#x2F;ksh）
+Shell for Root（&#x2F;sbin&#x2F;sh）
+…….
+
+变量定义变量，等号两边不能有空格:
+name=&quot;c&quot;
+
+
+命名只能使用英文字母，数字和下划线，首个字符不能以数字开头。
+中间不能有空格，可以使用下划线 _。
+不能使用标点符号。
+不能使用bash里的关键字（可用help命令查看保留关键字）。
+
+使用变量$name
+name=&quot;c&quot;echo $namename=&quot;c1&quot;echo $name
+
+只读变量使用readonly声明
+name=&quot;c&quot;readonly nameecho $name   #会提示变量只读
+
+删除变量
+name=&quot;c&quot;unset nameecho $name #无输出
+
+字符串单引号name=&#x27;c&#x27;
+
+单引号里面的内容都会原样输出，即使转义也不行。可以进行字符串拼接
+双引号name=&quot;c&quot;
+
+双引号可以出现变量，并且可以进行转义。
+name=&quot;c&quot;str=&quot;hi,\&quot;$name\&quot;!&quot;
+
+获取字符串长度name=&quot;ccc&quot;echo $&#123;#name&#125;  #输出3
+
+$&#123;#name&#125; 等价于 $&#123;#name[0]&#125;
+截取字符串name=&quot;my name is c&quot;echo $&#123;name:1:3&#125;  #输出y n
+
+查找字符串匹配 name 字符串中n出现的索引，注意是 &#96; 反引号
+name=&quot;my name is c&quot;echo `expr index &quot;$&#123;name&#125;&quot; n`  #输出4
+
+注释单行注释以 # 开头的行就是注释，被解释器忽略
+以 #! 开头，声明脚本使用哪个解释器
+# 这是一行注释# 这是一行注释
+
+多行注释Here文档：表示一个空命令，用于执行后面的Here文档，&lt;&lt;EOF 表示Here文档。
+:&lt;&lt;EOF这是一行注释这是一行注释这是一行注释EOF
+
+不一定非要用EOF，可以使用其它符号，delimiter用于标注的分隔符，结尾在加一个分隔符即可。
+:&lt;&lt;delimiter这是一行注释这是一行注释这是一行注释delimiter
+
+直接使用 : 号
+: &#x27;这是一行注释这是一行注释这是一行注释&#x27;
+
+传递的参数脚本内获取参数的格式$n，其中$0为执行的文件名，$1为执行的第一个参数，以此类推。
+特殊字符
+
+
+
+$#
+传递到脚本的参数个数
+
+
+
+$*
+以一个单字符串显示所有向脚本传递的参数
+
+
+$$
+脚本运行的当前进程ID号
+
+
+$!
+后台运行的最后一个进程ID号
+
+
+$@
+*与$相同，只不过不是以但字符串的方式返回，而是分别返回
+
+
+$-
+显示Shell使用的当前选项，与set命令相同
+
+
+$？
+显示最后的退出状态。0表示没有错误，其它任何值表示有错
+
+
+数组Bash Shell只支持一维数组，下标从0开始。
+定义数组#定义方式1array_name=(&quot;A&quot;,&quot;B&quot;,C)#定义方式2array_name[0]=&quot;A&quot;array_name[1]=&quot;B&quot;array_name[2]=C
+
+读取数组echo &quot;第一个元素：$&#123;array_name[0]&#125;&quot;echo &quot;第二个元素：$&#123;array_name[1]&#125;&quot;
+
+关联数组语法： declare -A array_name
+-A选项就是声明一个关联数组，关联数组的key是唯一的。
+声明一个关联数组 animal
+declare -A animal([&quot;dog&quot;]=&quot;This is a dog&quot; [&quot;cat&quot;]=&quot;This is a cat&quot;)
+
+或者
+declare -A animalanimal[&quot;dog&quot;]=&quot;This is a dog&quot;animal[&quot;cat&quot;]=&quot;This is a cat&quot;
+
+访问关联数组的值
+echo $&#123;animal[&quot;dog&quot;]&#125;
+
+获取数组的所有元素使用 @ 或 *
+#!/bin/bash# author:chris# url:www.wysiwyg.workarray_name[0]=&quot;A&quot;array_name[1]=&quot;B&quot;array_name[2]=Cecho &quot;数组的元素：$&#123;array_name[*]&#125;&quot;  #输出 A B Cecho &quot;数组的元素：$&#123;array_name[@]&#125;&quot;  #输出 A B Cdeclare -A animalanimal[&quot;dog&quot;]=&quot;This is a dog&quot;animal[&quot;cat&quot;]=&quot;This is a cat&quot;echo &quot;数组的元素：$&#123;animal[*]&#125;&quot;echo &quot;数组的元素：$&#123;animal[@]&#125;&quot; #都输出 This is a cat This is a dog#加 ! 可以输出所有的键declare -A animalanimal[&quot;dog&quot;]=&quot;This is a dog&quot;animal[&quot;cat&quot;]=&quot;This is a cat&quot;echo &quot;数组的元素：$&#123;!animal[*]&#125;&quot;echo &quot;数组的元素：$&#123;!animal[@]&#125;&quot; 
+
+获取数组的长度使用 # 号
+echo &quot;$&#123;#array_name[*]&#125;&quot;
+
+运算符Shell支持多种运算符：
+
+算数运算符
+关系运算符
+布尔运算符
+字符串运算符
+文件测试运算符
+
+算数运算符a&#x3D;10,b&#x3D;20
+
+
+
+运算符
+说明
+例子
+
+
+
++
+加
+expr $a + $b结果为30
+
+
+-
+减
+expr $a - $b结果为-10
+
+
+*
+乘
+expr $a \* $b结果为200
+
+
+&#x2F;
+除
+expr $b / $a结果为2
+
+
+%
+区域
+expr $a % $b结果为10
+
+
+&#x3D;
+赋值
+a &#x3D; $b 把20赋值给a
+
+
+&#x3D;&#x3D;
+相等
+[ $a &#x3D;&#x3D; $b ] 结果为 false
+
+
+!&#x3D;
+不相等
+[ $a !&#x3D; $b ] 结果为true
+
+
+expr 是表达式计算，注意由于 * 是Linux的关键字，所以需要使用转义字符，或者使用 $(())进行计算，运算符旁边也不需要空格。
+注意表达式两边要有空格
+#!/bin/basha=10b=20ret=`expr $a + $b`echo &quot;a + b：$ret&quot;ret=`expr $a - $b`echo &quot;a - b：$ret&quot;ret=`expr $a \* $b`echo &quot;a * b：$ret&quot;ret=$((a * b))echo &quot;a * b：$ret&quot;#注意[ ]里面与运算符两边都有加空格if [ $a == $b ]then 	echo &quot;a 等于 b&quot;fi	if [ $a != $b ]then 	echo &quot;a 不等于 b&quot;fi
+
+脚本执行结果
+a + b：30a - b：-10a * b：200a * b：200a 不等于 b
+
+关系运算符a&#x3D;10,b&#x3D;20
+
+
+
+运算符
+说明
+例子
+
+
+
+-eq
+两个值是否相等
+[ $a -eq $b ]  或 test [$a] -eq [$b]  返回 false
+
+
+-ne
+两个值是否不相等
+[ $a -ne $b ]  true
+
+
+-gt
+左边值是否大于右边值
+[ $a -gt $b ]  false
+
+
+-lt
+左边值是否小于右边值
+[ $a -lt $b ]  false
+
+
+-ge
+左边值是否大于等于右边值
+[ $a -ge $b ]  false
+
+
+-le
+左边值是否小于等于右边值
+[ $a -le $b ]  true
+
+
+布尔运算符a&#x3D;10,b&#x3D;20
+
+
+
+运算符
+说明
+举例
+
+
+
+!
+非运算
+[ ! false ] true。
+
+
+-o
+或运算，有一个表达式为 true 则返回 true。
+[ $a -lt 15 -o $b -gt 50 ] true。
+
+
+-a
+与运算，两个表达式都为 true 才返回 true。
+[ $a -lt 15 -a $b -gt 50] false。
+
+
+逻辑运算符a&#x3D;10,b&#x3D;20
+
+
+
+运算符
+说明
+举例
+
+
+
+&amp;&amp;
+逻辑的 AND
+[[ $a -lt 50 &amp;&amp; $b -gt 50 ]] false
+
+
+||
+逻辑的 OR
+[[ $a -lt 50 || $b -gt 50 ]] true
+
+
+字符串运算符字符串a&#x3D;”abc”，b&#x3D;”qwe”
+
+
+
+运算符
+说明
+举例
+
+
+
+&#x3D;
+两个字符串是否相等
+[ $a &#x3D; $b ] false。
+
+
+!&#x3D;
+两个字符串是否不相等
+[ $a !&#x3D; $b ] true。
+
+
+-n
+字符串长度是否不为 0
+[ -n “$b” ] true。
+
+
+-z
+字符串长度是否为0
+[ -z $b ] false。
+
+
+$
+字符串是否不为空
+[ $b ] true。
+
+
+文件测试运算符
+
+
+操作符
+说明
+
+
+
+-b file
+检测文件是否是块设备文件
+
+
+-c file
+检测文件是否是字符设备文件
+
+
+-d file
+检测文件是否是目录
+
+
+-f file
+检测文件是否是普通文件（既不是目录，也不是设备文件）
+
+
+-g file
+检测文件是否设置了 SGID 位
+
+
+-k file
+检测文件是否设置了粘着位(Sticky Bit)
+
+
+-p file
+检测文件是否是有名管道
+
+
+-u file
+检测文件是否设置了 SUID 位
+
+
+-r file
+检测文件是否可读
+
+
+-w file
+检测文件是否可写
+
+
+-x file
+检测文件是否可执行
+
+
+-s file
+检测文件是否为空（文件大小是否大于0）
+
+
+-e file
+检测文件（包括目录）是否存在
+
+
+流程控制if else语法格式：
+# if语法if conditionthen   command   ...fi   #if elseif conditionthen   command   ...else      command   ...fi#if else-if elseif conditionthen   command   ...elif condition  then   command   ...else      command   ...fi
+
+也可以写成一行，用 ; 号隔开
+for循环for var in val val...valdo    command   ...done   #无限循环for (( ; ; ))do    command   ...done 
+
+例子：
+#!/bin/bashfor var in my name is cdo  echo $&#123;var&#125;done  
+
+while循环while conditiondo   command   ...done#无限循环while true    do   command   ...done
+
+util循环until conditiondo   command   ...done
+
+case … esac类似于其他语言的switch case 语句。) 表示case分支，;; 表示break
+case 值 in模式1)  command   ...  ;;模式2)  command   ...  ;; *)   #匹配所有，括号里面可以使用一些运算符  command   ...   break   #可以使用 break 或 continue 命令  ;;esac
+
+函数定义function funname()&#123;   action;      return int;&#125;
+
+function 关键字可以省略。
+return返回值也可省略，若没有显示的使用return，则使用最后一条命令的结果作为返回值，范围(0-255)
+函数参数funname()`&#123;  echo &quot;第一个参数为 $1&quot;  echo &quot;第一个参数为 $2&quot;  echo &quot;第一个参数为 $`&#123;10&#125;&quot;  echo &quot;参数个数 $#&quot;  echo &quot;输出所有参数 $*&quot;&#125;funname 1 2 3 4 5 6 7 8 9 10
+
+取第10个以及大于10个以上传入的参数时，需要使用 &#123;&#125;，参数获取的方式与Linux传递的参数获取方式基本相同。
+输入输出重定向Linux可以将终端或者文件方式输入的内容，转到另一个目标中去。
+Linux有关重定向有三种与之关联的文件描述符：
+
+0：指标准输入(STDIN)
+1：指标准输出(STDOUT)
+2.：指标准错误输出(STDERR)
+
+输出重定向command &gt; file
+
+将 echo 的值重定向 test 文件中：
+echo &quot;输出重定向测试&quot; &gt; test
+
+若 test 文件有内容，使用拼接的方式，使用 &gt;&gt;：
+echo &quot;输出重定向，拼接测试&quot; &gt;&gt; test
+
+输入重定向command &lt; file
+
+将 test 文件内容 重定向给 cat，并显示：
+cat &lt; test
+
+组合操作只将命令的 标准错误 输出到 error 文件：
+command 2&gt;error
+
+将 标准输出到log文件：
+command &gt;log 2&gt;&amp;1
+
+将 test 文件重定向输入给 cat 重定向输出给 test1文件
+cat &lt; test &gt; test1
+
+Here 文档前面多行注释提到过Here文档，我们也可以使用Here文档，将内容重定向到交互式脚本或者程序。
+command &lt;&lt; delimiter    documentdelimiter
+
+使用 wc 统计Here文档的行数，注意最后的 EOF 需要顶格书写
+wc -l &lt;&lt; EOF  document  document  documentEOF3  #输出3行
+
+&#x2F;dev&#x2F;null文件若不想将命令的输出显示到屏幕上，可以将命令的结果 重定向到 &#x2F;dev&#x2F;null 中
+command &gt; /dev/null 
+
+文件包含一个shell脚本中可以包含另一个shell脚本，格式如下：
+#第一种. filename#第二种source filename
+
+实例：
+test1.sh:
+#!/bin/bashname=&quot;c&quot;
+
+PS：使用Here文档将内容写入 test1.sh：
+cat &lt;&lt; eof &gt;test1.sh #!/bin/bashname=&quot;c&quot;eof
+
+test2.sh:
+#!/bin/bash. ./test1.sh   # source ./test1.sh echo &quot;name: $&#123;name&#125;&quot;
+
+[root@192 ~]# chmod +x test2.sh [root@192 ~]# ./test2.sh name: c
+
+]]></content>
+      <categories>
+        <category>Shell</category>
+      </categories>
+      <tags>
+        <tag>脚本</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ConditionalOnBean注解</title>
+    <url>/personalBlog/2024/05/26/2024/202405/2024-05-26-ConditionalOnBean%E6%B3%A8%E8%A7%A3/</url>
+    <content><![CDATA[前言@ConditionalOnBean注解应用在方法或类上，在条件中的Bean存在的时候才会去加载目标Bean。其实它的底层还是使用的@Conditional注解，如下：
+@Target(&#123; ElementType.TYPE, ElementType.METHOD &#125;)@Retention(RetentionPolicy.RUNTIME)@Documented@Conditional(OnBeanCondition.class)public @interface ConditionalOnBean &#123;    // 省略...&#125;
+
+我们查看 OnBeanCondition 类，我们再来看ConfigurationPhase枚举：
+@Order(Ordered.LOWEST_PRECEDENCE)class OnBeanCondition extends FilteringSpringBootCondition implements ConfigurationCondition &#123;    @Override    public ConfigurationPhase getConfigurationPhase() &#123;        return ConfigurationPhase.REGISTER_BEAN;    &#125;    // 省略...&#125;
+
+PARSE_CONFIGURATION ：是否需要加载此配置类
+REGISTER_BEAN：是否需要加载此Bean
+enum ConfigurationPhase &#123;    /*** The &#123;@link Condition&#125; should be evaluated as a &#123;@code @Configuration&#125;* class is being parsed.* &lt;p&gt;If the condition does not match at this point, the &#123;@code @Configuration&#125;* class will not be added.*/    PARSE_CONFIGURATION,    /*** The &#123;@link Condition&#125; should be evaluated when adding a regular* (non &#123;@code @Configuration&#125;) bean. The condition will not prevent* &#123;@code @Configuration&#125; classes from being added.* &lt;p&gt;At the time that the condition is evaluated, all &#123;@code @Configuration&#125;* classes will have been parsed.*/    REGISTER_BEAN&#125;
+
+
+
+原理创建TestA类，
+@Component@ConditionalOnBean(type = &quot;com.chris.feign.condition.TestB&quot;)public class TestA &#123;&#125;
+
+创建TestB类，此类不交由Spring容器管理。
+public class TestB &#123;&#125;
+
+我们直接将断点打在 org.springframework.context.annotation.ConfigurationClassParser#processConfigurationClass 方法上，并添加条件  &quot;testA&quot;.equals(configClass.getBeanName())。（这段代码是以及扫描出需要被Spring管理的Bean，后续的解析方法的入口，可以看一下之前写的文章 https://wysiwyg.work/2023/03/01/part1/source/Spring/Spring%E7%9A%84refresh%E6%96%B9%E6%B3%95/）
+
+我们看一下 org.springframework.context.annotation.ConditionEvaluator#shouldSkip(org.springframework.core.type.AnnotatedTypeMetadata, org.springframework.context.annotation.ConfigurationCondition.ConfigurationPhase) 方法（建议断点一点点走）：
+public boolean shouldSkip(@Nullable AnnotatedTypeMetadata metadata, @Nullable ConfigurationPhase phase) &#123;    //如果没有Conditional注解则返回false，也就是不需要跳过    if (metadata == null || !metadata.isAnnotated(Conditional.class.getName())) &#123;        return false;    &#125;    //因为不为空会跳过    if (phase == null) &#123;        if (metadata instanceof AnnotationMetadata &amp;&amp;            ConfigurationClassUtils.isConfigurationCandidate((AnnotationMetadata) metadata)) &#123;            return shouldSkip(metadata, ConfigurationPhase.PARSE_CONFIGURATION);        &#125;        return shouldSkip(metadata, ConfigurationPhase.REGISTER_BEAN);    &#125;    List&lt;Condition&gt; conditions = new ArrayList&lt;&gt;();    //获取 @Conditional 注解的value值，也就是org.springframework.boot.autoconfigure.condition.OnBeanCondition    for (String[] conditionClasses : getConditionClasses(metadata)) &#123;        for (String conditionClass : conditionClasses) &#123;            Condition condition = getCondition(conditionClass, this.context.getClassLoader());            conditions.add(condition);        &#125;    &#125;    //排序    AnnotationAwareOrderComparator.sort(conditions);    for (Condition condition : conditions) &#123;        ConfigurationPhase requiredPhase = null;        if (condition instanceof ConfigurationCondition) &#123;            requiredPhase = ((ConfigurationCondition) condition).getConfigurationPhase();        &#125;        //requiredPhase == phase 这里不匹配，所以会返回false，也就是不需要跳过，意思就是需要加载此类        if ((requiredPhase == null || requiredPhase == phase) &amp;&amp; !condition.matches(this.context, metadata)) &#123;            return true;        &#125;    &#125;    return false;&#125;
+
+我们在把断点打在 org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader#loadBeanDefinitions 方法上，这个方法是将扫描出来的 BeanDefinition 加载到Spring 容器中，正如方法名字那样（断点条件和上面一样）：
+
+我们继续看 org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader#loadBeanDefinitionsForConfigurationClass 方法。
+private void loadBeanDefinitionsForConfigurationClass(    ConfigurationClass configClass, TrackedConditionEvaluator trackedConditionEvaluator) &#123;    //主要就是这里啦    if (trackedConditionEvaluator.shouldSkip(configClass)) &#123;        String beanName = configClass.getBeanName();        //删除BeanDefinition        if (StringUtils.hasLength(beanName) &amp;&amp; this.registry.containsBeanDefinition(beanName)) &#123;            this.registry.removeBeanDefinition(beanName);        &#125;        this.importRegistry.removeImportingClass(configClass.getMetadata().getClassName());        return;    &#125;    // ... 省略&#125;// org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.TrackedConditionEvaluator#shouldSkippublic boolean shouldSkip(ConfigurationClass configClass) &#123;    Boolean skip = this.skipped.get(configClass);    if (skip == null) &#123;        //使用 @Import引入的类        if (configClass.isImported()) &#123;            boolean allSkipped = true;            for (ConfigurationClass importedBy : configClass.getImportedBy()) &#123;                if (!shouldSkip(importedBy)) &#123;                    allSkipped = false;                    break;                &#125;            &#125;            if (allSkipped) &#123;                // The config classes that imported this one were all skipped, therefore we are skipped...                skip = true;            &#125;        &#125;        //主要就是这里了        if (skip == null) &#123;            skip = conditionEvaluator.shouldSkip(configClass.getMetadata(), ConfigurationPhase.REGISTER_BEAN);        &#125;        this.skipped.put(configClass, skip);    &#125;    return skip;&#125;//org.springframework.context.annotation.ConditionEvaluator#shouldSkip(org.springframework.core.type.AnnotatedTypeMetadata, org.springframework.context.annotation.ConfigurationCondition.ConfigurationPhase)//其实这个方法就是上面那个方法拉，只不过 phase 为ConfigurationPhase.REGISTER_BEANpublic boolean shouldSkip(@Nullable AnnotatedTypeMetadata metadata, @Nullable ConfigurationPhase phase) &#123;    if (metadata == null || !metadata.isAnnotated(Conditional.class.getName())) &#123;        return false;    &#125;    //直接往下看    if (phase == null) &#123;        if (metadata instanceof AnnotationMetadata &amp;&amp;            ConfigurationClassUtils.isConfigurationCandidate((AnnotationMetadata) metadata)) &#123;            return shouldSkip(metadata, ConfigurationPhase.PARSE_CONFIGURATION);        &#125;        return shouldSkip(metadata, ConfigurationPhase.REGISTER_BEAN);    &#125;    List&lt;Condition&gt; conditions = new ArrayList&lt;&gt;();    for (String[] conditionClasses : getConditionClasses(metadata)) &#123;        for (String conditionClass : conditionClasses) &#123;            Condition condition = getCondition(conditionClass, this.context.getClassLoader());            conditions.add(condition);        &#125;    &#125;    AnnotationAwareOrderComparator.sort(conditions);    for (Condition condition : conditions) &#123;        ConfigurationPhase requiredPhase = null;        if (condition instanceof ConfigurationCondition) &#123;            requiredPhase = ((ConfigurationCondition) condition).getConfigurationPhase();        &#125;        // requiredPhase == null || requiredPhase == phase 这里都会为ture，所以回去走 matches方法        if ((requiredPhase == null || requiredPhase == phase) &amp;&amp; !condition.matches(this.context, metadata)) &#123;            return true;        &#125;    &#125;    return false;&#125;//org.springframework.boot.autoconfigure.condition.SpringBootCondition#matches(org.springframework.context.annotation.ConditionContext, org.springframework.core.type.AnnotatedTypeMetadata)// OnBeanCondition 继承 SpringBootConditionpublic final boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) &#123;    //返回类或方法名 这里返回 com.chris.feign.condition.TestA    String classOrMethodName = getClassOrMethodName(metadata);    try &#123;        //主要看这个方法        ConditionOutcome outcome = getMatchOutcome(context, metadata);        //日志输出        logOutcome(classOrMethodName, outcome);        //这里拼接信息        recordEvaluation(context, classOrMethodName, outcome);        //返回 match值，        return outcome.isMatch();    &#125;    catch (NoClassDefFoundError ex) &#123;        throw new IllegalStateException(&quot;Could not evaluate condition on &quot; + classOrMethodName + &quot; due to &quot;                                        + ex.getMessage() + &quot; not found. Make sure your own configuration does not rely on &quot;                                        + &quot;that class. This can also happen if you are &quot;                                        + &quot;@ComponentScanning a springframework package (e.g. if you &quot;                                        + &quot;put a @ComponentScan in the default package by mistake)&quot;, ex);    &#125;    catch (RuntimeException ex) &#123;        throw new IllegalStateException(&quot;Error processing condition on &quot; + getName(metadata), ex);    &#125;&#125;//org.springframework.boot.autoconfigure.condition.OnBeanCondition#getMatchOutcomepublic ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) &#123;    ConditionMessage matchMessage = ConditionMessage.empty();    MergedAnnotations annotations = metadata.getAnnotations();    //是否有ConditionalOnBean 注解，肯定有啦    if (annotations.isPresent(ConditionalOnBean.class)) &#123;        Spec&lt;ConditionalOnBean&gt; spec = new Spec&lt;&gt;(context, metadata, annotations, ConditionalOnBean.class);        //这里是主要逻辑        MatchResult matchResult = getMatchingBeans(context, spec);        // return this.unmatchedAnnotations.isEmpty() &amp;&amp; this.unmatchedNames.isEmpty()		//			&amp;&amp; this.unmatchedTypes.isEmpty()        //因为这里 unmatchedTypes 是有值的，所以会返回false，也就是会走  noMatch 方法，也就会触发删除 TestA 的BeanDefinition,也就不会注册到spring容器中。        if (!matchResult.isAllMatched()) &#123;            String reason = createOnBeanNoMatchReason(matchResult);            return ConditionOutcome.noMatch(spec.message().because(reason));        &#125;        matchMessage = spec.message(matchMessage).found(&quot;bean&quot;, &quot;beans&quot;).items(Style.QUOTE,                                                                               matchResult.getNamesOfAllMatches());    &#125;    // ... 省略&#125;//org.springframework.boot.autoconfigure.condition.OnBeanCondition#getMatchingBeansprotected final MatchResult getMatchingBeans(ConditionContext context, Spec&lt;?&gt; spec) &#123;    ClassLoader classLoader = context.getClassLoader();    //获取当前的Bean工厂    ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();    //返回false，因为 spec.getStrategy()等于ALL    boolean considerHierarchy = spec.getStrategy() != SearchStrategy.CURRENT;    Set&lt;Class&lt;?&gt;&gt; parameterizedContainers = spec.getParameterizedContainers();    // spec.getStrategy()等于ALL    if (spec.getStrategy() == SearchStrategy.ANCESTORS) &#123;        BeanFactory parent = beanFactory.getParentBeanFactory();        Assert.isInstanceOf(ConfigurableListableBeanFactory.class, parent,                            &quot;Unable to use SearchStrategy.ANCESTORS&quot;);        beanFactory = (ConfigurableListableBeanFactory) parent;    &#125;    MatchResult result = new MatchResult();    //这里为空    Set&lt;String&gt; beansIgnoredByType = getNamesOfBeansIgnoredByType(classLoader, beanFactory, considerHierarchy,                                                                  spec.getIgnoredTypes(), parameterizedContainers);    //spec.getTypes() 获取的就是注解ConditionalOnBean上的type值，即 com.chris.feign.condition.TestB    for (String type : spec.getTypes()) &#123;        //根据type获取对应的Bean名称 ，因为TestB不存在，所以这里返回空        Collection&lt;String&gt; typeMatches = getBeanNamesForType(classLoader, considerHierarchy, beanFactory, type,                                                             parameterizedContainers);        Iterator&lt;String&gt; iterator = typeMatches.iterator();        while (iterator.hasNext()) &#123;            String match = iterator.next();            if (beansIgnoredByType.contains(match) || ScopedProxyUtils.isScopedTarget(match)) &#123;                iterator.remove();            &#125;        &#125;        if (typeMatches.isEmpty()) &#123;            // unmatchedTypes 添加此类型            result.recordUnmatchedType(type);        &#125;        else &#123;            result.recordMatchedType(type, typeMatches);        &#125;    &#125;    for (String annotation : spec.getAnnotations()) &#123;        Set&lt;String&gt; annotationMatches = getBeanNamesForAnnotation(classLoader, beanFactory, annotation,                                                                  considerHierarchy);        annotationMatches.removeAll(beansIgnoredByType);        if (annotationMatches.isEmpty()) &#123;            result.recordUnmatchedAnnotation(annotation);        &#125;        else &#123;            result.recordMatchedAnnotation(annotation, annotationMatches);        &#125;    &#125;    for (String beanName : spec.getNames()) &#123;        if (!beansIgnoredByType.contains(beanName) &amp;&amp; containsBean(beanFactory, beanName, considerHierarchy)) &#123;            result.recordMatchedName(beanName);        &#125;        else &#123;            result.recordUnmatchedName(beanName);        &#125;    &#125;    //这里 会返回 unmatchedTypes 有值的MatchResult对象，我们在返回调用此方法的方法，往上走..    return result;&#125;
+
+总结解析完所有的配置类之后，会在加载BeanDefinition之前判断是否需要跳过（因为ConditionalOnBean注解处于REGISTER_BEAN阶段，所以配置类肯定是加载的），执行 shouldSkip 方法，最后调用的是 org.springframework.boot.autoconfigure.condition.OnBeanCondition#getMatchingBeans 方法，获取声明的Bean是否已经加载，如果没有加载，则从Bean工厂中将其删除，也就不会加载到容器中，从而实现了ConditionalOnBean注解的功能。
+简单来说：
+加载的Bean信息中是否有ConditionalOnBean注解声明的Bean，如果不存在则从加载的Bean列表中移除当前Bean，从而禁止加载到Spring容器中。若存在则跳过，并加载到Spring容器中。
+]]></content>
+      <categories>
+        <category>源码</category>
+      </categories>
+      <tags>
+        <tag>技术</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Idea集成docker插件，实现项目自动部署</title>
+    <url>/personalBlog/2022/07/24/part1/docker/Idea%E4%BD%BF%E7%94%A8docker%E6%8F%92%E4%BB%B6%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E4%BB%A5Springboot%E9%A1%B9%E7%9B%AE/</url>
+    <content><![CDATA[
+什么是Docker
+官方解释：
+​		 Docker 是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的容器中,然后发布到任何流行的Linux或Windows操作系统的机器上,也可以实现虚拟化,容器是完全使用沙箱机制,相互之间不会有任何接口
+个人理解：
+​		如果一个服务器需要部署多个应用程序，那么当一个应用程序的执行出现问题，比如内存溢出，死循环等情况时，会影响其它影响程序的运行。那么可以使用Docker来分别管理应用程序，并且可以设置每个应用程序的占用资源大小，岂不美哉！
+
+下载Docker
+我这里使用的Centos，依次执行以下命令：
+添加阿里云镜像，这样下载就快了
+yum-config-manager \    --add-repo \    http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+
+下载Docker
+yum -y install docker
+
+查看docker的版本，如果有显示则表示安装成功
+docker version
+
+启动docker
+systemctl start docker
+
+
+
+配置一下阿里云镜像源吧，这样下载镜像的时候就快很多了，直接找到文件 /etc/docker/daemon.json,没有就创建，添加以下内容：
+{
+“registry-mirrors”: [“]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>技术</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用Docker-Compose编排管理多容器Docker应用程序</title>
+    <url>/personalBlog/2022/08/09/part1/docker/docker-compose%E5%A4%9A%E5%AE%B9%E5%99%A8%E7%AE%A1%E7%90%86/</url>
+    <content><![CDATA[
+Compose 是什么
+Compose 是用于定义和运行多容器 Docker 应用程序的工具。可以使用yml配置文件来配置并管理所有的服务。然后使用一个命令，就可以创建以及启动所有的服务。
+
+使用Idea集成Docker-Compose
+首先需要下载docker-compose软件包，https://github.com/docker/compose/releases/， 
+本人使用Windows开发环境，所有下载的Windows版本，看个人所需。
+
+按照下列步骤，创建一个docker-compose
+
+步骤1是自定义名称，根据自身情况命名就行。
+步骤2是docker服务器实例，参考Idea集成docker插件，实现项目自动部署。
+步骤3就是compose配置文件的路径。
+
+
+docker-compose.yml配置文件
+我这里主要演示了访问 8200和8201端口可以访问部署在docker里面的spring boot项目（详看上篇Idea集成docker插件，实现项目自动部署）。并且将docker容器里面产生的日志挂载到宿主机上方便查看，如所示。我这里使用了本地的dockerfile文件构建的镜像，也可以直接使用docker服务器上已经构建好的镜像
+version: &#x27;2&#x27;services:  #服务名，随便起  demo1:    #构建的镜像名    image: docker_deploy1:v1.0    #构建的容器名    container_name: demo1    restart: always    #使用本地的dockerfile构建镜像，需要将文件与本文件在一个目录上    build:      context: ./   #路径      dockerfile: Dockerfile  #dockerfile的名字    #宿主机到容器的端口映射    ports:      - &#x27;8200:8099&#x27;    volumes:      - /home/logs/demo1:/log  #挂载日志 将宿主的 /home/logs/demo1 挂载到 容器的/log目录上，便于查看日志  demo2:    image: docker_deploy2:v1.0    container_name: demo2    restart: always    ports:      - &#x27;8201:8099&#x27;    volumes:      - /home/logs/demo2:/log    build:      context: ./      dockerfile: Dockerfile
+
+
+
+小结
+本文主要介绍如何使用docker-compose来管理并运行多个容器，例子比较简单。主要想给大家演示，如何根据yml配置去管理多个容器。一般在公司进行项目开发时，会涉及到多个开发环境，比如开发、测试、发布等。那么我们可以根据以上环境去创建三个容器，在需要发布相应环境的时候，我们只需要将打包好的jar包制作成镜像，然后在yml文件中启动相应的服务即可（需在Idea中集成）。
+可能出现的困惑：
+为什么例子中要使用本地的dockerfile文件进行构建容器？
+答：我这个例子是这么用的。可以直接使用已经存在的镜像启动容器。还有就是使用dockerfile文件，将dockerfile文件以及yml配置文件放到服务区上，在服务器上使用docker-compose的命令，仍然能达到最终目的，只不过本例子中Idea帮助我们执行了。还记得刚开始需要下载docker-compose的软件吗，就是需要在安装Idea编辑软件的机器上去执行docker-compose命令。
+
+
+]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>技术</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux简介</title>
+    <url>/personalBlog/2023/11/14/2023/linux/2023-11-11-Linux%E7%AE%80%E4%BB%8B/</url>
+    <content><![CDATA[简介Linux 内核最初只是由芬兰人林纳斯·托瓦兹（Linus Torvalds）在赫尔辛基大学上学时出于个人爱好而编写的。
+Linux 是一套免费使用和自由传播的类 Unix 操作系统，是一个基于 POSIX 和 UNIX 的多用户、多任务、支持多线程和多 CPU 的操作系统。
+Linux 能运行主要的 UNIX 工具软件、应用程序和网络协议。它支持 32 位和 64 位硬件。Linux 继承了 Unix 以网络为核心的设计思想，是一个性能稳定的多用户网络操作系统。
+发行版
+目前市场比较有名的发行版：Ubuntu、RedHat、CentOS、Debian、Fedora、SuSE、OpenSUSE、Arch Linux、SolusOS 等。
+Linux vs WindowsWindows界面统一，驱动程序丰富，版本更新频繁。使用比较简单，很适合普通人群使用。比较多的用于办公室办公、学习等。
+Linux的界面风格随发行版，可能也互不兼容。GNU&#x2F;Linux 的终端机是从 UNIX 传承下来，基本命令和操作方法也几乎一致。比较多的用于服务器。
+下载Centos官网：https://www.centos.org/download/
+阿里云：https://mirrors.aliyun.com/centos/7/isos/x86_64
+
+CentOS-7.0-x86_64-DVD-1503-01.iso : 标准安装版，一般下载这个就可以了（推荐）
+CentOS-7.0-x86_64-NetInstall-1503-01.iso : 网络安装镜像（从网络安装或者救援系统）
+CentOS-7.0-x86_64-Everything-1503-01.iso: 对完整版安装盘的软件进行补充，集成所有软件。（包含centos7的一套完整的软件包，可以用来安装系统或者填充本地镜像）
+CentOS-7.0-x86_64-GnomeLive-1503-01.iso: GNOME桌面版
+CentOS-7.0-x86_64-KdeLive-1503-01.iso: KDE桌面版
+CentOS-7.0-x86_64-livecd-1503-01.iso : 光盘上运行的系统，类拟于winpe
+CentOS-7.0-x86_64-minimal-1503-01.iso : 精简版，自带的软件最少
+
+启动过程init程序的类型
+SysV: init, CentOS 5之前, 配置文件： &#x2F;etc&#x2F;inittab。
+
+Upstart: init,CentOS 6, 配置文件： &#x2F;etc&#x2F;inittab, &#x2F;etc&#x2F;init&#x2F;*.conf。
+
+Systemd： systemd, CentOS 7,配置文件： &#x2F;usr&#x2F;lib&#x2F;systemd&#x2F;system、 &#x2F;etc&#x2F;systemd&#x2F;system。
+
+
+内核引导计算机打开电源后，会对BIOS（基本输入输出系统）进行开机自检，按照BIOS设置的启动设备（一般是硬盘）进行启动。操作系统接管硬件之后，会读入 &#x2F;boot 目录下的内核文件。
+
+运行initinit程序会去读取配置文件 &#x2F;etc&#x2F;inittab。用来引导启动其它进程。
+
+运行级别
+Linux系统有7个运行级别，根据不同的场景，从而分配不同的开机启动程序。
+
+运行级别0：系统的停机状态，若设置为此运行级别，则系统将不能启动。
+运行级别1：单用户的工作状态，只有root权限，适用于系统维护，并且不能远程登录。
+运行级别2：多用户的状态。没有NFS。
+运行级别3：完全的多用户状态，有NFS。登录后进入控制台模式。
+运行级别4：保留。
+运行级别5：登录后进入GUI模式，也就是图形界面。
+运行级别6：系统重启模式，若设置此级别，则系统陷入重启循环。
+
+系统初始化Init会调用执行 &#x2F;etc&#x2F;rc.d&#x2F;rc.sysinit，而rc.sysinit是一个bash shell脚本，主要完成一些系统初始化的工作。激活交换分区、检查磁盘、加载硬件模块以及其它需要优先执行的任务。&#x2F;etc&#x2F;rc.d&#x2F;rc5.d&#x2F;目录中的启动脚本其实是一些连接文件，真正的rc启动脚本在&#x2F;etc&#x2F;rc.d&#x2F;init.d&#x2F;下。
+我们可以在&#x2F;etc&#x2F;rc.d&#x2F;init.d下添加我们自定义的启动脚本。
+
+建立终端rc执行之后，返回init。这个时候基本环境已经设置好了，各种的守护线程也已经启动。init会打开6个终端，供用户登录使用。
+tty1、tty2、tty3、tty4、tty5、tty6。
+使用快捷键Ctrl + Alt + F1 ~ F6 在命令行界面之间切换。
+在命令行界面使用快捷键Ctrl + Alt + F7切回图形化界面。
+如果使用的VM虚拟机，命令行之间切换使用Alt + Space + F1F6。在图形化界面使用Alt + Shift + Ctrl + F1F6 切换到命令行界面。
+用户登录系统一般来说登录方式有三种：
+
+命令行
+ssh登录
+图形化界面登录
+
+
+Linux关机#将数据从内存刷新到磁盘sync#关机   #-h now：立马关机#-r now：立马重启#-h 23:00：今天的23:00关机#-h +12 十二分钟后关机shutdown  #重启reboot#关闭系统halt
+
+目录结构登录系统之后，输入以下命令：
+ls /
+
+
+因为不是新安装的虚拟机，可能存在后续添加的目录，这里只记录重要的目录。
+
+&#x2F;bin：存放经常使用的程序或命令
+
+&#x2F;boot：存放系统的内核文件，包含连接文件、镜像文件。
+
+&#x2F;dev ：Device(设备) 的缩写, 存放Linux的外部设备。
+
+&#x2F;etc：存放所有系统需要的配置文件以及子目录列表，不能轻易更改，可能导致系统无法正常启动。
+
+&#x2F;home：用户的主目录，以用户的账号命名。
+
+&#x2F;lib：Library(库) 的缩写，存放基本的代码库（c++库），与Windows里面的DLL文件相似。
+
+&#x2F;media：linux 系统会自动识别一些设备，例如U盘、光驱等等，当识别后，Linux 会把识别的设备挂载到这个目录下。
+
+&#x2F;mnt：系统提供该目录是为了让用户临时挂载别的文件系统的，我们可以将自己的U盘等设备挂载到&#x2F;mnt目录，这样就可以查看数据了。
+
+&#x2F;opt： Optional(可选) 的缩写，默认为空，额外安装的软件可以放在里面。
+
+&#x2F;proc：Processes(进程) 的缩写，&#x2F;proc 是一种伪文件系统，也就是虚拟的目录，是系统内存的映射，我们可以通过访问此目录，获取系统信息。可以通过此目录，来获取进程的Id。此目录的内容在内存上，可以直接修改某些文件。
+下面的命令可以屏蔽主机的ping命令，使别人无法ping你的机器（icmp_echo_ignore_all的值默认为0）：
+echo 1 &gt; /proc/sys/net/ipv4/icmp_echo_ignore_all
+
+&#x2F;root：系统管理员用户的主目录。
+
+&#x2F;sbin：只能系统管理员使用的命令或者程序。
+
+&#x2F;srv： 该目录存放一些服务启动之后需要提取的数据。
+
+&#x2F;sys：
+这是 Linux2.6 内核的一个很大的变化。该目录下安装了 2.6 内核中新出现的一个文件系统 sysfs 。
+sysfs 文件系统集成了下面3种文件系统的信息：针对进程信息的 proc 文件系统、针对设备的 devfs 文件系统以及针对伪终端的 devpts 文件系统。
+该文件系统是内核设备树的一个直观反映。
+当一个内核对象被创建的时候，对应的文件和目录也在内核对象子系统中被创建。
+
+&#x2F;tmp：Temporary(临时) 的缩写，存放临时文件。
+
+&#x2F;usr：unix shared resources(共享资源) 的缩写，用户的很多应用程序和文件都放在这个目录下，类似于 windows 下的 program files 目录。
+
+&#x2F;usr&#x2F;bin：系统用户使用的应用程序。
+
+&#x2F;usr&#x2F;sbin：超级用户使用的比较高级的管理程序和系统守护程序。
+
+&#x2F;usr&#x2F;src：内核源代码默认的放置目录。
+
+&#x2F;var：Variable(变量) 的缩写，存放经常修改的数据，比如日志文件就在此目录下。
+
+&#x2F;run：临时文件，用来存储系统启动以来的信息。当系统重启之后，这个目录下的文件应该被删除或者清除。
+
+
+远程登录一般项目中使用的服务器都是云服务器，而云服务器都是布置到各个厂商的机房，你不能去机房使用服务器，而需要使用远程连接的方式去访问服务器，一般使用SSH的连接方式，默认端口为22。
+Windows连接Linux服务器的工具有： SecureCRT、 Putty、Xshell等。我使用的是SecureCRT或Xshell，可根据个人喜好选择。这里使用SecureCRT。
+使用账号密码登录点击软件的快速连接，输入连接的Hostname、Username，点击Connect按钮，会弹出密码弹框，输入密码即可。
+
+
+连接之后，可以设置我们的偏好。比如设置字体大小、编码。
+
+使用秘钥验证机制登录Linux
+SecureCRT打开Session Options，创建Identity文件。
+
+
+
+Key type选择RSA
+
+
+
+可以忽略此不走，直接下一步
+
+
+
+设置Key的长度
+
+
+
+选择OpenSSH Key format，并指令私钥保存的地方
+
+
+
+使用账号密码登录Linux服务器，上传刚刚生成的公钥文件，可以使用 FileZilla 软件上传。
+
+
+
+进入 &#x2F;root&#x2F;.ssh 目录，创建 authorized_keys文件（如果有就不需要创建），将刚刚上传的秘钥内容拼接到 authorized_keys 文件之后。
+
+
+
+使用秘钥登录，进入Session Options 配置刚刚生成的秘钥文件（其实已经自动配置了），连接即可。
+
+
+
+验证是否为秘钥方式登录，打开Trace Options选择，点击连接可以查看本地登录日志。
+
+
+
+文件属性Linux是一种多用户的服务器，为了保护系统的安全，Linux系统对于不同用户访问同一个文件或目录做出了不同的规定。
+
+chown (change owner) ： 修改所属用户与组。
+chmod (change mode) ： 修改用户的权限。
+
+使用 ll 命令查看文件属性以及所属的用户和组
+[root@192 /]# lllrwxrwxrwx.   1 root root     7 8月  25 2019 bin -&gt; usr/bindr-xr-xr-x.   5 root root  4096 11月  8 2022 bootdrwxr-xr-x    4 root root    57 9月  25 2022 data-rw-r--r--    1 root root   700 11月 14 19:22 derby.logdrwxr-xr-x   20 root root  3380 11月 14 19:21 devdrwxr-xr-x. 153 root root 12288 11月 14 19:21 etc
+
+文件的第一个属性代表此文件是目录、文件或者链接文件等
+
+d为目录，如上面的boot目录
+- 为文件，如上面的derby.log文件
+若是 l 则表示为链接文档(link file)
+若是 b 则表示为装置文件里面的可供储存的接口设备(可随机存取装置)
+若是 c 则表示为装置文件里面的串行端口设备，例如键盘、鼠标(一次性读取装置)
+
+上面的data的目录的属性drwxr-xr-x，第一个d代表data为目录，后面以三个字符为一组，r代表可读、w代表可写、x代表可执行，如果没有权限就会出现-号。
+后面跟的 root root 分别为 所有和所属组。一般权限对root用户无效
+
+从左到右使用0-9表示。
+0位表示文件类型，1-3表示确定属主（此文件的所有者）拥有文件的权限。4-6表示确定属组（所有者的同组用户）拥有文件的权限、7-9表示其他用户拥有文件的权限。
+1、4、7表示读权限，有权限时使用r表示，没有则使用-表示。
+2、8、7表示写权限。3、6、9表示可执行权限。
+
+chgrp 更改文件属组
+chgrp [-R] 属组名 文件名
+
+参数可选 -R：表示递归更改
+
+chown 更改所有者以及所属组
+chown [–R] 所有者 文件名chown [-R] 所有者:属组名 文件名
+
+更改 derby.log 文件的所有者以及所属组为 chris 账号
+chown chris:chris derby.log
+
+chmod 更改文件9个属性
+chmod [-R] xyz 文件或目录
+
+记住r、w、x的分数表
+
+r:4
+w:2
+x:1
+
+更改derby.log权限为-rwx—r–
+# 7= 4+2+1;---=0+0+0;4=4+0+0chmod 704  derby.log
+
+使用符号类型修改权限
+u：代表user 用户
+g：代表group 组
+o：代表other 其他
+a：代表所有
++：代表加入权限
+-： 代表除去权限
+&#x3D;： 代表设定权限
+更改derby.log权限为-rwx—r–：
+chmod u=+r+w+x,g=-r-w-x,o=+r derby.log
+
+derby.log所有都去掉读权限
+chmod a-r derby.log
+
+用户和用户组管理用户管理
+添加用户账号useradd
+useradd 选项 用户名
+
+
+-c comment 指定一段注释性描述。
+-d 目录 指定用户主目录，如果此目录不存在，则同时使用-m选项，可以创建主目录。
+-g 用户组 指定用户所属的用户组。
+-G 用户组，用户组 指定用户所属的附加组。
+-s Shell文件 指定用户的登录Shell。
+-u 用户号 指定用户的用户号，如果同时有-o选项，则可以重复使用其他用户的标识号。
+
+创建chris用户，指定用户主目录为 &#x2F;home&#x2F;chris，-m参数表示若不存在chris目录，则创建。
+useradd -d /home/chris -m chris
+
+增加用户账号就是在&#x2F;etc&#x2F;passwd文件中为新用户增加一条记录，同时更新其他系统文件如&#x2F;etc&#x2F;shadow, &#x2F;etc&#x2F;group等
+
+删除账号
+userdel 选项 用户名
+
+常用的选项为 -r，表示跟主目录一起删除。
+
+修改账号
+usermod 选项 用户名
+
+常用的选项和useradd命令选择一致。
+修改chris用户的登录shell为ksh，主目录为c，所属组为test。
+usermod -s /bin/ksh -d /home/c -g test chris
+
+设置用户的登录shell可以限制登录用户所要访问功能，比如设置成 &#x2F;bin&#x2F;nologin ，用户即使登录上去也使用不了Linux。
+
+用户口令管理
+新创建的账号口令默认是没有的，需要指定口令后才可以使用。
+passwd 选项 用户名
+
+
+-l 锁定口令，即禁用账号。
+-u 口令解锁。
+-d 使账号无口令。
+-f 强迫用户下次登录时修改口令。
+
+
+
+用户组管理
+添加用户组
+groupadd 选项 用户组
+
+
+-g GID 指定新用户组的组标识号（GID）。
+-o 一般与-g选项同时使用，表示新用户组的GID可以与系统已有用户组的GID相同。
+
+添加名为chris的用户组，新组的组标识号是在当前已有的最大组标识号的基础上加1。
+groupadd chris
+
+修改用户组
+groupmod 选项 用户组
+
+
+-g GID 为用户组指定新的组标识号。
+-o 与-g选项同时使用，用户组的新GID可以与系统已有用户组的GID相同。
+-n新用户组 将用户组的名字改为新名字
+
+修改chris组名为chris1
+groupmod -n chris1
+
+删除用户组
+groupdel 用户组
+
+切换用户组
+若一个用户有多个组，而不同组有不同的权限，需要用到其他权限的时候，可以进行切换用户组。
+下面的命令是将当前用户切换到chris1用户组，前提是chris1用户组确实是该用户的所属组或者附加组。
+newgrp chris1
+
+与账号有关的系统文件与账号有关的系统文件有 &#x2F;etc&#x2F;passwd, &#x2F;etc&#x2F;shadow, &#x2F;etc&#x2F;group等。
+
+&#x2F;etc&#x2F;passwd
+[root@192 ~]# cat /etc/passwdroot:x:0:0:root:/root:/bin/bashbin:x:1:1:bin:/bin:/sbin/nologindaemon:x:2:2:daemon:/sbin:/sbin/nologinadm:x:3:4:adm:/var/adm:/sbin/nologinlp:x:4:7:lp:/var/spool/lpd:/sbin/nologinsync:x:5:0:sync:/sbin:/bin/syncshutdown:x:6:0:shutdown:/sbin:/sbin/shutdownhalt:x:7:0:halt:/sbin:/sbin/haltmail:x:8:12:mail:/var/spool/mail:/sbin/nologinoperator:x:11:0:operator:/root:/sbin/nologingames:x:12:100:games:/usr/games:/sbin/nologinftp:x:14:50:FTP User:/var/ftp:/sbin/nologinnobody:x:99:99:Nobody:/:/sbin/nologin
+
+保存的格式为：
+用户名:口令:用户标识号:组标识号:注释性描述:主目录:登录Shell
+
+此文件的口令只保留特殊字符，如 x 等，加密后的口令放在了&#x2F;etc&#x2F;shadow文件中
+
+&#x2F;etc&#x2F;group
+[root@192 ~]# vi /etc/grouproot:x:0:bin:x:1:daemon:x:2:
+
+保存的格式为：
+组名:口令:组标识号:组内用户列表
+
+
+“组名”是用户组的名称，由字母或数字构成。与&#x2F;etc&#x2F;passwd中的登录名一样，组名不应重复。
+“口令”字段存放的是用户组加密后的口令字。一般Linux 系统的用户组都没有口令，即这个字段一般为空，或者是*。
+“组标识号”与用户标识号类似，也是一个整数，被系统内部用来标识组。
+“组内用户列表”是属于这个组的所有用户的列表，不同用户之间用逗号(,)分隔。这个用户组可能是用户的主组，也可能是附加组。
+
+
+
+磁盘管理Linux磁盘管理的常用命令有 df、du、fdisk。
+
+df（英文全称：disk free）：列出文件系统的整体磁盘使用量
+du（英文全称：disk used）：检查磁盘空间使用量
+fdisk：用于磁盘分区
+
+1.df命令
+检查磁盘空间的占用情况
+df [选项] [目录或文件名]
+
+
+-a ：列出所有的文件系统，包括系统特有的 &#x2F;proc 等文件系统；
+-k ：以 KBytes 的容量显示各文件系统；
+-m ：以 MBytes 的容量显示各文件系统；
+-h ：以人们较易阅读的 GBytes, MBytes, KBytes 等格式自行显示；
+-H ：以 M&#x3D;1000K 取代 M&#x3D;1024K 的进位方式；
+-T ：显示文件系统类型, 连同该 partition 的 filesystem 名称 (例如 ext3) 也列出；
+-i ：不用硬盘容量，而以 inode 的数量来显示
+
+使用易读的方式显示磁盘容量	
+df -h
+
+2.du命令
+与df命令不同的是，du命令是对文件和目录磁盘使用空间的查看
+du [选项] [目录或文件名]
+
+
+-a ：列出所有的文件与目录容量，因为默认仅统计目录底下的文件量而已。
+-h ：以人们较易读的容量格式 (G&#x2F;M) 显示；
+-s ：仅显示指定目录或文件的总大小，而不显示其子目录的大小。
+-S ：包括子目录下的总计，与 -s 有点差别。
+-k ：以 KBytes 列出容量显示；
+-m ：以 MBytes 列出容量显示；
+
+3.fdisk命令
+fdisk是Linux磁盘分区的操作工具
+fdisk [-l] 装置名称
+
+-l ：输出后面接的装置所有的分区内容。若仅有 fdisk -l 时， 则系统将会把整个系统内能够搜寻到的装置的分区均列出来。
+列出所有分区
+[root@192 ~]# fdisk -l磁盘 /dev/sda：37.6 GB, 37580963840 字节，73400320 个扇区Units = 扇区 of 1 * 512 = 512 bytes扇区大小(逻辑/物理)：512 字节 / 512 字节I/O 大小(最小/最佳)：512 字节 / 512 字节磁盘标签类型：dos磁盘标识符：0x000db098   设备 Boot      Start         End      Blocks   Id  System/dev/sda1   *        2048     2099199     1048576   83  Linux/dev/sda2         2099200    41943039    19921920   8e  Linux LVM/dev/sda3        41943040    73400319    15728640   83  Linux磁盘 /dev/mapper/centos-root：33.3 GB, 33281802240 字节，65003520 个扇区Units = 扇区 of 1 * 512 = 512 bytes扇区大小(逻辑/物理)：512 字节 / 512 字节I/O 大小(最小/最佳)：512 字节 / 512 字节磁盘 /dev/mapper/centos-swap：2147 MB, 2147483648 字节，4194304 个扇区Units = 扇区 of 1 * 512 = 512 bytes扇区大小(逻辑/物理)：512 字节 / 512 字节I/O 大小(最小/最佳)：512 字节 / 512 字节
+
+
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>操作系统</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>从零开始搭建一个电商项目-中间件（六）</title>
+    <url>/personalBlog/2023/01/15/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E4%B8%AD%E9%97%B4%E4%BB%B6/</url>
+    <content><![CDATA[
+前言
+项目开发中，我们会碰见很多技术问题。比如使用Mysql存储数据时，当用户量访问比较大时，Mysql支撑不住。通常来说，用户的查询请求诸多，所以可以引入缓存中间件，如Redis。将经常读取的数据放入Redis中，并且Redis的数据是保存在内存中，比磁盘的读取速度高得多。再后来，用户量极具增加，Redis也经受不起折磨垮掉。后来将后台应用拆分成了各个微服务，每个服务担任相应的职责，并且每个服务部署多个节点，这样分散访问（负载均衡）使得后台服务又站了起来。此刻大家也没有闲着，将Mysql分库分表，引入中间件Sharding-JDBC。使用Redis官方推荐的 redis-cluster  方式部署Redis集群。微服务多节点部署，多个节点如何共享Session呢，所以又引入了中间件Spring Session解决了单点登录的问题。使用分布式锁Redisson解决多个节点共享资源的问题。越往后，微服务越多，之间的调用越来越复杂。当商品服务去调用订单服务时，还需要同步等待订单处理完逻辑之后，返回结果。所以又引入了消息队列，实现了服务之间的解耦，并且也削弱了上游和下游处理能力不相同的问题。可是有一天又出现问题了。当我调用商品下单时，商品服务需要调用订单服务下单，库存服务冻结相应库存。当下单调用正常，但是库存服务调用失败，无法实现整体的事务回滚。使用阿里的Seata中间件或者使用消息队列的延时队列实现分布式事务一致性。使用Sentinel中间件实现服务调用的熔断、降级、限流，防止出现雪崩等现象。使用Zikpin（内置Sleuth）实现链路追踪，可以更快的排查问题，查看各个服务的处理业务情况。后续用户量越来越大，服务不停挂，还需要运维人员手动启动服务，所以又引入了容器化Docker+K8s流水线任务，实现一站式部署、日志收集、微服务治理（熔断、限流、链路追踪）、告警通知、弹性伸缩等。
+
+缓存中间件
+缓存可以将经常查询的数据放进内存中，可以减缓数据库的压力。很多互联网产品读多写少的场景比较多，所以引入缓存是提高用户体验的一大妙招。经常使用的缓存中间件有Spring Cache、Redis等。本次项目中主要用到的是Redis，Spring Cache虽然能做缓存，但是无法在分布式环境中使用。而Redis不仅可以在分布式环境中使用，而且有着强大的数据结构，可以用来做消息队列、分布式锁。
+
+分布式Session
+Http请求都是无状态的，服务器是无法记得这次请求是属于哪个用户的。所以就需要用户在登录成功之后，服务器生成Session保存在内存中，然后返回给浏览器，浏览器生成Cookie保存在本地，下次请求带上，这样服务器就能知道这次请求是数据哪个用户的了。我们传统的Session是将数据保存在内存中，并且还是单机模式。当处于分布式环境时，会出现用户登录成功之后，访问其它微服务时需要再次进行登录。Spring Session就是为了解决单机环境中Session保存的问题。除了Session保存用户的登录信息之外，目前还使用Token令牌来保存来保存登录的用户信息。
+
+分布式锁
+实际中我们经常遇到多线程抢占同一共享资源的问题，导致业务逻辑出现问题。我们可以使用Java为我们提供的Synchronized、Lock等锁来锁住共享资源，使得同一时间只有一个线程能处理成功。但是这个锁只是本地锁，当我们处理例如减库存等操作时，在分布式的情况下，需要操作数据库或者缓存。若只是使用了本地锁，那无法避免的会出现超卖等问题。所以我们需要引入分布式锁。我们可以使用Redis的Setnx指令去加锁，但是此方法会出现原子性的系列问题。所以基于Redis的Redisson分布式锁，可以使得我们像使用Lock锁一样去使用它，所以上手很容易。
+
+消息队列
+现实中我们需要对消息进行顺序化管理，解耦两个微服务之间的调用或者缓解用户请求高峰。我们可以使用消息队列，本项目中使用的是RabbitMQ。主要使用了消息队列中的死信队列，来进行关闭订单以及保证分布式事务的一致性。我们可以用消息队列来保证消息的顺序发送或者接收，比如处理交易报文的确认成功报文或者Ack报文，以顺序化来处理通知报文。可以在用户高峰请求的时候，将大量的请求先保存在队列中，然后再慢慢进行处理。
+
+分布式事务
+微服务中进行业务操作时，必须要考虑的就是事务的问题了。当处于单体应用时，我们可以利用数据库提供的事务机制，保证我们业务的事务性。将单体应用拆分成多个微服务时，我们需要考虑到各个微服务之间的事务关系。当我们保存订单成功，但是减库存失败时，我们不能像处理本地事务那样去处理此问题，需要引入分布式组件。此项目中，使用了RabbitMQ的死信队列来保证事务的一致性。在处理业务的同时，可以保存一条延时消息，在指定的时间之后去检查业务是否都处理成功，若处理失败，则进行相应的数据回滚。分布式中间件还有阿里提供的Seata，二阶段、三阶段、TCC等思想。
+
+熔断、降级、限流
+微服务中，通常会有一个服务调用另一个服务的情况。当下游服务出现宕机，而此时用户请求又很大，容易出现雪崩的情况，导致上上游服务器也宕机。所以我们要引入熔断机制，当发现下游服务在规定时间内、或者次数内无法调用时，需要在规定的时间内不去调用此服务。实际中，项目中也可能会出现恶意用户请求或者防止大量请求涌入，我们可以使用限流机制，来防止服务器被打崩。当需要应对特殊的节日，如双十一，为了节省服务器资源，我们可以降级某些服务，如用户信息等服务，留存更多的服务器资源，来保证主要业务进行顺利。阿里提供的Sentinel组件可以实现熔断、降级以及限流操作。
+
+链路追踪
+实际项目中，当遇到生产问题时，我们需要打开堡垒机登录线上或者需要让相关的人员帮忙找线上的日志。当出现微服务调用复杂的情况时，往往找到问题所在花费的时间会很长。所以我们可以引入链路追踪中间件Zipkin，一款结合了阿里的Sleuth以及可视化界面，我们可以查看各个微服务之间调用的链路是怎么样的，并且能看见每个微服务所花费的时间等指标。当然链路追踪只是能查看服务调用的性能指标，可以更快的帮忙定位到为题。另外的，使用ELK日志收集组件，可以将微服务运行中的日志，使用Logstash收集各个微服务产生的日志，然后将收集的日志用Elasticsearch保存收集到的日志，最后使用ES的可视化工具Kibana将收集到的日志显示出来，这样就不需要去登录堡垒机，一步步去查看日志了。
+
+
+]]></content>
+      <categories>
+        <category>瞎胡闹</category>
+      </categories>
+      <tags>
+        <tag>技术</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>从零开始搭建一个电商项目-商品检索（五）</title>
+    <url>/personalBlog/2023/01/14/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E6%A3%80%E7%B4%A2/</url>
+    <content><![CDATA[
+前言
+大家网页端逛JD的时候，下图是很常见的。那么它的后端是如何实现的？最简单的想法就是把数据保存到mysql中，然后返回给前端。其实也可以，但是我们发现不止需要返回商品数据，还需要根据特定的信息去检索，进行模糊匹配。mysql关键字like可以实现，但是你不能确保查询的时候不进行全表扫描，而且大量数据查询，对于磁盘保存数据的mysql来说，可能就不太适合了。这问题那些服务器端大佬肯定早想到了  ElasticSearch   参考 第二篇 文章，使用Docker搭建ES。
+
+商品上架
+进入SPU管理菜单，点击上架。该功能主要保存商品信息到ES中，并修改SPU状态为已上架。需要创建保存到ES索引的mappin（相当于mysql的数据类型），参考以下结构https://gitee.com/chris_777&#x2F;easymall&#x2F;blob&#x2F;develop&#x2F;easy-mall-search&#x2F;src&#x2F;main&#x2F;resources&#x2F;easy_product-index_mapping.json
+
+渲染检索结果
+需要搭建nginx，前面第二篇有搭建教程。配置域名： 本机的 hosts文件192.168.202.129 easymall.com     # 商城主页192.168.202.129 search.easymall.com  # 检索服务页面192.168.202.129 item.easymall.com  # 商品详情页面192.168.202.129 auth.easymall.com # 登录服务页面192.168.202.129 cart.easymall.com  # 购物车服务页面192.168.202.129 order.easymall.com  # 订单服务页面192.168.202.129 seckill.easymall.com  # 秒杀服务页面配置nginx配置 nginx 的上有服务器组。然后进到 conf.d 创建一个 easymall.conf 配置文件，如图。定义server_name 当访问这些域名时会匹配http:&#x2F;&#x2F;上游服务器组名（easymall）其中 proxy_set_header  防止请求转发丢失Host请求头在gateway服务中配置路由信息，如图启动gateway、search服务，访问 http://search.easymall.com/，如下图，
+
+ES基本概念与语法
+本人使用的ES 8.3.3 版本，改版本取消了Type （类型）。Index（索引） 动词，相当于 MySQL 中的 insert； 名词，相当于 MySQL 中的 DatabaseDocument（文档） 保存在某个索引（Index）下的一个数据（Document），文档是JSON格式的，Document 就像是 MySQL 中的某个 Table 里面的内容；映射（Mapping）定义索引中的字段的名称；定义字段的数据类型，比如字符串、数字、布尔；字段，倒排索引的相关配置，比如设置某个字段为不被索引、记录 position 等。上述创建的 easy_product 的mapping，其中type 指定相应的数据类型
+
+数值类型: integer、long、short、byte、double、float
+
+字符串类型: text 或者 keyword
+
+布尔类型: boolean
+
+其中有一个 nested 类型的数据，该类型主要保存数组的结构。因为默认情况下，ES保存数据数据，会将其扁平化处理，从而会丢失数组的对应关系。 
+
+还比如 keyword 声明的类型，可以进行精确查找，不会对该字段进行分词。
+analyzer 可以制定分词器，有兴趣的小伙伴可以去自行搜素。
+
+
+常用方法 GET &#x2F;_cat&#x2F;nodes：查看所有节点 GET &#x2F;_cat&#x2F;health：查看 es 健康状况 GET &#x2F;_cat&#x2F;master：查看主节点 GET &#x2F;_cat&#x2F;indices：查看所有索引  
+ GET index名&#x2F;_mapping ：查看索引的mapping信息 GET  index名&#x2F;_search：查询索引信息，包括索引下的数据、数据的个数，分页等信息 还有聚合查询，有兴趣的小伙伴自行百度。
+
+
+]]></content>
+      <categories>
+        <category>瞎胡闹</category>
+      </categories>
+      <tags>
+        <tag>技术</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>从零开始搭建一个电商项目-商品管理（四）</title>
+    <url>/personalBlog/2023/01/13/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/</url>
+    <content><![CDATA[前期准备
+​		第二篇文章里面有gitee的项目地址。​		首先修改前端项目中 static&#x2F;config&#x2F;index.js 文件，修改后端访问地址。端口是网关服务的	
+//   /api 是网关层转发的特定前缀window.SITE_CONFIG[&#x27;baseUrl&#x27;] = &#x27;http://localhost:8200/api&#x27;;
+​		 修改各个后端配置文件中的中间件访问IP地址改成自己的.​		 nacos、es、rabbitmq、mysql、redis.这些地址都是已知的需要改。​		 sentinel、zipkin、seata 后续会提及。​		 尤其需要注意到config包里面有写死的访问地址（后续可以改成配置文件），比如​		 com.chris.easymallproduct.config.RedissonConfig product模块 需要修改redis的访问地址         com.chris.common.config.MinioConfig 修改Minio的访问地址
+​         可以利用启动报错慢慢修改。然后启动前后端项目，使用admin&#x2F;admin 登录
+     执行数据库创建脚本 [https://gitee.com/chris_777/easymall/blob/develop/sql](https://gitee.com/chris_777/easymall/blob/develop/sql/sys_menus.sql)
+      在执行创建菜单脚本 https://gitee.com/chris_777/easymall/blob/develop/sql/sys_menus.sql
+      执行三级分类脚本https://gitee.com/chris_777/easymall/blob/develop/sql/pms_category.sql
+
+
+分类维护
+导入三级分类的脚本之后，访问分类维护菜单，会显示导入的三级分类数据。配有增、删、改的功能。
+
+
+品牌管理
+我们针对手机这个产品去管理它的品牌，目前手机品牌挺多的，如华为、小米、中兴等。品牌就是用来在购买商品的时候知道这个产品是属于哪个厂商的。品牌新增功能，品牌名以及品牌的logo地址等信息
+
+关联分类，新增的品牌属于哪个分类。
+
+属性分组
+维护规格属性一对多的关系。如手机分类有 基本信息 的主体名，基本信息又包括 机身颜色、机身尺寸、机身重量等。如图3所示。关联功能用于关联主体与规格参数之间对应的关系。
+
+规格参数
+维护SPU的规格参数信息。可以新增规格参数，可检索：用户可以在首页搜索到快速展示：可以在 商品介绍 中进行展示
+
+销售属性
+维护SKU的基本参数信息，如颜色、内存等信息。
+
+创建商品
+进入商品系统-&gt;商品维护-&gt;发布商品菜单，开始创建商品基本信息。商品介绍：商品介绍中的图片商品图集：SKU的图片
+创建规格参数，选择之前增加的规格参数。
+创建销售属性。设置SKU信息，结果为销售属性的笛卡尔积查看创建的SPU信息查看SKU信息
+
+仓库管理
+维护仓库的信息，用来 逻辑保存商品商品采集。实际中我们需要对商品进行采集，并且入库，主要流程如下图所示人工创建采购单。这里的采购商品可以优化成下拉框，批量生产采购需求。合并时需要选择创建的采购单批量手动生成采购单创建采购单选择需要合并到哪个采购单中，其中编号3为创建的采购单的主键，可优化分配采购人员。这里的采购人员需要在系统管理菜单里面维护领取采购单，需要在APP上新增功能，这里只是模拟。 localhost:8104&#x2F;easymallware&#x2F;purchase&#x2F;received完成采购，其中3为采购单ID，6、7为采购项完成采购
+
+
+]]></content>
+      <categories>
+        <category>瞎胡闹</category>
+      </categories>
+      <tags>
+        <tag>技术</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>从零开始搭建一个电商项目-基础环境搭建（二）</title>
+    <url>/personalBlog/2023/01/11/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</url>
+    <content><![CDATA[
+搭建微服务项目
+Spring Boot 版本   2.3.7Spring Cloud 版本 Hoxton.SR9Spring Alibaba 版本 2.1.1Java 版本 1.8后端项目地址：https://gitee.com/chris_777&#x2F;easymall     dev分支前端项目地址：https://gitee.com/chris_777&#x2F;easymall-vue 
+
+数据库
+easy_mall_admin 后台管理数据库easy_mall_oms 订单数据库easy_mall_pms 商品数据库easy_mall_sms 优惠数据库easy_mall_ums 会员数据库easy_mall_wms 仓储数据库地址：https://gitee.com/chris_777&#x2F;easymall&#x2F;tree&#x2F;develop&#x2F;sql
+
+安装中间件
+注意：需要安装docker，会有另一篇文章讲，docker建议 20 版本以下，后期兼容安装K8SRedis：主要用于缓存、分布式锁、分布式Session
+
+
+#拉取镜像 可以指定版本 redis:5.0.8docker pull redis  # 创建挂载文件mkdir -p /home/redis/conf &amp; touch /home/redis/conf/redis.conf   # 配置文件mkdir  /home/redis/data      # 数据目录#建议先启动容器，拿到容器里面的redis配置文件docker run -p 6379:6379 --name redis -d redis redis-server #进入容器docker exec -it 容器Id /bin/bash #找到 /etc/redis/redis.conf 从容器复制到宿主机上#然后到指定目录上看是否有相应配置docker cp 容器Id:/etc/redis/ /home/redis/conf/#删除容器docker rm 容器Id#使用镜像启动redis，然后使用redis连接工具连接测试docker run -p 6379:6379 --name redis -v /home/redis/data:/data \-v /home/redis/conf/redis.conf:/etc/redis/redis.conf \-d redis redis-server /etc/redis/redis.conf#可以修改容器自启动docker update --restart=always 容器Id#启动失败可以查看日志，若打开了自启动，注意查看速度要快，不然系统会重启启动一个新的容器docker logs 容器Id 
+
+​	Nginx：用于转发用户请求到后台服务，静动态资源分离（项目中目前没做）
+#拉取镜像 docker pull nginx  #创建挂载目录 配置文件 静态资源 日志mkdir /home/project/springcloud/nginx/confmkdir /home/project/springcloud/nginx/htmlmkdir /home/project/springcloud/nginx/logs#跟redis一样，启动nginx容器，取出配置文件信息，容器内路径： /etc/nginx/#删除容器，真是启动nginx容器 #我碰见的问题 modules -&gt; /usr/lib/nginx/modules  这个文件缺少，可以进入容器cp过来就可以了docker run  --name nginx  -p 80:80 \-v /home/project/springcloud/nginx/conf:/etc/nginx/ \-v /home/project/springcloud/nginx/logs:/var/log/nginx \-v /home/project/springcloud/nginx/html:/usr/share/nginx/html
+
+​	Minio：文件上传工具
+#拉取镜像 docker pull minio/minio#创建挂载目录mkdir /home/project/springcloud/minio/data#启动容器  MINIO_ACCESS_KEY：用户名 MINIO_SECRET_KEY：密码# 使用 ip:9000 访问后台管理    9090 端口用来程序连接docker run -p 9000:9000 -p 9090:9090 \ --name minio \ -e &quot;MINIO_ACCESS_KEY=admin&quot; \ -e &quot;MINIO_SECRET_KEY=admin&quot; \ -v /home/project/springcloud/minio/data:/data \ minio/minio server \ /data --console-address &quot;:9090&quot; -address &quot;:9000&quot;
+
+​	Rabbitmq：用于分布式事务、延时队列
+docker pull rabbitmq:management# 4369 -- erlang发现口       5672 --client端通信口 # 15672 -- 管理界面ui端口    25672 -- server间内部通信口#启动完成之后使用 15672 打开管理界面  账号/密码 guest/guestdocker run -d --name rabbitmq --publish 5671:5671 \--publish 5672:5672 --publish 4369:4369 --publish 25672:25672 --publish 15671:15671 --publish 15672:15672 \rabbitmq:management
+​	Nacos：注册中心、配置中心（目前没用）
+#https://github.com/alibaba/nacos/releases  下载nacos 注意版本wget https://github.com/alibaba/nacos/releases/download/2.1.0/nacos-server-2.1.0.tar.gz#解压，然后进入 bin 目录启动即可tar -zxvf nacos-server-2.1.0.tar.gz
+
+​	mysql：宿主机原先已经安装，此项目没有进行安装操作，可以网上搜索安装教程。推荐使用		docker安装，比较简单。
+​	Elasticsearch：商品信息检索​	Kibana：图形化展示ES中的索引等信息
+docker pull elasticsearch:7.4.2docker pull kibana:7.4.2#elasticsearchmkdir /home/project/springcloud/docker_elasticsearch/configmkdir /home/project/springcloud/docker_elasticsearch/data#进入到目录 cd /home/project/springcloud/docker_elasticsearch/config# 创建es的启动配置文件cat &gt; elasticsearch.yml &lt;&lt; EOFnetwork.host: 0.0.0.0http.port: 9200transport.port: 9300http.cors.enabled: truehttp.cors.allow-origin: &quot;*&quot;xpack.security.enabled: truexpack.security.http.ssl.enabled: falsexpack.security.transport.ssl.enabled: falseEOF#确保权限chmod  777 /home/project/springcloud/docker_elasticsearch# 启动es docker run --name elasticsearch -p 9200:9200 -p 9300:9300 \-e &quot;discovery.type=single-node&quot; \-e ES_JAVA_OPTS=&quot;-Xms64m -Xmx512m&quot; \-v /home/project/springcloud/docker_elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml \-v /home/project/springcloud/docker_elasticsearch/data:/usr/share/elasticsearch/data \-v /home/project/springcloud/docker_elasticsearch/plugins:/usr/share/elasticsearch/plugins \-d elasticsearch:7.4.2#创建文件   /usr/share/kibana/config/kibana.yml mkdir /home/project/springcloud/docker_kibanacd  /home/project/springcloud/docker_kibana#写入配置文件cat &gt; kibana.yml &lt;&lt; EOFserver:  host: &quot;0.0.0.0&quot;  port: 5601# ESelasticsearch:  hosts: [&quot;http://192.168.202.129:9200&quot;]  username: &quot;kibana_system&quot; #默认的用户名  password: &quot;123456&quot;# 汉化i18n.locale: &quot;zh-CN&quot;EOF# 启动容器 然后访问 ip+5601docker run -d \  --name=kibana \  -p 5601:5601 \  -v /home/project/springcloud/docker_kibana:/usr/share/kibana/config \  kibana:7.4.2
+
+
+人人开源
+网址： https://gitee.com/renreniorenren-fast ：后台管理系统renren-fast-vue：前端项目根据文档中的操作步骤，换成自己的数据库。
+
+
+]]></content>
+      <categories>
+        <category>瞎胡闹</category>
+      </categories>
+      <tags>
+        <tag>技术</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>那天聊了一夜的乱码问题</title>
+    <url>/personalBlog/2021/03/17/part1/garbled/garbled/</url>
+    <content><![CDATA[
+前言
+想必大家都碰到过这种情况，如图：
+
+ 这是Tom猫启动的截图。 本来应该显示中文，但最后却显示成了一些不认识的字符。
+
+事因
+
+记得那天夜黑风高，正当我宽衣入睡的时候，一只手从我的后背悄悄的搭在了我的肩膀上。 我瞬间汗毛竖立，但下一秒我却嘴角上扬，(ˉ▽￣～) 切~~是小A。
+你大半夜不睡觉干啥？给我吓的…，不是…，给我来宽衣解带吗？我回过头，猥琐的笑道。
+我遇到了一些问题，只要前端传来的数据中有中文，我的后台就会显示有乱码，怎么搞，明天要给老大交任务了啊，小A说。
+来，我拉着小A坐在腿上，安抚着说到：傻瓜，是编码问题。
+
+
+了解真相
+
+编码是信息从一种形式或格式转换为另一种形式的过程；解码则是编码的逆过程
+
+以上解释来自于维基百科。
+对于电脑而言，编码其实是将人类理解的语言（中文，英文）转换成计算机能理解的语言（0和1）。而解码正好相反。
+
+编码方式有哪些
+
+对学计算机专业的童鞋们，第一门编程语言应该是C语言吧，记得好像是书的最后一页是ASCLL表，是美国人用来显示他们英语用的编码方式。而中文一般采用的是GB2312，GBK,UTF-8等编码方式。各个语言基本都有对应的编码方式，但是随即问题也就出现了，对于一个文档中有中文，英文，日语，韩语，那岂不是要疯掉？所以总有一个大佬会站出来，那就是Unicode咯，它整理、编码了世界上大部分的文字系统。
+
+编码的基本原理
+
+其实可以想一想，若你用GBK编码的话，那么你解码你是用扫描编码方式？那肯定是GBK咯，解铃还须系铃人啊。我的理解是，这其实是一种协议，你按照特有的协议进行处理，那么你解析的时候，肯定需要知道当初那个制定好的协议结构咯。是不是跟前后端传递的数据是一样的？你前端可以传递XML和JSON格式（相当于编码方式）的数据，那你后台肯定需要对应的方式去获取数据，不然肯定获取的是不正确的数据了（相当于乱码）。
+
+
+
+]]></content>
+      <categories>
+        <category>Web的那些事</category>
+      </categories>
+      <tags>
+        <tag>技术</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MQTT</title>
     <url>/personalBlog/2024/01/09/2024/20240303/2024-01-09-MQTT/</url>
     <content><![CDATA[简述MQTT（Message Queuing Telemetry Transport，消息队列遥测传输协议），是一种基于发布&#x2F;订阅（publish&#x2F;subscribe）模式的”轻量级”通讯协议，该协议构建于TCP&#x2F;IP协议上，由IBM在1999年发布。MQTT最大的优点在于，可以用极少的代码和带宽，为远程连接的设备提供可靠的消息服务。作为一种低开销、低带宽占用的即时通讯协议，在物联网、小型设备和移动应用等方面有着比较广泛的应用。
@@ -2299,763 +2998,6 @@ package com.chirs.mqtt.mqttcore.multiple;import lombok.Data;@Datapublic class Mq
       </tags>
   </entry>
   <entry>
-    <title>Jenkins</title>
-    <url>/personalBlog/2024/03/03/2024/202404/Jenkins/</url>
-    <content><![CDATA[CI&#x2F;DI简介CI&#x2F;DI就是持续集成与部署，持续集成（Continuous integration），持续部署（Continuous deployment）。
-持续集成：频繁地将代码集成到主干。通俗的来说就是将不同分支的代码提交到代码仓库，如GitLab。将非主分支合并到主分支上。并进行构建测试，确认是否正确的集成。
-持续部署：将集成测试完成的项目部署到对应的环境。
-
-首先，开发将代码提交到代码仓库，将代码的改动合并到相应的分支。
-下一步，Jenkins利用git、maven等插件，对提交的代码进行拉取、测试、打包等，
-最后，将代码打包成jar&#x2F;war推送到测试、生产服务器进行部署。
-使用到的软件：
-Java版本：1.8  
-虚拟机 Centos7
-Git版本：2.37.2 ，用于代码版本管控
-GitLab版本：16.9.1 ，用于代码仓库  
-Jenkins版本：2.346.3 ，适配JDK1.8，用于程序集成与部署
-GitLab安装官网地址：https://gitlab.cn/install/
-安装依赖ssh如果只是本地网络访问GitLab可以忽略：
-yum install -y curl policycoreutils-python openssh-server perlsystemctl enable sshdsystemctl start sshd
-
-开始安装curl -fsSL https://get.gitlab.cn | /bin/bash#设置访问路径EXTERNAL_URL=&quot;192.168.202.129&quot; yum install -y gitlab-jh#配置文件，更改访问路径 EXTERNAL_URLvim /etc/gitlab/gitlab.rb
-
-启动gitlab#启动gitlab-ctl start    #更新配置需要执行gitlab-ctl reconfigure#状态gitlab-ctl statusgitlab-ctl stop#查看日照计gitlab-ctl tail 
-
-
-访问突发忘记密码了。。。
-
-使用以下命令
-
-gitlab-rails console production
-
-若出现报错
-
-
-使用以下命令
-
-gitlab-rails console -e production
-
-
-
-查看root信息 user &#x3D; User.where(id:1).first
-
-irb(main):001:0&gt; user = User.where(id:1).first=&gt; #&lt;User id:1 @root&gt;
-
-
-修改密码 user.password &#x3D;’******‘
-
-irb(main):002:0&gt; user.password = &#x27;chris123456&#x27;=&gt; &quot;chris123456&quot;
-
-
-保存 user.save
-
-#返回ture  irb(main):004:0&gt; user.save
-
-Jenkins安装安装#注意此方法需要JDK17版本wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.reporpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.keyyum install jenkins
-
-启动systemctl start jenkinsJob for jenkins.service failed because the control process exited with error code. See &quot;systemctl status jenkins.service&quot; and &quot;journalctl -xe&quot; for details.
-
-发现报错systemctl status jenkins● jenkins.service - Jenkins Continuous Integration Server   Loaded: loaded (/usr/lib/systemd/system/jenkins.service; disabled; vendor preset: disabled)   Active: failed (Result: start-limit) since 三 2024-03-06 21:58:58 CST; 28s ago  Process: 11939 ExecStart=/usr/bin/jenkins (code=exited, status=1/FAILURE) Main PID: 11939 (code=exited, status=1/FAILURE)3月 06 21:58:58 192.168.202.129 systemd[1]: jenkins.service: main process exited, code=exited, status=1/FAILURE3月 06 21:58:58 192.168.202.129 systemd[1]: Failed to start Jenkins Continuous Integration Server.3月 06 21:58:58 192.168.202.129 systemd[1]: Unit jenkins.service entered failed state.3月 06 21:58:58 192.168.202.129 systemd[1]: jenkins.service failed.3月 06 21:58:58 192.168.202.129 systemd[1]: jenkins.service holdoff time over, scheduling restart.3月 06 21:58:58 192.168.202.129 systemd[1]: Stopped Jenkins Continuous Integration Server.3月 06 21:58:58 192.168.202.129 systemd[1]: start request repeated too quickly for jenkins.service3月 06 21:58:58 192.168.202.129 systemd[1]: Failed to start Jenkins Continuous Integration Server.3月 06 21:58:58 192.168.202.129 systemd[1]: Unit jenkins.service entered failed state.3月 06 21:58:58 192.168.202.129 systemd[1]: jenkins.service failed.
-
-官网上Jenkins安装需要JDK17版本，而虚拟机上JDK版本为1.8，转战方法
-使用 yum remove 安装包名卸载安装的Jenkins
-重新开始安装wget https://repo.huaweicloud.com/jenkins/redhat-stable/jenkins-2.346.3-1.1.noarch.rpmrpm -ivh jenkins-2.346.3-1.1.noarch.rpm
-
-修改配置文件修改配置文件  /etc/sysconfig/jenkins
-JENKINS_USER&#x3D;”root”
-JENKINS_PORT&#x3D;”12001”  （修改端口）
-启动Jenkinscd /etc/init.d# (restart | stop)./jenkins start 
-
-访问 http://192.168.202.129:12001/
-输入控制台的密码串，或去 /var/lib/jenkins/secrets/initialAdminPassword 查看。
-
-输入管理员密码，安装插件后，创建用户名完成之后，进入主页。如下图：
-
-可能遇到的问题
-插件安装不下来或受高本版jenkins的约束，可配置对应版本所需的镜像地址
-
-修改 Update Site的值   Plugin Manager  —&gt; Advanced  替换镜像源
-
- 清华大学开源软件镜像站     https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/，找对自己对应版本的jenkins版本，我这里是 Jenkins 2.346.3
-
-
-将地址复制到 Update Site 中，点击提交
-
-全局搜索 default.json 文件，然后进入到对应的目录
-find / -name default.json
-
-进入之后，备份文件
-cp default.json default.json.bak
-
-下载指定版本的 update-center.json 文件，并用下载的json文件替换，并重启jenkins。之后去页面上重新刷新一下插件就好了
-wget https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/dynamic-2.346/update-center.jsonmv update-center.json default.jsoncd /etc/init.d/./jenkins stop./jenkins start
-
-实践基于角色的访问权限控制
-安装Role-based Authorization Strategy插件
-
-
-
-全局安全配置
-
-
-
-修改安全配置为 Role-Based Strategy
-
-
-
-创建用户
-
-
-
-创建两个用户chris、chris1
-
-
-
-创建角色
-
-
-角色分为 Global roles、Item roles、Agent roles
- Global roles：管理员等高级用户可以创建基于全局的角色
-Item roles：针对项目锁拥有的角色
-Agent roles：代理角色，与各个节点相关
-创建 grole 角色，默认和管理员拥有相同的权利
-
-
-分配角色
-
-将用户 chris 赋予 grole 角色
-
-凭证管理我们需要jenkins从git上拉取我们提交的代码，git肯定是需要访问凭证信息的，此时我们可以创建一个连接git的凭证，在拉取项目代码时可以使用。
-安装 Credentials Binding 插件，我这里已经安装了，跳过。安装完之后，会有一个凭证管理入口
-
-点击进去之后，添加凭证
-
-有五种凭证类型
-
-Username with password ：用户名和密码方式
-SSH Username with private key： 使用 SSH 用户和密钥
-Secret file： 需要保密的文本文件，使用时 Jenkins 会将文件复制到一个临时目录中，再将文件路径设置到一个变量中，等构建结束后，所复制的 Secret file 就会被删除
-Secret text： 保存一个加密文本，如GitHub 的 api token
-Certificate： 通过证书方式
-
-
-创建ssh秘钥访问git
-安装git插件
-
-搜索git安装即可
-
-jenkins服务器上也需要安装git
-# 安装命令yum install git -ygit --version
-
-
-在jenkins所在服务器生成公私钥对
-
-ssh-keygen -t rsa cd ~/.ssh
-
-
-id_rsa：私钥文件
-id_rsa.pub：公钥文件
-
-将生成的私钥文件内容，放到jenkins上，即创建凭证
-
-
-
-将生成的公钥内容放到gitlab中
-
-
-
-创建一个freestyle项目
-
-
-
-输入gitlab仓库的项目地址，并选择需要使用的秘钥信息，注意Branches to build选择对应的分支。
-
-
-
-保存之后，点击 build now
-
-
-
-查看构建的历史
-
-
-
-访问jenkins部署的服务器，/var/lib/jenkins/workspace ,发现项目已经拉下来了，项目名就是创建的 freestyle 项目名称
-
-
-Maven管理
-安装maven
-
-wget https://dlcdn.apache.org/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gztar -xzf apache-maven-3.9.6-bin.tar.gz
-
-
-配置环境变量
-
-vim /etc/profile#添加以下内容export MAVEN_HOME=/home/maven/apache-maven-3.9.6export PATH=$PATH:$MAVEN_HOME/bin#生效配置source /etc/profile#测试mvn -v
-
-
-创建maven的代码仓库以及配置settings.xml
-
-修改maven的conf的settings.xml配置文件
-localRepository标签，修改本地仓库地址：
-&lt;localRepository&gt;/home/maven/maven_repo&lt;/localRepository&gt;
-
-添加阿里云镜像：
-&lt;mirror&gt;    &lt;id&gt;aliyunmaven&lt;/id&gt;    &lt;mirrorOf&gt;*&lt;/mirrorOf&gt;    &lt;name&gt;aliyun&lt;/name&gt;    &lt;url&gt;https://maven.aliyun.com/repository/public&lt;/url&gt;&lt;/mirror&gt;
-
-
-配置jenkins
-
-Global Tool Configuration
-
-配置JDK
-
-
-
-配置Maven
-
-
-
-添加配置（记得创建一个maven项目哦）
-
-
-
-添加mvn打包命令
-
-
-
-配置环境变量，不然build时候找不到命令
-
-#将输出的环境变量进行配置echo $PATH
-
-
-
-开始Build
-
-
-
-拉代码，执行maven命令
-
-
-
-可以查看maven本地仓库，依赖包已经下载
-
-
-出现的问题查看日志，发现报错
-
-配置Git的目录，根据自己安装的目录修改
-
-补一句我们可以在maven打完包之后，使用java命令启动jar包即可。
-部署Jar包
-创建一个maven项目
-
-
-
-配置项目路径，注意分支
-
-
-
-构建命令
-Run only if build succeeds：在构建成功时执行后续步骤
-
-
-
-
-安装 Publish Over SSH 插件
-
-
-若部署的服务器跟jenkins不在同一服务器，需要下载
-
-
-
-配置远程服务器信息以及密码等信息
-
-Passphrase： 如果生成秘钥的时候输入了密码，就在这里输入，否则留空
-Path to Key： Jenkins 所在服务器秘钥(id_rsa)的路径，和下面的Key二选一（&#x2F;root&#x2F;.ssh&#x2F;id_rsa）
-Key： Jenkins 所在服务器秘钥(id_rsa)的路内容，和上面的Path to Key二选一
-
-
-配置远程服务器
-
-Remote Directory：访问的远程服务器目录
-
-
-添加 post-build step Send files or execute commands over SSH
-
-Source files：源文件 
-Remove prefix：删除前缀 ，这里删除target，只传jar包
-Remote directory：上传到服务器的目录
-Exec command：执行的脚本
-注：这里执行命令的时候进入到了jar包的目录，然后以后台方式启动
-如果没有进入到目录，命令启动jar没用
-如果不是后台运行，jenkins会卡主
-
-
-
-开始构建
-
-
-
-远程服务器上查看jar包以及是否执行
-
-完工！
-
-
-流水线概念将原先一个任务做完的事情，拆分为多个子任务执行，以流水线的方式执行。
-由于拆分为多个子任务，可以观察每个子任务执行的状态，并在出现问题的时候，可以迅速查询出问题点，提高效率。
-功能特性代码实现：以代码的形式实现，不仅可以被纳入版本控制，还可以通过编辑代码实现目标效果。可持续性：任务的执行，不受jenkins等其他环境的限制。操作灵活：子任务可以随意终止和继续  多功能：支持复杂CD要求，包括fork/join子进程，循环和并行执行工作的能力  可扩展：支持DSL的自定义扩展以及与其他插件集成。
-
-两种实现方式脚本式pipeline基于groovy的DSL语言实现，提供了大量的灵活性和可拓展性。因为jenkins的基于java实现的，所以很早引入了groovy作为DSL。如果使用groovy来编写jenkins file，这对与小白是有难度的，所以就有了声明式pipeline出现。
-声明式pipeline适合没有编程经验的初学者，并得到了官方越来越多的支持。
-实践创建流水线项目，如果没有改选择，则需要下载Pipeline的插件
-
-两种定义方式
-Pipeline Script：直接把脚本内容写到脚本对话框中Pipeline script from SCM ：Source Control Management–源代码控制管理，即从gitlab&#x2F;github&#x2F;git上获得pipeline脚本–JenkisFile
-刚开始不会写脚本咋办呢，可以使用 Pipeline Syntax 来生成。
-
-实例从Git仓库拉取代码，使用Maven进行构建，打包并运行，先上最终脚本
-pipeline &#123;    agent any    stages &#123;        stage(&#x27;Git Pull&#x27;) &#123;            steps &#123;                echo &quot;开始拉取代码...&quot;                git credentialsId: &#x27;git-ssh&#x27;, url: &#x27;git@192.168.202.129:jenkins_group/first-test-project.git&#x27;            &#125;        &#125;        stage(&#x27;Maven clean package&#x27;) &#123;            steps &#123;                echo &quot;maven clean package...&quot;                sh &#x27;mvn clean package&#x27;            &#125;        &#125;        stage(&#x27;deploy project&#x27;) &#123;            steps &#123;                echo &quot;deploy project...&quot;                sshPublisher(publishers: [sshPublisherDesc(configName: &#x27;192.168.202.130&#x27;, transfers: [sshTransfer(cleanRemote: false, excludes: &#x27;&#x27;, execCommand: &#x27;&#x27;&#x27;cd /home/jenkins_projectjava -jar demo-0.0.1-SNAPSHOT.jar &gt;application.log  2&gt;&amp;1 &amp;echo &quot;部署成功&quot;&#x27;&#x27;&#x27;, execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: &#x27;[, ]+&#x27;, remoteDirectory: &#x27;&#x27;, remoteDirectorySDF: false, removePrefix: &#x27;target&#x27;, sourceFiles: &#x27;target/demo-0.0.1-SNAPSHOT.jar&#x27;)], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])            &#125;        &#125;    &#125;&#125;
-
-
-拉取代码
-
-选择Git选项，输入代码地址，分支，以及认证方式生成脚本
-
-
-
-Maven构建
-
-使用 sh maven clean package 命令即可
-
-上传到远程服务器部署
-
-选择下图的选项，剩下的配置信息跟构建Maven项目一致
-
-
-
-
-开始Build
-
-
-可以看到每一步的执行时间
-
-触发器我们配置项目的时候，会有如下图所示的选项
-
-Build whenever a SNAPSHOT dependency is built：
-当job依赖的快照版本被build时，执行本job。
-**Trigger builds remotely (e.g., from scripts)**：
-触发远程构建。
-Build after other projects are built：
-当本job依赖的其它job被build时，执行本job。
-Build periodically：
-定期构建，就是设置定时器每隔一段时间进行自动构建、部署。
-Poll SCM：
-指定特定时间，比较一次源代码是否发生变更，若发生则Build。
-实例这里演示一下构建完任务之后，构建后续的任务。
-创建一个Freestyle项目（A2）进行Install：
-Trigger only if build is stable：只有构建稳定时触发
-
-使用Shell脚本对A1项目进行构建：
-
-创建一个Freestyle项目（A1）用于Git拉取项目代码：
-
-开始构建A1：
-拉取代码之后，触发构建A2：
-
-查看A2执行情况，也成功触发：
-
-]]></content>
-      <categories>
-        <category>CI/DI</category>
-      </categories>
-      <tags>
-        <tag>技术</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>ConditionalOnBean注解</title>
-    <url>/personalBlog/2024/05/26/2024/202405/2024-05-26-ConditionalOnBean%E6%B3%A8%E8%A7%A3/</url>
-    <content><![CDATA[前言@ConditionalOnBean注解应用在方法或类上，在条件中的Bean存在的时候才会去加载目标Bean。其实它的底层还是使用的@Conditional注解，如下：
-@Target(&#123; ElementType.TYPE, ElementType.METHOD &#125;)@Retention(RetentionPolicy.RUNTIME)@Documented@Conditional(OnBeanCondition.class)public @interface ConditionalOnBean &#123;    // 省略...&#125;
-
-我们查看 OnBeanCondition 类，我们再来看ConfigurationPhase枚举：
-@Order(Ordered.LOWEST_PRECEDENCE)class OnBeanCondition extends FilteringSpringBootCondition implements ConfigurationCondition &#123;    @Override    public ConfigurationPhase getConfigurationPhase() &#123;        return ConfigurationPhase.REGISTER_BEAN;    &#125;    // 省略...&#125;
-
-PARSE_CONFIGURATION ：是否需要加载此配置类
-REGISTER_BEAN：是否需要加载此Bean
-enum ConfigurationPhase &#123;    /*** The &#123;@link Condition&#125; should be evaluated as a &#123;@code @Configuration&#125;* class is being parsed.* &lt;p&gt;If the condition does not match at this point, the &#123;@code @Configuration&#125;* class will not be added.*/    PARSE_CONFIGURATION,    /*** The &#123;@link Condition&#125; should be evaluated when adding a regular* (non &#123;@code @Configuration&#125;) bean. The condition will not prevent* &#123;@code @Configuration&#125; classes from being added.* &lt;p&gt;At the time that the condition is evaluated, all &#123;@code @Configuration&#125;* classes will have been parsed.*/    REGISTER_BEAN&#125;
-
-
-
-原理创建TestA类，
-@Component@ConditionalOnBean(type = &quot;com.chris.feign.condition.TestB&quot;)public class TestA &#123;&#125;
-
-创建TestB类，此类不交由Spring容器管理。
-public class TestB &#123;&#125;
-
-我们直接将断点打在 org.springframework.context.annotation.ConfigurationClassParser#processConfigurationClass 方法上，并添加条件  &quot;testA&quot;.equals(configClass.getBeanName())。（这段代码是以及扫描出需要被Spring管理的Bean，后续的解析方法的入口，可以看一下之前写的文章 https://wysiwyg.work/2023/03/01/part1/source/Spring/Spring%E7%9A%84refresh%E6%96%B9%E6%B3%95/）
-
-我们看一下 org.springframework.context.annotation.ConditionEvaluator#shouldSkip(org.springframework.core.type.AnnotatedTypeMetadata, org.springframework.context.annotation.ConfigurationCondition.ConfigurationPhase) 方法（建议断点一点点走）：
-public boolean shouldSkip(@Nullable AnnotatedTypeMetadata metadata, @Nullable ConfigurationPhase phase) &#123;    //如果没有Conditional注解则返回false，也就是不需要跳过    if (metadata == null || !metadata.isAnnotated(Conditional.class.getName())) &#123;        return false;    &#125;    //因为不为空会跳过    if (phase == null) &#123;        if (metadata instanceof AnnotationMetadata &amp;&amp;            ConfigurationClassUtils.isConfigurationCandidate((AnnotationMetadata) metadata)) &#123;            return shouldSkip(metadata, ConfigurationPhase.PARSE_CONFIGURATION);        &#125;        return shouldSkip(metadata, ConfigurationPhase.REGISTER_BEAN);    &#125;    List&lt;Condition&gt; conditions = new ArrayList&lt;&gt;();    //获取 @Conditional 注解的value值，也就是org.springframework.boot.autoconfigure.condition.OnBeanCondition    for (String[] conditionClasses : getConditionClasses(metadata)) &#123;        for (String conditionClass : conditionClasses) &#123;            Condition condition = getCondition(conditionClass, this.context.getClassLoader());            conditions.add(condition);        &#125;    &#125;    //排序    AnnotationAwareOrderComparator.sort(conditions);    for (Condition condition : conditions) &#123;        ConfigurationPhase requiredPhase = null;        if (condition instanceof ConfigurationCondition) &#123;            requiredPhase = ((ConfigurationCondition) condition).getConfigurationPhase();        &#125;        //requiredPhase == phase 这里不匹配，所以会返回false，也就是不需要跳过，意思就是需要加载此类        if ((requiredPhase == null || requiredPhase == phase) &amp;&amp; !condition.matches(this.context, metadata)) &#123;            return true;        &#125;    &#125;    return false;&#125;
-
-我们在把断点打在 org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader#loadBeanDefinitions 方法上，这个方法是将扫描出来的 BeanDefinition 加载到Spring 容器中，正如方法名字那样（断点条件和上面一样）：
-
-我们继续看 org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader#loadBeanDefinitionsForConfigurationClass 方法。
-private void loadBeanDefinitionsForConfigurationClass(    ConfigurationClass configClass, TrackedConditionEvaluator trackedConditionEvaluator) &#123;    //主要就是这里啦    if (trackedConditionEvaluator.shouldSkip(configClass)) &#123;        String beanName = configClass.getBeanName();        //删除BeanDefinition        if (StringUtils.hasLength(beanName) &amp;&amp; this.registry.containsBeanDefinition(beanName)) &#123;            this.registry.removeBeanDefinition(beanName);        &#125;        this.importRegistry.removeImportingClass(configClass.getMetadata().getClassName());        return;    &#125;    // ... 省略&#125;// org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.TrackedConditionEvaluator#shouldSkippublic boolean shouldSkip(ConfigurationClass configClass) &#123;    Boolean skip = this.skipped.get(configClass);    if (skip == null) &#123;        //使用 @Import引入的类        if (configClass.isImported()) &#123;            boolean allSkipped = true;            for (ConfigurationClass importedBy : configClass.getImportedBy()) &#123;                if (!shouldSkip(importedBy)) &#123;                    allSkipped = false;                    break;                &#125;            &#125;            if (allSkipped) &#123;                // The config classes that imported this one were all skipped, therefore we are skipped...                skip = true;            &#125;        &#125;        //主要就是这里了        if (skip == null) &#123;            skip = conditionEvaluator.shouldSkip(configClass.getMetadata(), ConfigurationPhase.REGISTER_BEAN);        &#125;        this.skipped.put(configClass, skip);    &#125;    return skip;&#125;//org.springframework.context.annotation.ConditionEvaluator#shouldSkip(org.springframework.core.type.AnnotatedTypeMetadata, org.springframework.context.annotation.ConfigurationCondition.ConfigurationPhase)//其实这个方法就是上面那个方法拉，只不过 phase 为ConfigurationPhase.REGISTER_BEANpublic boolean shouldSkip(@Nullable AnnotatedTypeMetadata metadata, @Nullable ConfigurationPhase phase) &#123;    if (metadata == null || !metadata.isAnnotated(Conditional.class.getName())) &#123;        return false;    &#125;    //直接往下看    if (phase == null) &#123;        if (metadata instanceof AnnotationMetadata &amp;&amp;            ConfigurationClassUtils.isConfigurationCandidate((AnnotationMetadata) metadata)) &#123;            return shouldSkip(metadata, ConfigurationPhase.PARSE_CONFIGURATION);        &#125;        return shouldSkip(metadata, ConfigurationPhase.REGISTER_BEAN);    &#125;    List&lt;Condition&gt; conditions = new ArrayList&lt;&gt;();    for (String[] conditionClasses : getConditionClasses(metadata)) &#123;        for (String conditionClass : conditionClasses) &#123;            Condition condition = getCondition(conditionClass, this.context.getClassLoader());            conditions.add(condition);        &#125;    &#125;    AnnotationAwareOrderComparator.sort(conditions);    for (Condition condition : conditions) &#123;        ConfigurationPhase requiredPhase = null;        if (condition instanceof ConfigurationCondition) &#123;            requiredPhase = ((ConfigurationCondition) condition).getConfigurationPhase();        &#125;        // requiredPhase == null || requiredPhase == phase 这里都会为ture，所以回去走 matches方法        if ((requiredPhase == null || requiredPhase == phase) &amp;&amp; !condition.matches(this.context, metadata)) &#123;            return true;        &#125;    &#125;    return false;&#125;//org.springframework.boot.autoconfigure.condition.SpringBootCondition#matches(org.springframework.context.annotation.ConditionContext, org.springframework.core.type.AnnotatedTypeMetadata)// OnBeanCondition 继承 SpringBootConditionpublic final boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) &#123;    //返回类或方法名 这里返回 com.chris.feign.condition.TestA    String classOrMethodName = getClassOrMethodName(metadata);    try &#123;        //主要看这个方法        ConditionOutcome outcome = getMatchOutcome(context, metadata);        //日志输出        logOutcome(classOrMethodName, outcome);        //这里拼接信息        recordEvaluation(context, classOrMethodName, outcome);        //返回 match值，        return outcome.isMatch();    &#125;    catch (NoClassDefFoundError ex) &#123;        throw new IllegalStateException(&quot;Could not evaluate condition on &quot; + classOrMethodName + &quot; due to &quot;                                        + ex.getMessage() + &quot; not found. Make sure your own configuration does not rely on &quot;                                        + &quot;that class. This can also happen if you are &quot;                                        + &quot;@ComponentScanning a springframework package (e.g. if you &quot;                                        + &quot;put a @ComponentScan in the default package by mistake)&quot;, ex);    &#125;    catch (RuntimeException ex) &#123;        throw new IllegalStateException(&quot;Error processing condition on &quot; + getName(metadata), ex);    &#125;&#125;//org.springframework.boot.autoconfigure.condition.OnBeanCondition#getMatchOutcomepublic ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) &#123;    ConditionMessage matchMessage = ConditionMessage.empty();    MergedAnnotations annotations = metadata.getAnnotations();    //是否有ConditionalOnBean 注解，肯定有啦    if (annotations.isPresent(ConditionalOnBean.class)) &#123;        Spec&lt;ConditionalOnBean&gt; spec = new Spec&lt;&gt;(context, metadata, annotations, ConditionalOnBean.class);        //这里是主要逻辑        MatchResult matchResult = getMatchingBeans(context, spec);        // return this.unmatchedAnnotations.isEmpty() &amp;&amp; this.unmatchedNames.isEmpty()		//			&amp;&amp; this.unmatchedTypes.isEmpty()        //因为这里 unmatchedTypes 是有值的，所以会返回false，也就是会走  noMatch 方法，也就会触发删除 TestA 的BeanDefinition,也就不会注册到spring容器中。        if (!matchResult.isAllMatched()) &#123;            String reason = createOnBeanNoMatchReason(matchResult);            return ConditionOutcome.noMatch(spec.message().because(reason));        &#125;        matchMessage = spec.message(matchMessage).found(&quot;bean&quot;, &quot;beans&quot;).items(Style.QUOTE,                                                                               matchResult.getNamesOfAllMatches());    &#125;    // ... 省略&#125;//org.springframework.boot.autoconfigure.condition.OnBeanCondition#getMatchingBeansprotected final MatchResult getMatchingBeans(ConditionContext context, Spec&lt;?&gt; spec) &#123;    ClassLoader classLoader = context.getClassLoader();    //获取当前的Bean工厂    ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();    //返回false，因为 spec.getStrategy()等于ALL    boolean considerHierarchy = spec.getStrategy() != SearchStrategy.CURRENT;    Set&lt;Class&lt;?&gt;&gt; parameterizedContainers = spec.getParameterizedContainers();    // spec.getStrategy()等于ALL    if (spec.getStrategy() == SearchStrategy.ANCESTORS) &#123;        BeanFactory parent = beanFactory.getParentBeanFactory();        Assert.isInstanceOf(ConfigurableListableBeanFactory.class, parent,                            &quot;Unable to use SearchStrategy.ANCESTORS&quot;);        beanFactory = (ConfigurableListableBeanFactory) parent;    &#125;    MatchResult result = new MatchResult();    //这里为空    Set&lt;String&gt; beansIgnoredByType = getNamesOfBeansIgnoredByType(classLoader, beanFactory, considerHierarchy,                                                                  spec.getIgnoredTypes(), parameterizedContainers);    //spec.getTypes() 获取的就是注解ConditionalOnBean上的type值，即 com.chris.feign.condition.TestB    for (String type : spec.getTypes()) &#123;        //根据type获取对应的Bean名称 ，因为TestB不存在，所以这里返回空        Collection&lt;String&gt; typeMatches = getBeanNamesForType(classLoader, considerHierarchy, beanFactory, type,                                                             parameterizedContainers);        Iterator&lt;String&gt; iterator = typeMatches.iterator();        while (iterator.hasNext()) &#123;            String match = iterator.next();            if (beansIgnoredByType.contains(match) || ScopedProxyUtils.isScopedTarget(match)) &#123;                iterator.remove();            &#125;        &#125;        if (typeMatches.isEmpty()) &#123;            // unmatchedTypes 添加此类型            result.recordUnmatchedType(type);        &#125;        else &#123;            result.recordMatchedType(type, typeMatches);        &#125;    &#125;    for (String annotation : spec.getAnnotations()) &#123;        Set&lt;String&gt; annotationMatches = getBeanNamesForAnnotation(classLoader, beanFactory, annotation,                                                                  considerHierarchy);        annotationMatches.removeAll(beansIgnoredByType);        if (annotationMatches.isEmpty()) &#123;            result.recordUnmatchedAnnotation(annotation);        &#125;        else &#123;            result.recordMatchedAnnotation(annotation, annotationMatches);        &#125;    &#125;    for (String beanName : spec.getNames()) &#123;        if (!beansIgnoredByType.contains(beanName) &amp;&amp; containsBean(beanFactory, beanName, considerHierarchy)) &#123;            result.recordMatchedName(beanName);        &#125;        else &#123;            result.recordUnmatchedName(beanName);        &#125;    &#125;    //这里 会返回 unmatchedTypes 有值的MatchResult对象，我们在返回调用此方法的方法，往上走..    return result;&#125;
-
-总结解析完所有的配置类之后，会在加载BeanDefinition之前判断是否需要跳过（因为ConditionalOnBean注解处于REGISTER_BEAN阶段，所以配置类肯定是加载的），执行 shouldSkip 方法，最后调用的是 org.springframework.boot.autoconfigure.condition.OnBeanCondition#getMatchingBeans 方法，获取声明的Bean是否已经加载，如果没有加载，则从Bean工厂中将其删除，也就不会加载到容器中，从而实现了ConditionalOnBean注解的功能。
-简单来说：
-加载的Bean信息中是否有ConditionalOnBean注解声明的Bean，如果不存在则从加载的Bean列表中移除当前Bean，从而禁止加载到Spring容器中。若存在则跳过，并加载到Spring容器中。
-]]></content>
-      <categories>
-        <category>源码</category>
-      </categories>
-      <tags>
-        <tag>技术</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>用C语言介绍运行时内存结构</title>
-    <url>/personalBlog/2021/03/24/part1/complie/compile1/</url>
-    <content><![CDATA[某天，小A跑过来问：计算机是怎么运行代码的？
-我说：这个问题很难回答（以我菜鸟的身份），em…，我最近在看编译原理这本书，里面有讲到一些程序运行的过程，我把我所理解的给你说说吧。
-
-代码运行时的内存结构
-
-&emsp;&emsp;我们都知道，计算机主要由输入设备、输出设备、存储器和处理器组成，而处理器又有逻辑和控制单元（这里省略了寄存器）。如下图
-
-&emsp;&emsp;我们从图中看到，中央处理器又分为逻辑单元和控制单元。逻辑单元的作用就是进行基本的逻辑运算（加减乘除与或），控制单元则主要控制的是计算机的读写、中断和取指等操作。而执行代码的时候，正是CPU进行一系列逻辑运算的时候。我们拿一段C语言代码，看看计算机是怎么运行它的。这里主要看看运行代码的时候内存是什么样子的。
-
-int fun(int a,int b);int m=10;int main()&#123;    inti=4;    int j=5;    m = fun(i,j);    return 0;&#125;int fun(int a,int b)&#123;    int c=0;    c=a+b;    return c;&#125;
-
-
-&emsp;&emsp;下面，我们开始吧。程序开始之前需要申请内存空间，此时的内存应该有代码区、静态数据区和动态数据区。如下图，其中动态数据区就是程序运行期间产生动态数据的地方，静态数据区主要用来保存常量（代码中的m就是常量）而代码区则用来保存我们的代码的，对于计算机来说就是机器码咯（代码中的main和fun函数）。
-
-&emsp;&emsp;开始执行程序吧….，是不是少了点什么？我们注意到代码中main函数需要调用fuc函数，执行完fuc函数之后又会跳转到main函数中执行，那么这里有个问题，计算机是如何知道调用完fuc函数之后，是如何返回main函数继续执行的呢？聪明的你肯定想到了，保存跳转fuc函数之前的地址（main）不就行了！所有这里还需要CPU的三个重要的寄存器用来保存运行的状态，分别是EIP（extended Instruction pointer）指令寄存器、EBP（Base pointer）基址寄存器和ESP（Stack  pointer）栈寄存器。
-&emsp;&emsp;EIP永远指向代码区的下一条指令。EBP 和ESP用来管理栈空间的，其中EBP指向栈底，ESP指向栈顶，如下图。其中EBP和ESP中间的灰色部分为程序加载时内核设置的位置，有兴趣可以去看看《Linux内核设计的艺术》。
-
-&emsp;&emsp;现在可以开始执行程序了，我们首先需要保存当前的栈底的地址，之后EBP和ESP重合了，如下图
-
-&emsp;&emsp;接着我们开始执行main函数了，首先初始化局部变量i和j，如下图（有没有发现，变量明只是用来理解的，实际运行的时候就只有值了）
-
-&emsp;&emsp;接下来调用fuc函数。首先会传递参数，将变量a、b压入栈中。这里参数压栈的参数和书写的顺序刚好相反，参数b先入栈，数值为变量j，之后参数a压入栈，数值为变量b。预留函数的返回值空间，当函数返回的时候，这里的值会传递给m。如下图(我拉长了动态数据区，本质都是一样的)。
-
-&emsp;&emsp;至此函数参数以及返回值已入栈完毕，接下来要开始执行fuc函数了。我们知道，执行函数完成之后，程序并不是立马就停止了，而是继续执行。所以我们首先需要做的就是保存当前执行的状态信息，在执行完fuc函数之后可以返回到正确位置继续执行。所以第一步我们应该保存当前执行指令的地址，以供函数返回时使用。然后保存main函数的栈底地址，这样EBP就能空下来，重新指向fuc的栈底了。如下图
-
-&emsp;&emsp;现在栈的主角是fuc函数了，首先将变量c入栈，然后执行a+b，将结果复制给c，之后返回c的值。如下图。
-
-&emsp;&emsp;此时fuc函数执行完毕，需要清栈。这里主要分为两步，第一步恢复main函数的栈信息，第二步需要找到fun函数返回的地址，程序继续执行。如下图。
-
-&emsp;&emsp;此时已经返回执行main函数了，需要将fun返回的值赋值给m。如图
-
-
-
-
-
-&emsp;&emsp;至此main函数也执行完毕，清除栈中的所有数据。如图：
-
-
-
-小结
-
-&emsp;&emsp;计算机就是一个输入、处理和输出的设备，输入我们编写的代码到内存，处理代码逻辑（出栈入栈），输出最终结果。计算机就是在复杂，原理都还是这样。
-&emsp;
-]]></content>
-      <categories>
-        <category>编译原理</category>
-      </categories>
-      <tags>
-        <tag>技术</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Idea集成docker插件，实现项目自动部署</title>
-    <url>/personalBlog/2022/07/24/part1/docker/Idea%E4%BD%BF%E7%94%A8docker%E6%8F%92%E4%BB%B6%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E4%BB%A5Springboot%E9%A1%B9%E7%9B%AE/</url>
-    <content><![CDATA[
-什么是Docker
-官方解释：
-​		 Docker 是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的容器中,然后发布到任何流行的Linux或Windows操作系统的机器上,也可以实现虚拟化,容器是完全使用沙箱机制,相互之间不会有任何接口
-个人理解：
-​		如果一个服务器需要部署多个应用程序，那么当一个应用程序的执行出现问题，比如内存溢出，死循环等情况时，会影响其它影响程序的运行。那么可以使用Docker来分别管理应用程序，并且可以设置每个应用程序的占用资源大小，岂不美哉！
-
-下载Docker
-我这里使用的Centos，依次执行以下命令：
-添加阿里云镜像，这样下载就快了
-yum-config-manager \    --add-repo \    http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
-
-下载Docker
-yum -y install docker
-
-查看docker的版本，如果有显示则表示安装成功
-docker version
-
-启动docker
-systemctl start docker
-
-
-
-配置一下阿里云镜像源吧，这样下载镜像的时候就快很多了，直接找到文件 /etc/docker/daemon.json,没有就创建，添加以下内容：
-{
-“registry-mirrors”: [“]]></content>
-      <categories>
-        <category>Docker</category>
-      </categories>
-      <tags>
-        <tag>技术</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>使用Docker-Compose编排管理多容器Docker应用程序</title>
-    <url>/personalBlog/2022/08/09/part1/docker/docker-compose%E5%A4%9A%E5%AE%B9%E5%99%A8%E7%AE%A1%E7%90%86/</url>
-    <content><![CDATA[
-Compose 是什么
-Compose 是用于定义和运行多容器 Docker 应用程序的工具。可以使用yml配置文件来配置并管理所有的服务。然后使用一个命令，就可以创建以及启动所有的服务。
-
-使用Idea集成Docker-Compose
-首先需要下载docker-compose软件包，https://github.com/docker/compose/releases/， 
-本人使用Windows开发环境，所有下载的Windows版本，看个人所需。
-
-按照下列步骤，创建一个docker-compose
-
-步骤1是自定义名称，根据自身情况命名就行。
-步骤2是docker服务器实例，参考Idea集成docker插件，实现项目自动部署。
-步骤3就是compose配置文件的路径。
-
-
-docker-compose.yml配置文件
-我这里主要演示了访问 8200和8201端口可以访问部署在docker里面的spring boot项目（详看上篇Idea集成docker插件，实现项目自动部署）。并且将docker容器里面产生的日志挂载到宿主机上方便查看，如所示。我这里使用了本地的dockerfile文件构建的镜像，也可以直接使用docker服务器上已经构建好的镜像
-version: &#x27;2&#x27;services:  #服务名，随便起  demo1:    #构建的镜像名    image: docker_deploy1:v1.0    #构建的容器名    container_name: demo1    restart: always    #使用本地的dockerfile构建镜像，需要将文件与本文件在一个目录上    build:      context: ./   #路径      dockerfile: Dockerfile  #dockerfile的名字    #宿主机到容器的端口映射    ports:      - &#x27;8200:8099&#x27;    volumes:      - /home/logs/demo1:/log  #挂载日志 将宿主的 /home/logs/demo1 挂载到 容器的/log目录上，便于查看日志  demo2:    image: docker_deploy2:v1.0    container_name: demo2    restart: always    ports:      - &#x27;8201:8099&#x27;    volumes:      - /home/logs/demo2:/log    build:      context: ./      dockerfile: Dockerfile
-
-
-
-小结
-本文主要介绍如何使用docker-compose来管理并运行多个容器，例子比较简单。主要想给大家演示，如何根据yml配置去管理多个容器。一般在公司进行项目开发时，会涉及到多个开发环境，比如开发、测试、发布等。那么我们可以根据以上环境去创建三个容器，在需要发布相应环境的时候，我们只需要将打包好的jar包制作成镜像，然后在yml文件中启动相应的服务即可（需在Idea中集成）。
-可能出现的困惑：
-为什么例子中要使用本地的dockerfile文件进行构建容器？
-答：我这个例子是这么用的。可以直接使用已经存在的镜像启动容器。还有就是使用dockerfile文件，将dockerfile文件以及yml配置文件放到服务区上，在服务器上使用docker-compose的命令，仍然能达到最终目的，只不过本例子中Idea帮助我们执行了。还记得刚开始需要下载docker-compose的软件吗，就是需要在安装Idea编辑软件的机器上去执行docker-compose命令。
-
-
-]]></content>
-      <categories>
-        <category>Docker</category>
-      </categories>
-      <tags>
-        <tag>技术</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>那天聊了一夜的乱码问题</title>
-    <url>/personalBlog/2021/03/17/part1/garbled/garbled/</url>
-    <content><![CDATA[
-前言
-想必大家都碰到过这种情况，如图：
-
- 这是Tom猫启动的截图。 本来应该显示中文，但最后却显示成了一些不认识的字符。
-
-事因
-
-记得那天夜黑风高，正当我宽衣入睡的时候，一只手从我的后背悄悄的搭在了我的肩膀上。 我瞬间汗毛竖立，但下一秒我却嘴角上扬，(ˉ▽￣～) 切~~是小A。
-你大半夜不睡觉干啥？给我吓的…，不是…，给我来宽衣解带吗？我回过头，猥琐的笑道。
-我遇到了一些问题，只要前端传来的数据中有中文，我的后台就会显示有乱码，怎么搞，明天要给老大交任务了啊，小A说。
-来，我拉着小A坐在腿上，安抚着说到：傻瓜，是编码问题。
-
-
-了解真相
-
-编码是信息从一种形式或格式转换为另一种形式的过程；解码则是编码的逆过程
-
-以上解释来自于维基百科。
-对于电脑而言，编码其实是将人类理解的语言（中文，英文）转换成计算机能理解的语言（0和1）。而解码正好相反。
-
-编码方式有哪些
-
-对学计算机专业的童鞋们，第一门编程语言应该是C语言吧，记得好像是书的最后一页是ASCLL表，是美国人用来显示他们英语用的编码方式。而中文一般采用的是GB2312，GBK,UTF-8等编码方式。各个语言基本都有对应的编码方式，但是随即问题也就出现了，对于一个文档中有中文，英文，日语，韩语，那岂不是要疯掉？所以总有一个大佬会站出来，那就是Unicode咯，它整理、编码了世界上大部分的文字系统。
-
-编码的基本原理
-
-其实可以想一想，若你用GBK编码的话，那么你解码你是用扫描编码方式？那肯定是GBK咯，解铃还须系铃人啊。我的理解是，这其实是一种协议，你按照特有的协议进行处理，那么你解析的时候，肯定需要知道当初那个制定好的协议结构咯。是不是跟前后端传递的数据是一样的？你前端可以传递XML和JSON格式（相当于编码方式）的数据，那你后台肯定需要对应的方式去获取数据，不然肯定获取的是不正确的数据了（相当于乱码）。
-
-
-
-]]></content>
-      <categories>
-        <category>Web的那些事</category>
-      </categories>
-      <tags>
-        <tag>技术</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>从零开始搭建一个电商项目-中间件（六）</title>
-    <url>/personalBlog/2023/01/15/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E4%B8%AD%E9%97%B4%E4%BB%B6/</url>
-    <content><![CDATA[
-前言
-项目开发中，我们会碰见很多技术问题。比如使用Mysql存储数据时，当用户量访问比较大时，Mysql支撑不住。通常来说，用户的查询请求诸多，所以可以引入缓存中间件，如Redis。将经常读取的数据放入Redis中，并且Redis的数据是保存在内存中，比磁盘的读取速度高得多。再后来，用户量极具增加，Redis也经受不起折磨垮掉。后来将后台应用拆分成了各个微服务，每个服务担任相应的职责，并且每个服务部署多个节点，这样分散访问（负载均衡）使得后台服务又站了起来。此刻大家也没有闲着，将Mysql分库分表，引入中间件Sharding-JDBC。使用Redis官方推荐的 redis-cluster  方式部署Redis集群。微服务多节点部署，多个节点如何共享Session呢，所以又引入了中间件Spring Session解决了单点登录的问题。使用分布式锁Redisson解决多个节点共享资源的问题。越往后，微服务越多，之间的调用越来越复杂。当商品服务去调用订单服务时，还需要同步等待订单处理完逻辑之后，返回结果。所以又引入了消息队列，实现了服务之间的解耦，并且也削弱了上游和下游处理能力不相同的问题。可是有一天又出现问题了。当我调用商品下单时，商品服务需要调用订单服务下单，库存服务冻结相应库存。当下单调用正常，但是库存服务调用失败，无法实现整体的事务回滚。使用阿里的Seata中间件或者使用消息队列的延时队列实现分布式事务一致性。使用Sentinel中间件实现服务调用的熔断、降级、限流，防止出现雪崩等现象。使用Zikpin（内置Sleuth）实现链路追踪，可以更快的排查问题，查看各个服务的处理业务情况。后续用户量越来越大，服务不停挂，还需要运维人员手动启动服务，所以又引入了容器化Docker+K8s流水线任务，实现一站式部署、日志收集、微服务治理（熔断、限流、链路追踪）、告警通知、弹性伸缩等。
-
-缓存中间件
-缓存可以将经常查询的数据放进内存中，可以减缓数据库的压力。很多互联网产品读多写少的场景比较多，所以引入缓存是提高用户体验的一大妙招。经常使用的缓存中间件有Spring Cache、Redis等。本次项目中主要用到的是Redis，Spring Cache虽然能做缓存，但是无法在分布式环境中使用。而Redis不仅可以在分布式环境中使用，而且有着强大的数据结构，可以用来做消息队列、分布式锁。
-
-分布式Session
-Http请求都是无状态的，服务器是无法记得这次请求是属于哪个用户的。所以就需要用户在登录成功之后，服务器生成Session保存在内存中，然后返回给浏览器，浏览器生成Cookie保存在本地，下次请求带上，这样服务器就能知道这次请求是数据哪个用户的了。我们传统的Session是将数据保存在内存中，并且还是单机模式。当处于分布式环境时，会出现用户登录成功之后，访问其它微服务时需要再次进行登录。Spring Session就是为了解决单机环境中Session保存的问题。除了Session保存用户的登录信息之外，目前还使用Token令牌来保存来保存登录的用户信息。
-
-分布式锁
-实际中我们经常遇到多线程抢占同一共享资源的问题，导致业务逻辑出现问题。我们可以使用Java为我们提供的Synchronized、Lock等锁来锁住共享资源，使得同一时间只有一个线程能处理成功。但是这个锁只是本地锁，当我们处理例如减库存等操作时，在分布式的情况下，需要操作数据库或者缓存。若只是使用了本地锁，那无法避免的会出现超卖等问题。所以我们需要引入分布式锁。我们可以使用Redis的Setnx指令去加锁，但是此方法会出现原子性的系列问题。所以基于Redis的Redisson分布式锁，可以使得我们像使用Lock锁一样去使用它，所以上手很容易。
-
-消息队列
-现实中我们需要对消息进行顺序化管理，解耦两个微服务之间的调用或者缓解用户请求高峰。我们可以使用消息队列，本项目中使用的是RabbitMQ。主要使用了消息队列中的死信队列，来进行关闭订单以及保证分布式事务的一致性。我们可以用消息队列来保证消息的顺序发送或者接收，比如处理交易报文的确认成功报文或者Ack报文，以顺序化来处理通知报文。可以在用户高峰请求的时候，将大量的请求先保存在队列中，然后再慢慢进行处理。
-
-分布式事务
-微服务中进行业务操作时，必须要考虑的就是事务的问题了。当处于单体应用时，我们可以利用数据库提供的事务机制，保证我们业务的事务性。将单体应用拆分成多个微服务时，我们需要考虑到各个微服务之间的事务关系。当我们保存订单成功，但是减库存失败时，我们不能像处理本地事务那样去处理此问题，需要引入分布式组件。此项目中，使用了RabbitMQ的死信队列来保证事务的一致性。在处理业务的同时，可以保存一条延时消息，在指定的时间之后去检查业务是否都处理成功，若处理失败，则进行相应的数据回滚。分布式中间件还有阿里提供的Seata，二阶段、三阶段、TCC等思想。
-
-熔断、降级、限流
-微服务中，通常会有一个服务调用另一个服务的情况。当下游服务出现宕机，而此时用户请求又很大，容易出现雪崩的情况，导致上上游服务器也宕机。所以我们要引入熔断机制，当发现下游服务在规定时间内、或者次数内无法调用时，需要在规定的时间内不去调用此服务。实际中，项目中也可能会出现恶意用户请求或者防止大量请求涌入，我们可以使用限流机制，来防止服务器被打崩。当需要应对特殊的节日，如双十一，为了节省服务器资源，我们可以降级某些服务，如用户信息等服务，留存更多的服务器资源，来保证主要业务进行顺利。阿里提供的Sentinel组件可以实现熔断、降级以及限流操作。
-
-链路追踪
-实际项目中，当遇到生产问题时，我们需要打开堡垒机登录线上或者需要让相关的人员帮忙找线上的日志。当出现微服务调用复杂的情况时，往往找到问题所在花费的时间会很长。所以我们可以引入链路追踪中间件Zipkin，一款结合了阿里的Sleuth以及可视化界面，我们可以查看各个微服务之间调用的链路是怎么样的，并且能看见每个微服务所花费的时间等指标。当然链路追踪只是能查看服务调用的性能指标，可以更快的帮忙定位到为题。另外的，使用ELK日志收集组件，可以将微服务运行中的日志，使用Logstash收集各个微服务产生的日志，然后将收集的日志用Elasticsearch保存收集到的日志，最后使用ES的可视化工具Kibana将收集到的日志显示出来，这样就不需要去登录堡垒机，一步步去查看日志了。
-
-
-]]></content>
-      <categories>
-        <category>瞎胡闹</category>
-      </categories>
-      <tags>
-        <tag>技术</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>从零开始搭建一个电商项目-商品检索（五）</title>
-    <url>/personalBlog/2023/01/14/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E6%A3%80%E7%B4%A2/</url>
-    <content><![CDATA[
-前言
-大家网页端逛JD的时候，下图是很常见的。那么它的后端是如何实现的？最简单的想法就是把数据保存到mysql中，然后返回给前端。其实也可以，但是我们发现不止需要返回商品数据，还需要根据特定的信息去检索，进行模糊匹配。mysql关键字like可以实现，但是你不能确保查询的时候不进行全表扫描，而且大量数据查询，对于磁盘保存数据的mysql来说，可能就不太适合了。这问题那些服务器端大佬肯定早想到了  ElasticSearch   参考 第二篇 文章，使用Docker搭建ES。
-
-商品上架
-进入SPU管理菜单，点击上架。该功能主要保存商品信息到ES中，并修改SPU状态为已上架。需要创建保存到ES索引的mappin（相当于mysql的数据类型），参考以下结构https://gitee.com/chris_777&#x2F;easymall&#x2F;blob&#x2F;develop&#x2F;easy-mall-search&#x2F;src&#x2F;main&#x2F;resources&#x2F;easy_product-index_mapping.json
-
-渲染检索结果
-需要搭建nginx，前面第二篇有搭建教程。配置域名： 本机的 hosts文件192.168.202.129 easymall.com     # 商城主页192.168.202.129 search.easymall.com  # 检索服务页面192.168.202.129 item.easymall.com  # 商品详情页面192.168.202.129 auth.easymall.com # 登录服务页面192.168.202.129 cart.easymall.com  # 购物车服务页面192.168.202.129 order.easymall.com  # 订单服务页面192.168.202.129 seckill.easymall.com  # 秒杀服务页面配置nginx配置 nginx 的上有服务器组。然后进到 conf.d 创建一个 easymall.conf 配置文件，如图。定义server_name 当访问这些域名时会匹配http:&#x2F;&#x2F;上游服务器组名（easymall）其中 proxy_set_header  防止请求转发丢失Host请求头在gateway服务中配置路由信息，如图启动gateway、search服务，访问 http://search.easymall.com/，如下图，
-
-ES基本概念与语法
-本人使用的ES 8.3.3 版本，改版本取消了Type （类型）。Index（索引） 动词，相当于 MySQL 中的 insert； 名词，相当于 MySQL 中的 DatabaseDocument（文档） 保存在某个索引（Index）下的一个数据（Document），文档是JSON格式的，Document 就像是 MySQL 中的某个 Table 里面的内容；映射（Mapping）定义索引中的字段的名称；定义字段的数据类型，比如字符串、数字、布尔；字段，倒排索引的相关配置，比如设置某个字段为不被索引、记录 position 等。上述创建的 easy_product 的mapping，其中type 指定相应的数据类型
-
-数值类型: integer、long、short、byte、double、float
-
-字符串类型: text 或者 keyword
-
-布尔类型: boolean
-
-其中有一个 nested 类型的数据，该类型主要保存数组的结构。因为默认情况下，ES保存数据数据，会将其扁平化处理，从而会丢失数组的对应关系。 
-
-还比如 keyword 声明的类型，可以进行精确查找，不会对该字段进行分词。
-analyzer 可以制定分词器，有兴趣的小伙伴可以去自行搜素。
-
-
-常用方法 GET &#x2F;_cat&#x2F;nodes：查看所有节点 GET &#x2F;_cat&#x2F;health：查看 es 健康状况 GET &#x2F;_cat&#x2F;master：查看主节点 GET &#x2F;_cat&#x2F;indices：查看所有索引  
- GET index名&#x2F;_mapping ：查看索引的mapping信息 GET  index名&#x2F;_search：查询索引信息，包括索引下的数据、数据的个数，分页等信息 还有聚合查询，有兴趣的小伙伴自行百度。
-
-
-]]></content>
-      <categories>
-        <category>瞎胡闹</category>
-      </categories>
-      <tags>
-        <tag>技术</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>从零开始搭建一个电商项目-商品管理（四）</title>
-    <url>/personalBlog/2023/01/13/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%95%86%E5%93%81%E7%AE%A1%E7%90%86/</url>
-    <content><![CDATA[前期准备
-​		第二篇文章里面有gitee的项目地址。​		首先修改前端项目中 static&#x2F;config&#x2F;index.js 文件，修改后端访问地址。端口是网关服务的	
-//   /api 是网关层转发的特定前缀window.SITE_CONFIG[&#x27;baseUrl&#x27;] = &#x27;http://localhost:8200/api&#x27;;
-​		 修改各个后端配置文件中的中间件访问IP地址改成自己的.​		 nacos、es、rabbitmq、mysql、redis.这些地址都是已知的需要改。​		 sentinel、zipkin、seata 后续会提及。​		 尤其需要注意到config包里面有写死的访问地址（后续可以改成配置文件），比如​		 com.chris.easymallproduct.config.RedissonConfig product模块 需要修改redis的访问地址         com.chris.common.config.MinioConfig 修改Minio的访问地址
-​         可以利用启动报错慢慢修改。然后启动前后端项目，使用admin&#x2F;admin 登录
-     执行数据库创建脚本 [https://gitee.com/chris_777/easymall/blob/develop/sql](https://gitee.com/chris_777/easymall/blob/develop/sql/sys_menus.sql)
-      在执行创建菜单脚本 https://gitee.com/chris_777/easymall/blob/develop/sql/sys_menus.sql
-      执行三级分类脚本https://gitee.com/chris_777/easymall/blob/develop/sql/pms_category.sql
-
-
-分类维护
-导入三级分类的脚本之后，访问分类维护菜单，会显示导入的三级分类数据。配有增、删、改的功能。
-
-
-品牌管理
-我们针对手机这个产品去管理它的品牌，目前手机品牌挺多的，如华为、小米、中兴等。品牌就是用来在购买商品的时候知道这个产品是属于哪个厂商的。品牌新增功能，品牌名以及品牌的logo地址等信息
-
-关联分类，新增的品牌属于哪个分类。
-
-属性分组
-维护规格属性一对多的关系。如手机分类有 基本信息 的主体名，基本信息又包括 机身颜色、机身尺寸、机身重量等。如图3所示。关联功能用于关联主体与规格参数之间对应的关系。
-
-规格参数
-维护SPU的规格参数信息。可以新增规格参数，可检索：用户可以在首页搜索到快速展示：可以在 商品介绍 中进行展示
-
-销售属性
-维护SKU的基本参数信息，如颜色、内存等信息。
-
-创建商品
-进入商品系统-&gt;商品维护-&gt;发布商品菜单，开始创建商品基本信息。商品介绍：商品介绍中的图片商品图集：SKU的图片
-创建规格参数，选择之前增加的规格参数。
-创建销售属性。设置SKU信息，结果为销售属性的笛卡尔积查看创建的SPU信息查看SKU信息
-
-仓库管理
-维护仓库的信息，用来 逻辑保存商品商品采集。实际中我们需要对商品进行采集，并且入库，主要流程如下图所示人工创建采购单。这里的采购商品可以优化成下拉框，批量生产采购需求。合并时需要选择创建的采购单批量手动生成采购单创建采购单选择需要合并到哪个采购单中，其中编号3为创建的采购单的主键，可优化分配采购人员。这里的采购人员需要在系统管理菜单里面维护领取采购单，需要在APP上新增功能，这里只是模拟。 localhost:8104&#x2F;easymallware&#x2F;purchase&#x2F;received完成采购，其中3为采购单ID，6、7为采购项完成采购
-
-
-]]></content>
-      <categories>
-        <category>瞎胡闹</category>
-      </categories>
-      <tags>
-        <tag>技术</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>从零开始搭建一个电商项目-基础环境搭建（二）</title>
-    <url>/personalBlog/2023/01/11/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</url>
-    <content><![CDATA[
-搭建微服务项目
-Spring Boot 版本   2.3.7Spring Cloud 版本 Hoxton.SR9Spring Alibaba 版本 2.1.1Java 版本 1.8后端项目地址：https://gitee.com/chris_777&#x2F;easymall     dev分支前端项目地址：https://gitee.com/chris_777&#x2F;easymall-vue 
-
-数据库
-easy_mall_admin 后台管理数据库easy_mall_oms 订单数据库easy_mall_pms 商品数据库easy_mall_sms 优惠数据库easy_mall_ums 会员数据库easy_mall_wms 仓储数据库地址：https://gitee.com/chris_777&#x2F;easymall&#x2F;tree&#x2F;develop&#x2F;sql
-
-安装中间件
-注意：需要安装docker，会有另一篇文章讲，docker建议 20 版本以下，后期兼容安装K8SRedis：主要用于缓存、分布式锁、分布式Session
-
-
-#拉取镜像 可以指定版本 redis:5.0.8docker pull redis  # 创建挂载文件mkdir -p /home/redis/conf &amp; touch /home/redis/conf/redis.conf   # 配置文件mkdir  /home/redis/data      # 数据目录#建议先启动容器，拿到容器里面的redis配置文件docker run -p 6379:6379 --name redis -d redis redis-server #进入容器docker exec -it 容器Id /bin/bash #找到 /etc/redis/redis.conf 从容器复制到宿主机上#然后到指定目录上看是否有相应配置docker cp 容器Id:/etc/redis/ /home/redis/conf/#删除容器docker rm 容器Id#使用镜像启动redis，然后使用redis连接工具连接测试docker run -p 6379:6379 --name redis -v /home/redis/data:/data \-v /home/redis/conf/redis.conf:/etc/redis/redis.conf \-d redis redis-server /etc/redis/redis.conf#可以修改容器自启动docker update --restart=always 容器Id#启动失败可以查看日志，若打开了自启动，注意查看速度要快，不然系统会重启启动一个新的容器docker logs 容器Id 
-
-​	Nginx：用于转发用户请求到后台服务，静动态资源分离（项目中目前没做）
-#拉取镜像 docker pull nginx  #创建挂载目录 配置文件 静态资源 日志mkdir /home/project/springcloud/nginx/confmkdir /home/project/springcloud/nginx/htmlmkdir /home/project/springcloud/nginx/logs#跟redis一样，启动nginx容器，取出配置文件信息，容器内路径： /etc/nginx/#删除容器，真是启动nginx容器 #我碰见的问题 modules -&gt; /usr/lib/nginx/modules  这个文件缺少，可以进入容器cp过来就可以了docker run  --name nginx  -p 80:80 \-v /home/project/springcloud/nginx/conf:/etc/nginx/ \-v /home/project/springcloud/nginx/logs:/var/log/nginx \-v /home/project/springcloud/nginx/html:/usr/share/nginx/html
-
-​	Minio：文件上传工具
-#拉取镜像 docker pull minio/minio#创建挂载目录mkdir /home/project/springcloud/minio/data#启动容器  MINIO_ACCESS_KEY：用户名 MINIO_SECRET_KEY：密码# 使用 ip:9000 访问后台管理    9090 端口用来程序连接docker run -p 9000:9000 -p 9090:9090 \ --name minio \ -e &quot;MINIO_ACCESS_KEY=admin&quot; \ -e &quot;MINIO_SECRET_KEY=admin&quot; \ -v /home/project/springcloud/minio/data:/data \ minio/minio server \ /data --console-address &quot;:9090&quot; -address &quot;:9000&quot;
-
-​	Rabbitmq：用于分布式事务、延时队列
-docker pull rabbitmq:management# 4369 -- erlang发现口       5672 --client端通信口 # 15672 -- 管理界面ui端口    25672 -- server间内部通信口#启动完成之后使用 15672 打开管理界面  账号/密码 guest/guestdocker run -d --name rabbitmq --publish 5671:5671 \--publish 5672:5672 --publish 4369:4369 --publish 25672:25672 --publish 15671:15671 --publish 15672:15672 \rabbitmq:management
-​	Nacos：注册中心、配置中心（目前没用）
-#https://github.com/alibaba/nacos/releases  下载nacos 注意版本wget https://github.com/alibaba/nacos/releases/download/2.1.0/nacos-server-2.1.0.tar.gz#解压，然后进入 bin 目录启动即可tar -zxvf nacos-server-2.1.0.tar.gz
-
-​	mysql：宿主机原先已经安装，此项目没有进行安装操作，可以网上搜索安装教程。推荐使用		docker安装，比较简单。
-​	Elasticsearch：商品信息检索​	Kibana：图形化展示ES中的索引等信息
-docker pull elasticsearch:7.4.2docker pull kibana:7.4.2#elasticsearchmkdir /home/project/springcloud/docker_elasticsearch/configmkdir /home/project/springcloud/docker_elasticsearch/data#进入到目录 cd /home/project/springcloud/docker_elasticsearch/config# 创建es的启动配置文件cat &gt; elasticsearch.yml &lt;&lt; EOFnetwork.host: 0.0.0.0http.port: 9200transport.port: 9300http.cors.enabled: truehttp.cors.allow-origin: &quot;*&quot;xpack.security.enabled: truexpack.security.http.ssl.enabled: falsexpack.security.transport.ssl.enabled: falseEOF#确保权限chmod  777 /home/project/springcloud/docker_elasticsearch# 启动es docker run --name elasticsearch -p 9200:9200 -p 9300:9300 \-e &quot;discovery.type=single-node&quot; \-e ES_JAVA_OPTS=&quot;-Xms64m -Xmx512m&quot; \-v /home/project/springcloud/docker_elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml \-v /home/project/springcloud/docker_elasticsearch/data:/usr/share/elasticsearch/data \-v /home/project/springcloud/docker_elasticsearch/plugins:/usr/share/elasticsearch/plugins \-d elasticsearch:7.4.2#创建文件   /usr/share/kibana/config/kibana.yml mkdir /home/project/springcloud/docker_kibanacd  /home/project/springcloud/docker_kibana#写入配置文件cat &gt; kibana.yml &lt;&lt; EOFserver:  host: &quot;0.0.0.0&quot;  port: 5601# ESelasticsearch:  hosts: [&quot;http://192.168.202.129:9200&quot;]  username: &quot;kibana_system&quot; #默认的用户名  password: &quot;123456&quot;# 汉化i18n.locale: &quot;zh-CN&quot;EOF# 启动容器 然后访问 ip+5601docker run -d \  --name=kibana \  -p 5601:5601 \  -v /home/project/springcloud/docker_kibana:/usr/share/kibana/config \  kibana:7.4.2
-
-
-人人开源
-网址： https://gitee.com/renreniorenren-fast ：后台管理系统renren-fast-vue：前端项目根据文档中的操作步骤，换成自己的数据库。
-
-
-]]></content>
-      <categories>
-        <category>瞎胡闹</category>
-      </categories>
-      <tags>
-        <tag>技术</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>从零开始搭建一个电商项目-流水线（九）</title>
     <url>/personalBlog/2023/01/18/part1/mall/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE-%E6%B5%81%E6%B0%B4%E7%BA%BF/</url>
     <content><![CDATA[
@@ -3451,6 +3393,64 @@ xxl-sso 单点登录服务（没使用）
       </tags>
   </entry>
   <entry>
+    <title>用Shell实现备份Mysql数据</title>
+    <url>/personalBlog/2023/12/11/2023/linux/2023-11-20-%E7%94%A8Shell%E5%AE%9E%E7%8E%B0%E5%A4%87%E4%BB%BDMysql%E7%9A%84Binlog%E6%97%A5%E5%BF%97/</url>
+    <content><![CDATA[需求Mysql版本：5.7.38      Linux系统：7.0
+服务器A：192.168.202.129   服务器B：192.168.202.130
+初始化192.168.202.129
+全量:
+根目录：/home/backup/all
+备份数据保存位置：/home/backup/all/data
+日志保存位置：/home/backup/all/bak.log
+增量：
+根目录：/home/backup/incr
+备份数据保存位置：/home/backup/incr/data
+日志保存位置：/home/backup/incr/bak.log
+下次开始备份的序列号：/home/backup/incr/sn
+临时保存备份的增量binlog日志：/home/backup/incr/cp_binglog
+192.168.202.130
+全量:
+备份数据目录：/home/backup/all/&#123;date&#125;
+日期home/backup/all 目录，增量也是。
+增量：
+备份数据目录：/home/backup/incr/&#123;date&#125;
+全量
+每七天进行一次全量备份，并刷新binlog日志，保存下一次增量开始备份的序列。
+打包sql文件为tar包，使用md5sum生成tar包的效验值，将效验文件与tar包一起打包压缩。
+使用scp将129服务器上压缩的tar.gz包拷贝到130服务器。
+ssh连接130服务器，解压压缩包，使用md5sum效验文件完整性。
+
+增量
+若当天存在全量备份，则直接退出。
+首先生成新的binlog日志，然后获取此次需要同步的binlog序列号，获取mysql目录下的binlog日志，先拷贝到本地的临时目录。将所有增量的binlog日志打成tar包，使用md5sum生成效验文件，并一起打包压缩。
+使用scp将129服务器上压缩的tar.gz包拷贝到130服务器。
+ssh连接130服务器，解压压缩包，使用md5sum效验文件完整性。
+
+清理过期文件​	清理超过指定时间的备份文件
+定时每天执行脚本
+# For details see man 4 crontabs# Example of job definition:# .---------------- minute (0 - 59)# |  .------------- hour (0 - 23)# |  |  .---------- day of month (1 - 31)# |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...# |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat# |  |  |  |  |# *  *  *  *  * user-name  command to be executed
+
+方式一：
+进入/etc/cron.d目录，创建mysqldump.sh文件，赋予644权限。
+/var/log/cron 可查看定时器执行日志。
+#每天凌晨3点执行 XXX 替换成数据库备份脚本，绝对路径0 0 3 1 * ? root  sh XXX.sh   
+
+方式二：
+直接修改 /etc/crontab，内容一致
+准备安装expect用于ssh交互yum -y install expect
+
+scp免密登录#129上执行，将生成的公钥复制到 130的 /root/.ssh/authorized_keysssh-keygen -t rsa
+
+脚本#/bin/bash#Description: mysql binlog备份#Author: chris#Created Time: 2023/11/22 21:45db_user=&#x27;root&#x27;db_pwd=&#x27;123456&#x27;#备份目录base_dir=&quot;/home/backup&quot;#全量  7天一次全量all_dir=&quot;$&#123;base_dir&#125;/all&quot;#增量  1天一次增量incr_dir=&quot;$&#123;base_dir&#125;/incr&quot;date=`date +%Y%m%d`copy_ip_addr=192.168.202.130interval_day=7expired_day=32incr_log=$incr_dir/bak.logall_log=$all_dir/bak.log#存放备份数据的目录incr_data=$incr_dir/dataall_data=$all_dir/data#保存最后一个复制的binglog序列号last_binlog_sn=$incr_dir/sn#临时存放binlog文件的目录cp_binglog_dir=$incr_dir/cp_binglog#init()&#123;if [ ! -d $&#123;incr_data&#125; ]then  mkdir -p $incr_datafiif [ ! -d $&#123;all_data&#125; ]then  mkdir -p $all_datafiif [ ! -d $&#123;all_dir&#125; ]then  mkdir -p $all_dirfiif [ ! -d $&#123;incr_dir&#125; ]then  mkdir -p $incr_dirfiif [ ! -d $&#123;cp_binglog_dir&#125; ]then  mkdir -p $cp_binglog_dirfiif [ ! -f $&#123;incr_log&#125; ]then  touch $&#123;incr_log&#125;fiif [ ! -f $&#123;all_log&#125; ]then  touch $all_logfiif [ ! -f $&#123;last_binlog_sn&#125; ];then  touch $&#123;last_binlog_sn&#125;  chmod 740 $&#123;last_binlog_sn&#125;fi&#125;log()&#123;  echo &quot;[`date &#x27;+%Y-%m-%d %H:%M:%S&#x27;`]:$1&quot;&#125;last_dump_file=`find $&#123;all_data&#125;/ -type f -mtime -$&#123;interval_day&#125; |wc -l`allBackup()&#123;# 通过文件名拿到最后一次备份的时间# last_date=ls $&#123;all_dir&#125; | tail -1 | awk -F &quot;_&quot; &#123;&#x27;print $2&#x27;&#125; | awk -F &quot;.&quot; &#123;&#x27;print $1&#x27;&#125;#不为空if [ $&#123;last_dump_file&#125; -gt 0 ]then   log &quot;mysqldump has done $&#123;last_dump_file&#125;&quot;&gt;&gt;  $all_log  returnfi log &quot;begin mysqldump -&gt; $&#123;all_data&#125;/all_$&#123;date&#125;.sql&quot; &gt;&gt; $all_log#全量#-A备份所有数据库 或 --all-databases#--quick 不缓存，直接导出#--flush-logs dump时生成新的binlog日志#--master-data=2 配合--flush-logs使用，只生成一次日志，不然每个数据库都会生成一次日志。 dump出的文件中，保存 binlog 和 pos点，并注释生成的这行信息。增量备份需要使用#          --master-data=1 dump出的文件中，不注释这行信息，恢复时会执行#--single-transaction 保证导出开始和结束的数据一致性，仅InnoDB。与--lock-tables选项互斥，相当于开启可重复读，在事务开始、事务结束的时候，多次select查询的值都是一样的。#--default-character-set 设置字符集为 utf8mb4，根据数据库原始的字符集确定，SHOW VARIABLES LIKE &#x27;character_set%&#x27;查询支持的字符集cd $&#123;all_data&#125;mysqldump -u$&#123;db_user&#125; -p$&#123;db_pwd&#125; -A --quick --flush-logs --master-data=2 --single-transaction --default-character-set=utf8mb4 &gt; all_$&#123;date&#125;.sql    if [ $? -eq 0 ];then     log &quot;mysqldump $&#123;all_data&#125;/all_$&#123;date&#125;.sql success&quot; &gt;&gt;$all_log  else      log &quot;mysqldump $&#123;all_data&#125;/all_$&#123;date&#125;.sql error&quot; &gt;&gt;$all_log     exit 1  fi    if [ ! -d $&#123;date&#125; ];then    mkdir -p $&#123;date&#125;  fi  next_sn=`grep &quot;MASTER_LOG_FILE=&#x27;*&#x27;&quot; all_$&#123;date&#125;.sql | awk -v flag=&quot;&#x27;&quot; -F &quot;.&quot; &#x27;&#123;split($2,arr,flag)&#125; END &#123;print arr[1]&#125;&#x27;`  echo $next_sn &gt; $&#123;last_binlog_sn&#125;  log &quot;mysqldump then save max binglog_sn and  sn= $&#123;next_sn&#125;&quot; &gt;&gt; $all_log  tar -cf $&#123;date&#125;/all_backup_$&#123;date&#125;.tar all_$&#123;date&#125;.sql  rm -f all_$&#123;date&#125;.sql  cd $&#123;date&#125;  # cd 到目录里面在md5sum  md5sum all_backup_$&#123;date&#125;.tar &gt; all_md5sum.txt  cd $&#123;all_data&#125;  tar -zcf all_backup_$&#123;date&#125;.tar.gz  $&#123;date&#125;  scp all_backup_$&#123;date&#125;.tar.gz  @$&#123;copy_ip_addr&#125;:$all_dir  if [ $? -eq 0 ];then     log &quot;scp  $&#123;all_data&#125;/all_backup_$&#123;date&#125;.tar.gz success and rm&quot; &gt;&gt;$all_log     rm -fr $&#123;all_data&#125;/all_backup_$&#123;date&#125;.tar.gz  else      log &quot;scp  $&#123;all_data&#125;/all_backup_$&#123;date&#125;.tar.gz error&quot; &gt;&gt;$all_log     exit 1  fi  #yum -y install expect 安裝  /usr/bin/expect&lt;&lt;EOF  spawn ssh root@$&#123;copy_ip_addr&#125;  expect &#123;     &quot;*Last login&quot;     &#123;send &quot;cd $all_dir\r&quot;&#125;  &#125;  expect &quot;*]#&quot; &#123;     send &quot;tar -zxf all_backup_$&#123;date&#125;.tar.gz\r     rm -f all_backup_$&#123;date&#125;.tar.gz\r     cd $&#123;date&#125;\r     md5sum -c all_md5sum.txt\r&quot;  &#125;  expect eofEOF  if [ $? -eq 0 ]  then    log &quot;md5sum check $&#123;copy_ip_addr&#125; $all_dir/all_backup_$&#123;date&#125;.tar.gz success&quot; &gt;&gt;$all_log    rm -rf $&#123;incr_data&#125;/*  else    log &quot;md5sum check $&#123;copy_ip_addr&#125; $all_dir/all_backup_$&#123;date&#125;.tar.gz fail&quot; &gt;&gt;$all_log    exit 1  fi&#125;binlog_path=&quot;/var/lib/mysql&quot;last_dump_file=`find $&#123;all_data&#125;/ -type f -mtime -$&#123;interval_day&#125; | wc -l`#last_dump_file=`find $&#123;all_data&#125;/ -type d | wc -l`incrBackup()&#123;#没有全量备份，则进行增量if [ $last_dump_file -gt 0 ]then  log &quot;has mysqldump $last_dump_file and return&quot; &gt;&gt; $&#123;incr_log&#125;  return 0fi#刷新日志mysql -u$db_user -p$db_pwd -e &quot;flush logs&quot;last_sn=`cat $&#123;last_binlog_sn&#125;`if [ -z $last_sn ];then  $last_sn=000ficount=`cat $&#123;binlog_path&#125;/mysql-bin.index |wc -l`index=0#跟java的不一样，有多少个数据就循环多少次   for content in `cat $&#123;binlog_path&#125;/mysql-bin.index`do   index=$((index+1))   sn=`echo $content | awk -F &quot;.&quot; &#x27;&#123;print $2&#125;&#x27;`   if [ $last_sn ] &amp;&amp; [ $sn -ge $last_sn ] || [ -z $last_sn ];then      # 跳过最新的      if [ $index -lt $count ];then      cp $content  $cp_binglog_dir      log &quot;$content -&gt; $cp_binglog_dir cp done&quot; &gt;&gt; $&#123;incr_log&#125;      fi   fi   if [ $index -ge $count ];then     echo $sn &gt; $&#123;last_binlog_sn&#125;     log &quot;save max binglog_sn and  sn= $&#123;sn&#125;&quot; &gt;&gt; $&#123;incr_log&#125;   fidonefile_count=`ls $cp_binglog_dir |wc -l`if [ $file_count -gt 0 ];then  cd $&#123;incr_data&#125;  #创建压缩目录  if [ ! -d $&#123;date&#125; ];then    mkdir -p $&#123;date&#125;  fi  # 建议使用相对路径打包，绝对路径打包，解压出来的包也会带上路径，并且少了开始的/  # cp_binglog 保存复制binlog的文件  cd $incr_dir    tar -cf incr_backup_$&#123;date&#125;.tar cp_binglog/*  mv -f incr_backup_$&#123;date&#125;.tar $&#123;incr_data&#125;/$&#123;date&#125;/  rm -fr $cp_binglog_dir/*  cd $&#123;incr_data&#125;/$&#123;date&#125;  md5sum  incr_backup_$&#123;date&#125;.tar &gt;incr_md5sum.txt  cd $&#123;incr_data&#125;  tar -zcf incr_backup_$&#123;date&#125;.tar.gz $&#123;date&#125;  scp incr_backup_$&#123;date&#125;.tar.gz @$&#123;copy_ip_addr&#125;:$incr_dir  if [ $? -eq 0 ];then    log &quot;$&#123;incr_data&#125;/incr_backup_$&#123;date&#125;.tar.gz  scp success and rm&quot; &gt;&gt; $&#123;incr_log&#125;    rm -f $&#123;incr_data&#125;/incr_backup_$&#123;date&#125;.tar.gz  else    log &quot;$&#123;incr_data&#125;/incr_backup_$&#123;date&#125;.tar.gz  scp error&quot; &gt;&gt; $&#123;incr_log&#125;  fi    /usr/bin/expect &lt;&lt;incrEOF  spawn ssh root@$&#123;copy_ip_addr&#125;  expect &#123;     &quot;*Last login&quot;     &#123;send &quot;cd $incr_dir\r&quot;&#125;  &#125;  expect &quot;*]#&quot; &#123;     send &quot;tar -zxf incr_backup_$&#123;date&#125;.tar.gz\r     rm -f incr_backup_$&#123;date&#125;.tar.gz\r     cd $&#123;date&#125;\r     md5sum -c incr_md5sum.txt\r&quot;  &#125;  expect eofincrEOF  if [ $? -eq 0 ]  then   log &quot;md5sum check $&#123;copy_ip_addr&#125; $incr_dir/incr_backup_$&#123;date&#125;.tar.gz success&quot; &gt;&gt;$&#123;incr_log&#125;  else   log &quot;md5sum check $&#123;copy_ip_addr&#125; $incr_dir/incr_backup_$&#123;date&#125;.tar.gz error&quot; &gt;&gt;$&#123;incr_log&#125;  fi else   log &quot;no incr log to cp&quot; &gt;&gt;$&#123;incr_log&#125;fi# 远程copy  记得配置免密登录# ssh-keygen -t rsa  将生成的公钥复制到 130 /root/.ssh/authorized_keys&#125;clearExpiredFile()&#123;log &quot;delete $all_data expired file: &quot;&gt;&gt; &#123;all_log&#125;echo `find $all_data/* -type f -mtime +$expired_day -exec ls \;` &gt;&gt; &#123;all_log&#125;find $all_data/* -type f -mtime +$expired_day -exec rm -rf &#123;&#125; \;log &quot;delete $incr_data expired file: &quot;&gt;&gt; &#123;incr_log&#125;echo `find $incr_data/* -type f -mtime +$expired_day -exec ls \;` &gt;&gt;&#123;incr_log&#125;find $incr_data/* -type f -mtime +$expired_day -exec rm -rf &#123;&#125; \;&#125;#初始化init#全量allBackup#增量incrBackup#清楚过期文件clearExpiredFile
+]]></content>
+      <categories>
+        <category>Shell</category>
+      </categories>
+      <tags>
+        <tag>脚本</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>虚拟机和物理机使用NAT方式连接</title>
     <url>/personalBlog/2021/11/07/part1/other/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%92%8C%E7%89%A9%E7%90%86%E6%9C%BA%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F/</url>
     <content><![CDATA[平时为了学习Linux服务器方面的知识，需要在自己的Windows机上搭建虚拟机。搭建过程是按照网上搜出来的步骤一步步来的，具体哪个地址也忘记了，反正有一大堆。安装虚拟机是挺简单，但是和主机之间通信这个步骤我当时只是按部就班的照抄过来的（就这一步挺麻烦的），加上运气好直接就可以运行了。但是！知道有一天，需要整理电脑文件，导致一不小心删除了虚拟机的文件，所以必须重新来过，一想到虚拟机的网络配置，我人都不好了。索性，这次顺便搞懂虚拟机网络配置的一些原理吧，下次就不那么头大了。
@@ -3485,78 +3485,6 @@ VMnet8网卡的IP地址是192.168.202.1，网关IP地址为192.168.202.2。
       </categories>
       <tags>
         <tag>计算机网络</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>最简单的多线程问题</title>
-    <url>/personalBlog/2021/03/13/part1/thread/%E6%9C%80%E7%AE%80%E5%8D%95%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[
-喜上眉梢
-
-有一天项目经理找到我说： 小C啊，这有个功能需要你做。
-我一看需求，心里面立刻就有了思路，很快啊。
-我回项目经理说：小事，下午写好给你。
-……
-到了下午，提前完成了任务，心想：还有谁比我这么快？提交了代码，开始摸鱼，呸，摸了摸戴在头上的假发，继续敲代码。
-
-
-胆大心雄
-
-第二天心情愉悦，正当开启装逼的一天。
-项目经理走到我的身边，拍了拍我的键盘说：小C啊，昨天你很快啊(我暗自窃喜)。但是客户也很快反馈了一些问题，他们说批量插入数据的时候，数据总显示的是最后一条数据，要不你看看？
-(此刻我内心想，这么完美的程序，还能有bug？)我将信将疑笑眯眯的说：好，我看看。
-
-
-低首下气
-
-我测试了一下还真是（打脸），我看了看程序，将用例运行了一边又一遍，哪出错了？我彻底蒙了，我看了半天都看不出是哪的问题（好菜）。于是只能加班摸索了（心累），一边又一遍，我发现了问题所在。
-
-分析
-我写的代码：		
-public void beginTest() &#123;  	List&lt;String&gt; testList = new ArrayList&lt;&gt;();  	testList.add(&quot;openId_1&quot;);	testList.add(&quot;openId_2&quot;);	testList.add(&quot;openId_3&quot;);	JSONObject data = new JSONObject();	testList.forEach(i -&gt; new Thread(() -&gt; &#123;    	data.put(&quot;touserId&quot;, i);                   ------------ 1    	singleTest.test(i, data);                  ------------ 2	&#125;).start());&#125;
-
-public class SingleTest &#123;	public void test(String openId, JSONObject data) &#123;   		 System.out.println(&quot;openId  &quot; + openId + &quot; &quot; + data.toJSONString());	&#125;&#125;
-
-test方法就是插入数据库的方法，理应正确的输出该为：
-openId  openId_1 &#123;&quot;touserId&quot;:&quot;openId_1&quot;&#125;openId  openId_2 &#123;&quot;touserId&quot;:&quot;openId_2&quot;&#125;openId  openId_3 &#123;&quot;touserId&quot;:&quot;openId_3&quot;&#125;
-
-但实际输出确实这样：
-openId  openId_2 &#123;&quot;touserId&quot;:&quot;openId_3&quot;&#125;openId  openId_3 &#123;&quot;touserId&quot;:&quot;openId_3&quot;&#125;openId  openId_1 &#123;&quot;touserId&quot;:&quot;openId_3&quot;&#125;
-
-（惊不惊喜意不意外，可能很多人现在已经看出了端倪）。为什么会这样？其实定眼一看，这里创建了多线程，ε&#x3D;(´ο｀*)))唉，多线程问题！立马安排，在test的方法打印一下当前线程信息！代码如下
-public class SingleTest &#123;        public void test(String openId, JSONObject data) &#123;            System.out.println(&quot;--------currentThread &quot; + Thread.currentThread());            System.out.println(&quot;openId  &quot; + openId + &quot; &quot; + data.toJSONString());        &#125;&#125;
-
-来吧，跑起来！结果如下：
---------currentThread Thread[Thread-1,5,main]--------currentThread Thread[Thread-0,5,main]--------currentThread Thread[Thread-2,5,main]openId  openId_3 &#123;&quot;touserId&quot;:&quot;openId_3&quot;&#125;openId  openId_2 &#123;&quot;touserId&quot;:&quot;openId_3&quot;&#125;openId  openId_1 &#123;&quot;touserId&quot;:&quot;openId_3&quot;&#125;
-
-哟，线程执行的比我都快。观察上面的结果可以看出在执行第二条打印语句的时候，线程已经跑了一圈了（真快啊）。然后呢？那第二条为什么会打印三条一模一样的信息？别急！下一个标题里面有答案。
-
-问题所在
-我们观察上面的 JSONObject 对象在List遍历的时候会传入test()方法里面。学过Java的都晓得，传递给方法的其实是JSONObject 对象的引用，但是线程太快了，在其他线程还没来得及操作的时候，最后一个线程已经把JSONObject 对象里面的内容给污染了（某线程骂骂咧咧），所以当剩余线程在去访问JSONObject 对象的时候，此时里面的数据已经是被污染之后的数据了，所以导致了以上问题的发生。
-
-解决
-这里需要加锁咯，个人能力有限，总结了以下解决方法（如有错误希望大佬指正）：
-
-每个线程都创建一份JSONObject 对象。
-test()方法添加同步锁。
-就是一个原理，你上厕所的时候，不要人进来就行了。
-
-
-
-
-
-神采风扬
-
-其实这次事情的发生还是跟线程共享同一变量所产生的。针对解决Java多线程问题，大佬们都提供了很多的方法，什么synchronized、ReentrantLock、CAS、AQS、Read…. ，”行了行了，别装b了”，小A拿下我的假发戴到他头上说。
-
-
-
-]]></content>
-      <categories>
-        <category>多线程</category>
-      </categories>
-      <tags>
-        <tag>技术</tag>
       </tags>
   </entry>
   <entry>
@@ -4060,6 +3988,78 @@ if (earlySingletonExposure) &#123;    Object earlySingletonReference = getSingle
 ]]></content>
       <categories>
         <category>源码</category>
+      </categories>
+      <tags>
+        <tag>技术</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>最简单的多线程问题</title>
+    <url>/personalBlog/2021/03/13/part1/thread/%E6%9C%80%E7%AE%80%E5%8D%95%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[
+喜上眉梢
+
+有一天项目经理找到我说： 小C啊，这有个功能需要你做。
+我一看需求，心里面立刻就有了思路，很快啊。
+我回项目经理说：小事，下午写好给你。
+……
+到了下午，提前完成了任务，心想：还有谁比我这么快？提交了代码，开始摸鱼，呸，摸了摸戴在头上的假发，继续敲代码。
+
+
+胆大心雄
+
+第二天心情愉悦，正当开启装逼的一天。
+项目经理走到我的身边，拍了拍我的键盘说：小C啊，昨天你很快啊(我暗自窃喜)。但是客户也很快反馈了一些问题，他们说批量插入数据的时候，数据总显示的是最后一条数据，要不你看看？
+(此刻我内心想，这么完美的程序，还能有bug？)我将信将疑笑眯眯的说：好，我看看。
+
+
+低首下气
+
+我测试了一下还真是（打脸），我看了看程序，将用例运行了一边又一遍，哪出错了？我彻底蒙了，我看了半天都看不出是哪的问题（好菜）。于是只能加班摸索了（心累），一边又一遍，我发现了问题所在。
+
+分析
+我写的代码：		
+public void beginTest() &#123;  	List&lt;String&gt; testList = new ArrayList&lt;&gt;();  	testList.add(&quot;openId_1&quot;);	testList.add(&quot;openId_2&quot;);	testList.add(&quot;openId_3&quot;);	JSONObject data = new JSONObject();	testList.forEach(i -&gt; new Thread(() -&gt; &#123;    	data.put(&quot;touserId&quot;, i);                   ------------ 1    	singleTest.test(i, data);                  ------------ 2	&#125;).start());&#125;
+
+public class SingleTest &#123;	public void test(String openId, JSONObject data) &#123;   		 System.out.println(&quot;openId  &quot; + openId + &quot; &quot; + data.toJSONString());	&#125;&#125;
+
+test方法就是插入数据库的方法，理应正确的输出该为：
+openId  openId_1 &#123;&quot;touserId&quot;:&quot;openId_1&quot;&#125;openId  openId_2 &#123;&quot;touserId&quot;:&quot;openId_2&quot;&#125;openId  openId_3 &#123;&quot;touserId&quot;:&quot;openId_3&quot;&#125;
+
+但实际输出确实这样：
+openId  openId_2 &#123;&quot;touserId&quot;:&quot;openId_3&quot;&#125;openId  openId_3 &#123;&quot;touserId&quot;:&quot;openId_3&quot;&#125;openId  openId_1 &#123;&quot;touserId&quot;:&quot;openId_3&quot;&#125;
+
+（惊不惊喜意不意外，可能很多人现在已经看出了端倪）。为什么会这样？其实定眼一看，这里创建了多线程，ε&#x3D;(´ο｀*)))唉，多线程问题！立马安排，在test的方法打印一下当前线程信息！代码如下
+public class SingleTest &#123;        public void test(String openId, JSONObject data) &#123;            System.out.println(&quot;--------currentThread &quot; + Thread.currentThread());            System.out.println(&quot;openId  &quot; + openId + &quot; &quot; + data.toJSONString());        &#125;&#125;
+
+来吧，跑起来！结果如下：
+--------currentThread Thread[Thread-1,5,main]--------currentThread Thread[Thread-0,5,main]--------currentThread Thread[Thread-2,5,main]openId  openId_3 &#123;&quot;touserId&quot;:&quot;openId_3&quot;&#125;openId  openId_2 &#123;&quot;touserId&quot;:&quot;openId_3&quot;&#125;openId  openId_1 &#123;&quot;touserId&quot;:&quot;openId_3&quot;&#125;
+
+哟，线程执行的比我都快。观察上面的结果可以看出在执行第二条打印语句的时候，线程已经跑了一圈了（真快啊）。然后呢？那第二条为什么会打印三条一模一样的信息？别急！下一个标题里面有答案。
+
+问题所在
+我们观察上面的 JSONObject 对象在List遍历的时候会传入test()方法里面。学过Java的都晓得，传递给方法的其实是JSONObject 对象的引用，但是线程太快了，在其他线程还没来得及操作的时候，最后一个线程已经把JSONObject 对象里面的内容给污染了（某线程骂骂咧咧），所以当剩余线程在去访问JSONObject 对象的时候，此时里面的数据已经是被污染之后的数据了，所以导致了以上问题的发生。
+
+解决
+这里需要加锁咯，个人能力有限，总结了以下解决方法（如有错误希望大佬指正）：
+
+每个线程都创建一份JSONObject 对象。
+test()方法添加同步锁。
+就是一个原理，你上厕所的时候，不要人进来就行了。
+
+
+
+
+
+神采风扬
+
+其实这次事情的发生还是跟线程共享同一变量所产生的。针对解决Java多线程问题，大佬们都提供了很多的方法，什么synchronized、ReentrantLock、CAS、AQS、Read…. ，”行了行了，别装b了”，小A拿下我的假发戴到他头上说。
+
+
+
+]]></content>
+      <categories>
+        <category>多线程</category>
       </categories>
       <tags>
         <tag>技术</tag>
