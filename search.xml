@@ -1,123 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>使用Spring AI实现一个简单的写作AI Agent</title>
-    <url>/personalBlog/2026/07/08/2026-07-08-%E4%BD%BF%E7%94%A8Spring-AI%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%86%99%E4%BD%9C-AI-Agent/</url>
-    <content><![CDATA[1.背景AI时代的到来，现在直接丢需求给AI，就能在极短时间内完成我们几天需要完成的工作。虽然需要修修补补，但整体的时效比”远古编程“高太多。 像现在熟悉的Codex，就是远超传统文本对话模型的AI Agent。所以通过一个简单的写作AI Agent了解学习一下Agent是如何工作的。
-本文基于Spring AI框架，集合MCP（模型上下文协议），构建一个写作智能体。可以完美浅入到你自己的Spring Boot项目中。
-2.系统架构设计2.1设计模式：链式工作流（Chain Workflow）写作具有天生的顺序性，所以采取链式工作流。将一整个任务拆分为多个任务，依次分步完成：
-
-主题生成：Agent根据用户输入的提示词，生成一个具体的写作题目。
-大纲规划：生成二级、三级标题
-全文撰写：按照大纲写出全文
-润色和终稿：优化预期、纠正语法。
-
-2.2分层架构采用三层架构+工具层：
-┌─────────────────────────────────────────────┐│     Agent Controller (REST API)             │└─────────────────┬───────────────────────────┘                  │┌─────────────────▼───────────────────────────┐│           Agent Service (核心编排)           ││  - 工作流引擎 (WorkflowEngine)              ││  - 记忆管理 (ChatMemory)                    │└─────────────────┬───────────────────────────┘                  │┌─────────────────▼───────────────────────────┐│           ChatClient (Spring AI)            ││   - 绑定 LLM (OpenAI, Qwen, etc.)          ││   - 注入 ToolCallbacks                      │└─────────────────┬───────────────────────────┘                  │      ┌───────────┴───────────┐      ▼                       ▼┌─────────────┐      ┌─────────────┐│ 本地工具集   │      │  MCP 客户端  ││ (WritingTools)│    │ (外部工具)   │└─────────────┘      └─────────────┘
-
-
-Agent Controller：接收用户的请求
-Agent Service：：编排工作流，维护会话记忆，决定何时调用工具。
-ChatClient：Spring AI提供的调用统一LLM的一个客户端。
-本地工具集：Java注解 @Tool，生成一个可以本地调用的工具方法。比如执行某个灯效。
-MCP 客户端：可以将工具处理逻辑部署到另一台机器上，供客户端调用。
-
-2.3核心数据流
-用户发送请求&#x3D;&gt;Controller将请求转发给Agent Service
-
-Agent Service 调用主题生成的方法，利用ChatClient 生成主题。
-
-调用大纲规划方法，生成的主题传入，利用ChatClient生成大纲。可以调用外部工具协作
-
-将大纲传入全文生成方法，利用ChatClient生成内容。
-
-最后执行润色，调整整体文章的风格，输出最终文章。
-
-主题之后的步骤都可以调用外部工具实现。所有的结果都保存到ChatMemory 中。
-
-
-3.实现步骤3.1 项目结构
-web-ai
-接收用户请求，保存上下文、调用大模型、调用远程MCP服务
-
-web-mcp-server
-远程的mcp服务，为大模型提供工具。
-
-
-web                          # 父工程根目录，pom打包类型 pom├── pom.xml                  # 父pom，统一版本、依赖管理、聚合子模块├── web-ai                   # 子模块1：AI业务服务│   └── pom.xml└── web-mcp-server           # 子模块2：MCP服务    └── pom.xml
-
-3.2 环境、依赖
-JDK 21
-Spring Boot  4.1.0
-Spring AI 2.0
-
-Maven核心依赖：
-web&#x2F;pom.xml ：
-&lt;parent&gt;    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;    &lt;version&gt;4.1.0&lt;/version&gt;    &lt;relativePath/&gt;&lt;/parent&gt;&lt;groupId&gt;com.chris&lt;/groupId&gt;&lt;artifactId&gt;web&lt;/artifactId&gt;&lt;version&gt;1.0.1-SNAPSHOT &lt;/version&gt;&lt;packaging&gt;pom&lt;/packaging&gt;&lt;name&gt;web&lt;/name&gt;&lt;description&gt;Multi-module project for Spring Boot + Spring AI&lt;/description&gt;&lt;modules&gt;    &lt;module&gt;web-core&lt;/module&gt;    &lt;module&gt;web-ai&lt;/module&gt;    &lt;module&gt;web-mcp-server&lt;/module&gt;&lt;/modules&gt;&lt;properties&gt;    &lt;java.version&gt;21&lt;/java.version&gt;    &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;    &lt;project.reporting.outputEncoding&gt;UTF-8&lt;/project.reporting.outputEncoding&gt;    &lt;maven.compiler.source&gt;21&lt;/maven.compiler.source&gt;    &lt;maven.compiler.target&gt;21&lt;/maven.compiler.target&gt;    &lt;maven.compiler.release&gt;21&lt;/maven.compiler.release&gt;    &lt;spring-ai.version&gt;2.0.0&lt;/spring-ai.version&gt;&lt;/properties&gt;&lt;dependencyManagement&gt;    &lt;dependencies&gt;        &lt;dependency&gt;            &lt;groupId&gt;org.springframework.ai&lt;/groupId&gt;            &lt;artifactId&gt;spring-ai-bom&lt;/artifactId&gt;            &lt;version&gt;$&#123;spring-ai.version&#125;&lt;/version&gt;            &lt;type&gt;pom&lt;/type&gt;            &lt;scope&gt;import&lt;/scope&gt;        &lt;/dependency&gt;        &lt;dependency&gt;            &lt;groupId&gt;com.github.victools&lt;/groupId&gt;            &lt;artifactId&gt;jsonschema-generator&lt;/artifactId&gt;            &lt;version&gt;5.0.0&lt;/version&gt;        &lt;/dependency&gt;        &lt;dependency&gt;            &lt;groupId&gt;com.github.victools&lt;/groupId&gt;            &lt;artifactId&gt;jsonschema-module-jackson&lt;/artifactId&gt;            &lt;version&gt;5.0.0&lt;/version&gt;        &lt;/dependency&gt;    &lt;/dependencies&gt;&lt;/dependencyManagement&gt;
-
-web-ai&#x2F;pom.xml：
-&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;&lt;parent&gt;    &lt;groupId&gt;com.chris&lt;/groupId&gt;    &lt;artifactId&gt;web&lt;/artifactId&gt;    &lt;version&gt;1.0.1-SNAPSHOT&lt;/version&gt;    &lt;relativePath&gt;../pom.xml&lt;/relativePath&gt;&lt;/parent&gt;&lt;artifactId&gt;web-ai&lt;/artifactId&gt;&lt;name&gt;web-ai&lt;/name&gt;&lt;dependencies&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;        &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;    &lt;/dependency&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;        &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;    &lt;/dependency&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.ai&lt;/groupId&gt;        &lt;artifactId&gt;spring-ai-starter-model-openai&lt;/artifactId&gt;    &lt;/dependency&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;        &lt;artifactId&gt;spring-boot-starter-data-redis&lt;/artifactId&gt;    &lt;/dependency&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;        &lt;artifactId&gt;commons-pool2&lt;/artifactId&gt;    &lt;/dependency&gt;    &lt;dependency&gt;        &lt;groupId&gt;com.fasterxml.jackson.datatype&lt;/groupId&gt;        &lt;artifactId&gt;jackson-datatype-jsr310&lt;/artifactId&gt;    &lt;/dependency&gt;    &lt;dependency&gt;        &lt;groupId&gt;com.alibaba&lt;/groupId&gt;        &lt;artifactId&gt;dashscope-sdk-java&lt;/artifactId&gt;        &lt;version&gt;2.21.13&lt;/version&gt;    &lt;/dependency&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.ai&lt;/groupId&gt;        &lt;artifactId&gt;spring-ai-starter-mcp-client&lt;/artifactId&gt;    &lt;/dependency&gt;&lt;/dependencies&gt;
-
-web-mcp-server&#x2F;pom.xml：
-&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;&lt;parent&gt;    &lt;groupId&gt;com.chris&lt;/groupId&gt;    &lt;artifactId&gt;web&lt;/artifactId&gt;    &lt;version&gt;1.0.1-SNAPSHOT&lt;/version&gt;    &lt;relativePath&gt;../pom.xml&lt;/relativePath&gt;&lt;/parent&gt;&lt;artifactId&gt;web-mcp-server&lt;/artifactId&gt;&lt;name&gt;web-mcp-server&lt;/name&gt;&lt;dependencies&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;        &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;    &lt;/dependency&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;        &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;    &lt;/dependency&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.ai&lt;/groupId&gt;        &lt;artifactId&gt;spring-ai-starter-mcp-server-webmvc&lt;/artifactId&gt;    &lt;/dependency&gt;&lt;/dependencies&gt;
-
-3.3 本地工具(Tools)工具是大模型访问外部环境的关键，也可以通过此功能调用我们自己的业务逻辑。
-@Tool注解的description说明书是描述这个功能是干什么的，描述的越清晰，大模型调用的越准确。
-@Componentpublic class WritingTools &#123;    @Tool(description = &quot;请调用 mcpTime 工具来获取当前的系统时间，不要自己编造。&quot;)    public String mcpTime() &#123;        System.out.println(&quot;通过 MCP 协议获取当前时间........&quot;);        return java.time.LocalDateTime.now().toString();    &#125;&#125;
-
-3.4 记忆管理(ChatMemory)ChatMemory分为记忆策略（Memory Type）和存储后端（Repository）。为了确保AI能记得调用者是谁，我们需要保存上下文信息。使用Redis将会话内容保存，当然也可以用向量数据库。并且使用滑动窗口策略。控制消息最大保存的条数。
-@Configurationpublic class ChatMemoryConfig &#123;    //保存数据的方式    @Bean    public ChatMemoryRepository chatMemoryRepository(RedisTemplate&lt;String, String&gt; redisTemplate) &#123;        return new RedisChatMemoryRepository(redisTemplate);    &#125;    //确定存储策略    @Bean    public ChatMemory chatMemory(ChatMemoryRepository repository) &#123;        return MessageWindowChatMemory.builder()                //允许存储的最大消息数                .maxMessages(30)                .chatMemoryRepository(repository)                .build();    &#125;&#125;
-
-具体的实现类RedisChatMemoryRepository:
-public class RedisChatMemoryRepository implements ChatMemoryRepository &#123;    private static final Logger log = LoggerFactory.getLogger(RedisChatMemoryRepository.class);    private static final String KEY_PREFIX = &quot;chat:memory:&quot;;    private static final String CONVERSATION_INDEX_KEY = &quot;chat:conversations&quot;;    private final RedisTemplate&lt;String, String&gt; redisTemplate;    private final ObjectMapper objectMapper;    public RedisChatMemoryRepository(RedisTemplate&lt;String, String&gt; redisTemplate) &#123;        this.redisTemplate = redisTemplate;        this.objectMapper = new ObjectMapper()                .findAndRegisterModules()                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);    &#125;    @Override    public List&lt;String&gt; findConversationIds() &#123;        Set&lt;String&gt; conversationIds = redisTemplate.opsForSet()                .members(CONVERSATION_INDEX_KEY);        if (conversationIds == null || conversationIds.isEmpty()) &#123;            return Collections.emptyList();        &#125;        return new ArrayList&lt;&gt;(conversationIds);    &#125;    @Override    public List&lt;Message&gt; findByConversationId(String conversationId) &#123;        String key = KEY_PREFIX + conversationId;        String json = redisTemplate.opsForValue().get(key);        if (json == null || json.isEmpty()) &#123;            return Collections.emptyList();        &#125;        try &#123;            List&lt;MessageRecord&gt; records = objectMapper.readValue(json, new TypeReference&lt;List&lt;MessageRecord&gt;&gt;() &#123;&#125;);            List&lt;Message&gt; messages = new ArrayList&lt;&gt;();            for (MessageRecord record : records) &#123;                messages.add(switch (record.type()) &#123;                    case &quot;user&quot; -&gt; new UserMessage(record.content());                    case &quot;assistant&quot; -&gt; new AssistantMessage(record.content());                    case &quot;system&quot; -&gt; new SystemMessage(record.content());                    default -&gt; throw new IllegalArgumentException(&quot;Unknown message type: &quot; + record.type());                &#125;);            &#125;            return messages;        &#125; catch (JsonProcessingException e) &#123;            log.error(&quot;Failed to deserialize messages for conversation: &#123;&#125;, error: &#123;&#125;&quot;, conversationId, e.getMessage());            redisTemplate.delete(key);            redisTemplate.opsForSet().remove(CONVERSATION_INDEX_KEY, conversationId);            return Collections.emptyList();        &#125;    &#125;    @Override    public void saveAll(String conversationId, List&lt;Message&gt; messages) &#123;        if (messages == null || messages.isEmpty()) &#123;            deleteByConversationId(conversationId);            return;        &#125;        String key = KEY_PREFIX + conversationId;        try &#123;            List&lt;MessageRecord&gt; records = new ArrayList&lt;&gt;();            for (Message msg : messages) &#123;                String type;                if (msg instanceof UserMessage) type = &quot;user&quot;;                else if (msg instanceof AssistantMessage) type = &quot;assistant&quot;;                else if (msg instanceof SystemMessage) type = &quot;system&quot;;                else &#123;                    log.warn(&quot;Skipping unknown message type: &#123;&#125;&quot;, msg.getClass().getName());                    continue;                &#125;                records.add(new MessageRecord(type, msg.getText()));            &#125;            String json = objectMapper.writeValueAsString(records);            redisTemplate.opsForValue().set(key, json);            redisTemplate.opsForSet().add(CONVERSATION_INDEX_KEY, conversationId);        &#125; catch (JsonProcessingException e) &#123;            throw new RuntimeException(&quot;Failed to serialize messages for conversation: &quot; + conversationId, e);        &#125;    &#125;    @Override    public void deleteByConversationId(String conversationId) &#123;        String key = KEY_PREFIX + conversationId;        redisTemplate.delete(key);        redisTemplate.opsForSet().remove(CONVERSATION_INDEX_KEY, conversationId);    &#125;    //pojo    private record MessageRecord(String type, String content) &#123;&#125;&#125;
-
-3.5 Agent核心服务(WritingAgentService)classifyIntent：由LLM决策用户的意图，是想要直接写文章，还是单纯聊天、再次修改文章。
-@Service@Slf4jpublic class WritingAgentService &#123;    private final ChatClient chatClient;    private final ChatMemory chatMemory;    public WritingAgentService(ChatClient.Builder chatClientBuilder,                               ChatMemory chatMemory,                               WritingTools writingTools,                               SyncMcpToolCallbackProvider mcpProvider) &#123;        this.chatMemory = chatMemory;        // 注册 MCP 工具        ToolCallback[] mcpTools = mcpProvider.getToolCallbacks();        if (mcpTools.length &gt; 0) &#123;            chatClientBuilder.defaultTools(mcpTools);            log.info(&quot;已注册 &#123;&#125; 个 MCP 工具&quot;, mcpTools.length);        &#125; else &#123;            log.warn(&quot;未发现 MCP 工具，请检查 MCP Server 是否正常运行&quot;);        &#125;        // 构建 ChatClient（本地工具 + Advisor 在 chat() 中动态传入）        this.chatClient = chatClientBuilder                .defaultTools(writingTools)                .build();    &#125;    public String chat(String conversationId, String userInput) &#123;        try &#123;            MessageChatMemoryAdvisor advisor = MessageChatMemoryAdvisor.builder(chatMemory).build();            return chatClient.prompt()                    .user(userInput)                    .advisors(advisor)                    .advisors(advisorSpec -&gt; advisorSpec.param(ChatMemory.CONVERSATION_ID, conversationId))                    .call()                    .content();        &#125; catch (Exception e) &#123;            log.error(&quot;AI 调用失败, conversationId: &#123;&#125;&quot;, conversationId, e);            return &quot;抱歉，AI 服务暂时不可用，请稍后重试。&quot;;        &#125;    &#125;    /**     * 核心写作工作流     *     * @param userRequest    用户的写作需求     * @param conversationId 用于记忆隔离     * @return 最终文章     */    public String writeArticle(String userRequest, String conversationId) &#123;        try &#123;            // Step 1: 生成标题            String title = chat(conversationId, &quot;根据以下需求，生成一个吸引人的标题：&quot; + userRequest);            // Step 2: 生成大纲            String outline = chat(conversationId, &quot;根据标题【&quot; + title + &quot;】，生成2-3级大纲：&quot; + userRequest);            // Step 3: 根据大纲写全文            String draft = chat(conversationId, &quot;根据以下大纲，撰写800字左右的文章：\n&quot; + outline);            // Step 4: 润色            String chat = chat(conversationId, &quot;请润色以下文章，优化表达和逻辑：\n&quot; + draft);            //直接保存成md文档//            String path = &quot;drafts/&quot; + title.replaceAll(&quot; &quot;, &quot;_&quot;) + &quot;.md&quot;;            return chat;        &#125; catch (Exception e) &#123;            log.error(&quot;写作工作流执行失败&quot;, e);            return &quot;写作过程中出现异常，请稍后重试。&quot;;        &#125;    &#125;    public UserIntent classifyIntent(String userInput) &#123;        return chatClient.prompt()                .user(&quot;&quot;&quot;            请分析用户的输入，判断意图，并提取关键信息。            判断规则：            1. 如果用户要求“写一篇”、“生成一篇文章”、“帮我写”、“写一份报告”等，则 action 为 &quot;write_article&quot;。            2. 否则，action 为 &quot;chat&quot;。            3. 如果是写作意图，请提取核心主题到 topic 字段。            用户输入：%s            请严格遵守 JSON 格式输出。            &quot;&quot;&quot;.formatted(userInput))                .call()                .entity(UserIntent.class);    &#125;&#125;
-
-UserIntent 实体类:
-/** * 让Ai根据用户的输入判断是写作还是单纯聊天 */@Datapublic class UserIntent &#123;    @JsonProperty(required = true)    private String action; // &quot;write_article&quot; 或 &quot;chat&quot;    @JsonProperty(required = true)    private String topic;    private String reason;&#125;
-
-3.6 Controller入口用户接收用户的输入，将请求转给WritingAgentService，返回结果给前端。（目前是处理好之后返回整体的结果，可以搞成流式返回Flux&lt;String&gt;，更像跟人对话）
-@RestController@RequestMapping(&quot;/api/agent&quot;)@Slf4jpublic class AgentController &#123;    private final WritingAgentService agentService;    public AgentController(WritingAgentService agentService) &#123;        this.agentService = agentService;    &#125;      @PostMapping(&quot;/interact&quot;)    public String interact(@RequestParam String conversationId, @RequestBody String userInput) &#123;        // 1. AI 识别意图        UserIntent intent = agentService.classifyIntent(userInput);        log.info(&quot;interact intent:&#123;&#125;&quot;, intent);        // 2. 根据意图路由到不同的 Service 方法        if (&quot;write_article&quot;.equals(intent.getAction())) &#123;            // 写作：走多步工作流            String topic = intent.getTopic() != null ? intent.getTopic() : userInput;            return agentService.writeArticle(topic, conversationId);        &#125; else &#123;            // 聊天：走单轮对话            return agentService.chat(conversationId, userInput);        &#125;    &#125;&#125;
-
-3.7 调用MCP远程服务我们可以将本地工具做成一个单独的MCP服务（web-mcp-server模块），供Mcp Client。这样客户端就只专心处理Agent的逻辑和LLM之间的交互。很简单，跟生命本地Tool一样，声明远程的Tool就可以：
-@Componentpublic class McpServerTool &#123;    @McpTool(description = &quot;这个是用来翻译内容的&quot;)    public String translate(@ToolParam(description = &quot;需要翻译的内容&quot;) String message) &#123;        //可以自己实现        System.out.println(&quot;message translate.....&quot;);        return message;    &#125;&#125;
-
-3.8相关配置web-ai模块：
-server:  port: 8081spring:  application:    name: web-ai  data:    redis:      host: 192.168.202.129      port: 6380      password: #########   ai:    openai:      api-key: ######### 替换成自己的apiKey      base-url: https://open.bigmodel.cn/api/paas/v4  #我用的智普      chat:        model: glm-5.2    mcp:      client:        enabled: true        streamable-http:          connections:             my-mcp-server: # 自定义服务器名称               url: &quot;http://localhost:8082/mcp&quot;
-
-web-mcp-server模块：
-server:  port: 8082spring:  application:    name: web-mcp-server  ai:    mcp:      server:        name: my-mcp-server        version: 1.0.0        type: SYNC        protocol: STREAMABLE        enabled: true
-
-需要安装docker：
-docker run -d \  --name redis-server \  -p 6380:6380 \  -v /home/chris/redis/conf/redis.conf:/usr/local/etc/redis/redis.conf \  -v /home/chris/redis/data:/data \  redis:latest \  redis-server /usr/local/etc/redis/redis.conf
-
-4.启动测试Postman访问：localhost:8081&#x2F;api&#x2F;agent&#x2F;interact?conversationId&#x3D;test-user-007
-
-测试是否能保存上下文：
-
-
-验证Redis中保存的会话记录：
-
-
-让他写一个博客：
-
-
-
-调用我们的自定义远程Mcp工具:
-
-
-查看控制台输出，虽然我们没有实现翻译方法，LLM会判断结果是否正确，是否有他自己来翻译全文：
-
-]]></content>
-      <categories>
-        <category>AI</category>
-      </categories>
-      <tags>
-        <tag>技术</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Linux简介</title>
     <url>/personalBlog/2023/11/14/2023/linux/2023-11-11-Linux%E7%AE%80%E4%BB%8B/</url>
     <content><![CDATA[简介Linux 内核最初只是由芬兰人林纳斯·托瓦兹（Linus Torvalds）在赫尔辛基大学上学时出于个人爱好而编写的。
@@ -4177,6 +4060,123 @@ if (earlySingletonExposure) &#123;    Object earlySingletonReference = getSingle
 ]]></content>
       <categories>
         <category>源码</category>
+      </categories>
+      <tags>
+        <tag>技术</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用Spring AI实现一个简单的写作AI Agent</title>
+    <url>/personalBlog/2026/07/08/2026-07-08-%E4%BD%BF%E7%94%A8Spring-AI%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%86%99%E4%BD%9C-AI-Agent/</url>
+    <content><![CDATA[1.背景AI时代的到来，现在直接丢需求给AI，就能在极短时间内完成我们几天需要完成的工作。虽然需要修修补补，但整体的时效比”远古编程“高太多。 像现在熟悉的Codex，就是远超传统文本对话模型的AI Agent。所以通过一个简单的写作AI Agent了解学习一下Agent是如何工作的。
+本文基于Spring AI框架，集合MCP（模型上下文协议），构建一个写作智能体。可以完美浅入到你自己的Spring Boot项目中。
+2.系统架构设计2.1设计模式：链式工作流（Chain Workflow）写作具有天生的顺序性，所以采取链式工作流。将一整个任务拆分为多个任务，依次分步完成：
+
+主题生成：Agent根据用户输入的提示词，生成一个具体的写作题目。
+大纲规划：生成二级、三级标题
+全文撰写：按照大纲写出全文
+润色和终稿：优化预期、纠正语法。
+
+2.2分层架构采用三层架构+工具层：
+┌─────────────────────────────────────────────┐│     Agent Controller (REST API)             │└─────────────────┬───────────────────────────┘                  │┌─────────────────▼───────────────────────────┐│           Agent Service (核心编排)           ││  - 工作流引擎 (WorkflowEngine)              ││  - 记忆管理 (ChatMemory)                    │└─────────────────┬───────────────────────────┘                  │┌─────────────────▼───────────────────────────┐│           ChatClient (Spring AI)            ││   - 绑定 LLM (OpenAI, Qwen, etc.)          ││   - 注入 ToolCallbacks                      │└─────────────────┬───────────────────────────┘                  │      ┌───────────┴───────────┐      ▼                       ▼┌─────────────┐      ┌─────────────┐│ 本地工具集   │      │  MCP 客户端  ││ (WritingTools)│    │ (外部工具)   │└─────────────┘      └─────────────┘
+
+
+Agent Controller：接收用户的请求
+Agent Service：：编排工作流，维护会话记忆，决定何时调用工具。
+ChatClient：Spring AI提供的调用统一LLM的一个客户端。
+本地工具集：Java注解 @Tool，生成一个可以本地调用的工具方法。比如执行某个灯效。
+MCP 客户端：可以将工具处理逻辑部署到另一台机器上，供客户端调用。
+
+2.3核心数据流
+用户发送请求&#x3D;&gt;Controller将请求转发给Agent Service
+
+Agent Service 调用主题生成的方法，利用ChatClient 生成主题。
+
+调用大纲规划方法，生成的主题传入，利用ChatClient生成大纲。可以调用外部工具协作
+
+将大纲传入全文生成方法，利用ChatClient生成内容。
+
+最后执行润色，调整整体文章的风格，输出最终文章。
+
+主题之后的步骤都可以调用外部工具实现。所有的结果都保存到ChatMemory 中。
+
+
+3.实现步骤3.1 项目结构
+web-ai
+接收用户请求，保存上下文、调用大模型、调用远程MCP服务
+
+web-mcp-server
+远程的mcp服务，为大模型提供工具。
+
+
+web                          # 父工程根目录，pom打包类型 pom├── pom.xml                  # 父pom，统一版本、依赖管理、聚合子模块├── web-ai                   # 子模块1：AI业务服务│   └── pom.xml└── web-mcp-server           # 子模块2：MCP服务    └── pom.xml
+
+3.2 环境、依赖
+JDK 21
+Spring Boot  4.1.0
+Spring AI 2.0
+
+Maven核心依赖：
+web&#x2F;pom.xml ：
+&lt;parent&gt;    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;    &lt;version&gt;4.1.0&lt;/version&gt;    &lt;relativePath/&gt;&lt;/parent&gt;&lt;groupId&gt;com.chris&lt;/groupId&gt;&lt;artifactId&gt;web&lt;/artifactId&gt;&lt;version&gt;1.0.1-SNAPSHOT &lt;/version&gt;&lt;packaging&gt;pom&lt;/packaging&gt;&lt;name&gt;web&lt;/name&gt;&lt;description&gt;Multi-module project for Spring Boot + Spring AI&lt;/description&gt;&lt;modules&gt;    &lt;module&gt;web-core&lt;/module&gt;    &lt;module&gt;web-ai&lt;/module&gt;    &lt;module&gt;web-mcp-server&lt;/module&gt;&lt;/modules&gt;&lt;properties&gt;    &lt;java.version&gt;21&lt;/java.version&gt;    &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;    &lt;project.reporting.outputEncoding&gt;UTF-8&lt;/project.reporting.outputEncoding&gt;    &lt;maven.compiler.source&gt;21&lt;/maven.compiler.source&gt;    &lt;maven.compiler.target&gt;21&lt;/maven.compiler.target&gt;    &lt;maven.compiler.release&gt;21&lt;/maven.compiler.release&gt;    &lt;spring-ai.version&gt;2.0.0&lt;/spring-ai.version&gt;&lt;/properties&gt;&lt;dependencyManagement&gt;    &lt;dependencies&gt;        &lt;dependency&gt;            &lt;groupId&gt;org.springframework.ai&lt;/groupId&gt;            &lt;artifactId&gt;spring-ai-bom&lt;/artifactId&gt;            &lt;version&gt;$&#123;spring-ai.version&#125;&lt;/version&gt;            &lt;type&gt;pom&lt;/type&gt;            &lt;scope&gt;import&lt;/scope&gt;        &lt;/dependency&gt;        &lt;dependency&gt;            &lt;groupId&gt;com.github.victools&lt;/groupId&gt;            &lt;artifactId&gt;jsonschema-generator&lt;/artifactId&gt;            &lt;version&gt;5.0.0&lt;/version&gt;        &lt;/dependency&gt;        &lt;dependency&gt;            &lt;groupId&gt;com.github.victools&lt;/groupId&gt;            &lt;artifactId&gt;jsonschema-module-jackson&lt;/artifactId&gt;            &lt;version&gt;5.0.0&lt;/version&gt;        &lt;/dependency&gt;    &lt;/dependencies&gt;&lt;/dependencyManagement&gt;
+
+web-ai&#x2F;pom.xml：
+&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;&lt;parent&gt;    &lt;groupId&gt;com.chris&lt;/groupId&gt;    &lt;artifactId&gt;web&lt;/artifactId&gt;    &lt;version&gt;1.0.1-SNAPSHOT&lt;/version&gt;    &lt;relativePath&gt;../pom.xml&lt;/relativePath&gt;&lt;/parent&gt;&lt;artifactId&gt;web-ai&lt;/artifactId&gt;&lt;name&gt;web-ai&lt;/name&gt;&lt;dependencies&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;        &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;    &lt;/dependency&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;        &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;    &lt;/dependency&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.ai&lt;/groupId&gt;        &lt;artifactId&gt;spring-ai-starter-model-openai&lt;/artifactId&gt;    &lt;/dependency&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;        &lt;artifactId&gt;spring-boot-starter-data-redis&lt;/artifactId&gt;    &lt;/dependency&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;        &lt;artifactId&gt;commons-pool2&lt;/artifactId&gt;    &lt;/dependency&gt;    &lt;dependency&gt;        &lt;groupId&gt;com.fasterxml.jackson.datatype&lt;/groupId&gt;        &lt;artifactId&gt;jackson-datatype-jsr310&lt;/artifactId&gt;    &lt;/dependency&gt;    &lt;dependency&gt;        &lt;groupId&gt;com.alibaba&lt;/groupId&gt;        &lt;artifactId&gt;dashscope-sdk-java&lt;/artifactId&gt;        &lt;version&gt;2.21.13&lt;/version&gt;    &lt;/dependency&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.ai&lt;/groupId&gt;        &lt;artifactId&gt;spring-ai-starter-mcp-client&lt;/artifactId&gt;    &lt;/dependency&gt;&lt;/dependencies&gt;
+
+web-mcp-server&#x2F;pom.xml：
+&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;&lt;parent&gt;    &lt;groupId&gt;com.chris&lt;/groupId&gt;    &lt;artifactId&gt;web&lt;/artifactId&gt;    &lt;version&gt;1.0.1-SNAPSHOT&lt;/version&gt;    &lt;relativePath&gt;../pom.xml&lt;/relativePath&gt;&lt;/parent&gt;&lt;artifactId&gt;web-mcp-server&lt;/artifactId&gt;&lt;name&gt;web-mcp-server&lt;/name&gt;&lt;dependencies&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;        &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;    &lt;/dependency&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;        &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;    &lt;/dependency&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.ai&lt;/groupId&gt;        &lt;artifactId&gt;spring-ai-starter-mcp-server-webmvc&lt;/artifactId&gt;    &lt;/dependency&gt;&lt;/dependencies&gt;
+
+3.3 本地工具(Tools)工具是大模型访问外部环境的关键，也可以通过此功能调用我们自己的业务逻辑。
+@Tool注解的description说明书是描述这个功能是干什么的，描述的越清晰，大模型调用的越准确。
+@Componentpublic class WritingTools &#123;    @Tool(description = &quot;请调用 mcpTime 工具来获取当前的系统时间，不要自己编造。&quot;)    public String mcpTime() &#123;        System.out.println(&quot;通过 MCP 协议获取当前时间........&quot;);        return java.time.LocalDateTime.now().toString();    &#125;&#125;
+
+3.4 记忆管理(ChatMemory)ChatMemory分为记忆策略（Memory Type）和存储后端（Repository）。为了确保AI能记得调用者是谁，我们需要保存上下文信息。使用Redis将会话内容保存，当然也可以用向量数据库。并且使用滑动窗口策略。控制消息最大保存的条数。
+@Configurationpublic class ChatMemoryConfig &#123;    //保存数据的方式    @Bean    public ChatMemoryRepository chatMemoryRepository(RedisTemplate&lt;String, String&gt; redisTemplate) &#123;        return new RedisChatMemoryRepository(redisTemplate);    &#125;    //确定存储策略    @Bean    public ChatMemory chatMemory(ChatMemoryRepository repository) &#123;        return MessageWindowChatMemory.builder()                //允许存储的最大消息数                .maxMessages(30)                .chatMemoryRepository(repository)                .build();    &#125;&#125;
+
+具体的实现类RedisChatMemoryRepository:
+public class RedisChatMemoryRepository implements ChatMemoryRepository &#123;    private static final Logger log = LoggerFactory.getLogger(RedisChatMemoryRepository.class);    private static final String KEY_PREFIX = &quot;chat:memory:&quot;;    private static final String CONVERSATION_INDEX_KEY = &quot;chat:conversations&quot;;    private final RedisTemplate&lt;String, String&gt; redisTemplate;    private final ObjectMapper objectMapper;    public RedisChatMemoryRepository(RedisTemplate&lt;String, String&gt; redisTemplate) &#123;        this.redisTemplate = redisTemplate;        this.objectMapper = new ObjectMapper()                .findAndRegisterModules()                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);    &#125;    @Override    public List&lt;String&gt; findConversationIds() &#123;        Set&lt;String&gt; conversationIds = redisTemplate.opsForSet()                .members(CONVERSATION_INDEX_KEY);        if (conversationIds == null || conversationIds.isEmpty()) &#123;            return Collections.emptyList();        &#125;        return new ArrayList&lt;&gt;(conversationIds);    &#125;    @Override    public List&lt;Message&gt; findByConversationId(String conversationId) &#123;        String key = KEY_PREFIX + conversationId;        String json = redisTemplate.opsForValue().get(key);        if (json == null || json.isEmpty()) &#123;            return Collections.emptyList();        &#125;        try &#123;            List&lt;MessageRecord&gt; records = objectMapper.readValue(json, new TypeReference&lt;List&lt;MessageRecord&gt;&gt;() &#123;&#125;);            List&lt;Message&gt; messages = new ArrayList&lt;&gt;();            for (MessageRecord record : records) &#123;                messages.add(switch (record.type()) &#123;                    case &quot;user&quot; -&gt; new UserMessage(record.content());                    case &quot;assistant&quot; -&gt; new AssistantMessage(record.content());                    case &quot;system&quot; -&gt; new SystemMessage(record.content());                    default -&gt; throw new IllegalArgumentException(&quot;Unknown message type: &quot; + record.type());                &#125;);            &#125;            return messages;        &#125; catch (JsonProcessingException e) &#123;            log.error(&quot;Failed to deserialize messages for conversation: &#123;&#125;, error: &#123;&#125;&quot;, conversationId, e.getMessage());            redisTemplate.delete(key);            redisTemplate.opsForSet().remove(CONVERSATION_INDEX_KEY, conversationId);            return Collections.emptyList();        &#125;    &#125;    @Override    public void saveAll(String conversationId, List&lt;Message&gt; messages) &#123;        if (messages == null || messages.isEmpty()) &#123;            deleteByConversationId(conversationId);            return;        &#125;        String key = KEY_PREFIX + conversationId;        try &#123;            List&lt;MessageRecord&gt; records = new ArrayList&lt;&gt;();            for (Message msg : messages) &#123;                String type;                if (msg instanceof UserMessage) type = &quot;user&quot;;                else if (msg instanceof AssistantMessage) type = &quot;assistant&quot;;                else if (msg instanceof SystemMessage) type = &quot;system&quot;;                else &#123;                    log.warn(&quot;Skipping unknown message type: &#123;&#125;&quot;, msg.getClass().getName());                    continue;                &#125;                records.add(new MessageRecord(type, msg.getText()));            &#125;            String json = objectMapper.writeValueAsString(records);            redisTemplate.opsForValue().set(key, json);            redisTemplate.opsForSet().add(CONVERSATION_INDEX_KEY, conversationId);        &#125; catch (JsonProcessingException e) &#123;            throw new RuntimeException(&quot;Failed to serialize messages for conversation: &quot; + conversationId, e);        &#125;    &#125;    @Override    public void deleteByConversationId(String conversationId) &#123;        String key = KEY_PREFIX + conversationId;        redisTemplate.delete(key);        redisTemplate.opsForSet().remove(CONVERSATION_INDEX_KEY, conversationId);    &#125;    //pojo    private record MessageRecord(String type, String content) &#123;&#125;&#125;
+
+3.5 Agent核心服务(WritingAgentService)classifyIntent：由LLM决策用户的意图，是想要直接写文章，还是单纯聊天、再次修改文章。
+@Service@Slf4jpublic class WritingAgentService &#123;    private final ChatClient chatClient;    private final ChatMemory chatMemory;    public WritingAgentService(ChatClient.Builder chatClientBuilder,                               ChatMemory chatMemory,                               WritingTools writingTools,                               SyncMcpToolCallbackProvider mcpProvider) &#123;        this.chatMemory = chatMemory;        // 注册 MCP 工具        ToolCallback[] mcpTools = mcpProvider.getToolCallbacks();        if (mcpTools.length &gt; 0) &#123;            chatClientBuilder.defaultTools(mcpTools);            log.info(&quot;已注册 &#123;&#125; 个 MCP 工具&quot;, mcpTools.length);        &#125; else &#123;            log.warn(&quot;未发现 MCP 工具，请检查 MCP Server 是否正常运行&quot;);        &#125;        // 构建 ChatClient（本地工具 + Advisor 在 chat() 中动态传入）        this.chatClient = chatClientBuilder                .defaultTools(writingTools)                .build();    &#125;    public String chat(String conversationId, String userInput) &#123;        try &#123;            MessageChatMemoryAdvisor advisor = MessageChatMemoryAdvisor.builder(chatMemory).build();            return chatClient.prompt()                    .user(userInput)                    .advisors(advisor)                    .advisors(advisorSpec -&gt; advisorSpec.param(ChatMemory.CONVERSATION_ID, conversationId))                    .call()                    .content();        &#125; catch (Exception e) &#123;            log.error(&quot;AI 调用失败, conversationId: &#123;&#125;&quot;, conversationId, e);            return &quot;抱歉，AI 服务暂时不可用，请稍后重试。&quot;;        &#125;    &#125;    /**     * 核心写作工作流     *     * @param userRequest    用户的写作需求     * @param conversationId 用于记忆隔离     * @return 最终文章     */    public String writeArticle(String userRequest, String conversationId) &#123;        try &#123;            // Step 1: 生成标题            String title = chat(conversationId, &quot;根据以下需求，生成一个吸引人的标题：&quot; + userRequest);            // Step 2: 生成大纲            String outline = chat(conversationId, &quot;根据标题【&quot; + title + &quot;】，生成2-3级大纲：&quot; + userRequest);            // Step 3: 根据大纲写全文            String draft = chat(conversationId, &quot;根据以下大纲，撰写800字左右的文章：\n&quot; + outline);            // Step 4: 润色            String chat = chat(conversationId, &quot;请润色以下文章，优化表达和逻辑：\n&quot; + draft);            //直接保存成md文档//            String path = &quot;drafts/&quot; + title.replaceAll(&quot; &quot;, &quot;_&quot;) + &quot;.md&quot;;            return chat;        &#125; catch (Exception e) &#123;            log.error(&quot;写作工作流执行失败&quot;, e);            return &quot;写作过程中出现异常，请稍后重试。&quot;;        &#125;    &#125;    public UserIntent classifyIntent(String userInput) &#123;        return chatClient.prompt()                .user(&quot;&quot;&quot;            请分析用户的输入，判断意图，并提取关键信息。            判断规则：            1. 如果用户要求“写一篇”、“生成一篇文章”、“帮我写”、“写一份报告”等，则 action 为 &quot;write_article&quot;。            2. 否则，action 为 &quot;chat&quot;。            3. 如果是写作意图，请提取核心主题到 topic 字段。            用户输入：%s            请严格遵守 JSON 格式输出。            &quot;&quot;&quot;.formatted(userInput))                .call()                .entity(UserIntent.class);    &#125;&#125;
+
+UserIntent 实体类:
+/** * 让Ai根据用户的输入判断是写作还是单纯聊天 */@Datapublic class UserIntent &#123;    @JsonProperty(required = true)    private String action; // &quot;write_article&quot; 或 &quot;chat&quot;    @JsonProperty(required = true)    private String topic;    private String reason;&#125;
+
+3.6 Controller入口用户接收用户的输入，将请求转给WritingAgentService，返回结果给前端。（目前是处理好之后返回整体的结果，可以搞成流式返回Flux&lt;String&gt;，更像跟人对话）
+@RestController@RequestMapping(&quot;/api/agent&quot;)@Slf4jpublic class AgentController &#123;    private final WritingAgentService agentService;    public AgentController(WritingAgentService agentService) &#123;        this.agentService = agentService;    &#125;      @PostMapping(&quot;/interact&quot;)    public String interact(@RequestParam String conversationId, @RequestBody String userInput) &#123;        // 1. AI 识别意图        UserIntent intent = agentService.classifyIntent(userInput);        log.info(&quot;interact intent:&#123;&#125;&quot;, intent);        // 2. 根据意图路由到不同的 Service 方法        if (&quot;write_article&quot;.equals(intent.getAction())) &#123;            // 写作：走多步工作流            String topic = intent.getTopic() != null ? intent.getTopic() : userInput;            return agentService.writeArticle(topic, conversationId);        &#125; else &#123;            // 聊天：走单轮对话            return agentService.chat(conversationId, userInput);        &#125;    &#125;&#125;
+
+3.7 调用MCP远程服务我们可以将本地工具做成一个单独的MCP服务（web-mcp-server模块），供Mcp Client。这样客户端就只专心处理Agent的逻辑和LLM之间的交互。很简单，跟生命本地Tool一样，声明远程的Tool就可以：
+@Componentpublic class McpServerTool &#123;    @McpTool(description = &quot;这个是用来翻译内容的&quot;)    public String translate(@ToolParam(description = &quot;需要翻译的内容&quot;) String message) &#123;        //可以自己实现        System.out.println(&quot;message translate.....&quot;);        return message;    &#125;&#125;
+
+3.8相关配置web-ai模块：
+server:  port: 8081spring:  application:    name: web-ai  data:    redis:      host: 192.168.202.129      port: 6380      password: #########   ai:    openai:      api-key: ######### 替换成自己的apiKey      base-url: https://open.bigmodel.cn/api/paas/v4  #我用的智普      chat:        model: glm-5.2    mcp:      client:        enabled: true        streamable-http:          connections:             my-mcp-server: # 自定义服务器名称               url: &quot;http://localhost:8082/mcp&quot;
+
+web-mcp-server模块：
+server:  port: 8082spring:  application:    name: web-mcp-server  ai:    mcp:      server:        name: my-mcp-server        version: 1.0.0        type: SYNC        protocol: STREAMABLE        enabled: true
+
+需要安装docker：
+docker run -d \  --name redis-server \  -p 6380:6380 \  -v /home/chris/redis/conf/redis.conf:/usr/local/etc/redis/redis.conf \  -v /home/chris/redis/data:/data \  redis:latest \  redis-server /usr/local/etc/redis/redis.conf
+
+4.启动测试Postman访问：localhost:8081&#x2F;api&#x2F;agent&#x2F;interact?conversationId&#x3D;test-user-007
+
+测试是否能保存上下文：
+
+
+验证Redis中保存的会话记录：
+
+
+让他写一个博客：
+
+
+
+调用我们的自定义远程Mcp工具:
+
+
+查看控制台输出，虽然我们没有实现翻译方法，LLM会判断结果是否正确，是否有他自己来翻译全文：
+
+]]></content>
+      <categories>
+        <category>AI</category>
       </categories>
       <tags>
         <tag>技术</tag>
