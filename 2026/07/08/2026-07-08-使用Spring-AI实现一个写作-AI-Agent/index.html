@@ -199,19 +199,19 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name redis-server \</span><br><span class="line">  -p 6380:6380 \</span><br><span class="line">  -v /home/chris/redis/conf/redis.conf:/usr/local/etc/redis/redis.conf \</span><br><span class="line">  -v /home/chris/redis/data:/data \</span><br><span class="line">  redis:latest \</span><br><span class="line">  redis-server /usr/local/etc/redis/redis.conf</span><br></pre></td></tr></table></figure>
 
 <h1 id="4-启动测试"><a href="#4-启动测试" class="headerlink" title="4.启动测试"></a>4.启动测试</h1><p>Postman访问：localhost:8081&#x2F;api&#x2F;agent&#x2F;interact?conversationId&#x3D;test-user-007</p>
-<ol>
+<ul>
 <li>测试是否能保存上下文：</li>
-</ol>
+</ul>
 <p><img src="/personalBlog/images/2026-07-08-%E4%BD%BF%E7%94%A8Spring-AI%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%86%99%E4%BD%9C-AI-Agent/1785057974078.png" alt="1785057974078"></p>
 <p>验证Redis中保存的会话记录：</p>
 <p><img src="/personalBlog/images/2026-07-08-%E4%BD%BF%E7%94%A8Spring-AI%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%86%99%E4%BD%9C-AI-Agent/1785058048648.png" alt="1785058048648"></p>
-<ol start="2">
+<ul>
 <li>让他写一个博客：</li>
-</ol>
+</ul>
 <p><img src="/personalBlog/images/2026-07-08-%E4%BD%BF%E7%94%A8Spring-AI%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%86%99%E4%BD%9C-AI-Agent/1785059176101.png" alt="1785059176101"></p>
-<ol start="3">
+<ul>
 <li>调用我们的自定义远程Mcp工具:</li>
-</ol>
+</ul>
 <p><img src="/personalBlog/images/2026-07-08-%E4%BD%BF%E7%94%A8Spring-AI%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%86%99%E4%BD%9C-AI-Agent/1785059415643.png" alt="1785059415643"></p>
 <p>查看控制台输出，虽然我们没有实现翻译方法，LLM会判断结果是否正确，是否有他自己来翻译全文：</p>
 <p><img src="/personalBlog/images/2026-07-08-%E4%BD%BF%E7%94%A8Spring-AI%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%86%99%E4%BD%9C-AI-Agent/1785059753307.png" alt="1785059753307"></p>
