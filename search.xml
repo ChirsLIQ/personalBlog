@@ -119,7 +119,7 @@ docker run -d \  --name redis-server \  -p 6380:6380 \  -v /home/chris/redis/con
   </entry>
   <entry>
     <title>Spring AI-深入了解Agent</title>
-    <url>/personalBlog/2026/08/10/2026-07-27-Spring%20AI-%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3Agent/</url>
+    <url>/personalBlog/2026/08/10/2026-07-27-Spring-AI-%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3Agent/</url>
     <content><![CDATA[1.前言在上一边文章中，我们使用Spring AI 2.0实现了一个简单的Agent：使用Spring AI实现一个简单的写作AI Agent。不过，严格来说它更像一个由代码预先编排的“伪Agent”，因为所有写作步骤均通过硬编码固定，而非LLM自主决策。理想情况下，整个处理流程应由LLM根据上下文进行推理，并动态决定下一步的操作。
 总结下来，上篇实现主要在以下一个方面待优化：
 控制逻辑与角色分工：上版实现中，虽然引入了ChatClient和Tool等基础角色，但整个写作流程的调度与分支逻辑均由硬编码决定。这种情况下，LLM只充当生成文本的工具，未体现出调度者的责任。(当然要看具体的业务场景，硬编码可以控制程序的走向，而引入agent有很多不确定性)
@@ -222,18 +222,18 @@ chatMemory 改为builder的时候构造
 @Service@Slf4jpublic class WritingAgentServiceV1 &#123;    private final ChatClient chatClient;    private final ChatMemory chatMemory;    private final SemanticMemoryAdvisor semanticMemoryAdvisor;    public WritingAgentServiceV1(ChatClient.Builder chatClientBuilder,                                 ChatMemory chatMemory,                                 WritingTools writingTools,                                 SyncMcpToolCallbackProvider mcpProvider,                                 SemanticMemoryAdvisor semanticMemoryAdvisor) &#123;        this.chatMemory = chatMemory;        this.semanticMemoryAdvisor = semanticMemoryAdvisor;        // 注册 MCP 工具        ToolCallback[] mcpTools = mcpProvider.getToolCallbacks();        if (mcpTools.length &gt; 0) &#123;            chatClientBuilder.defaultTools(mcpTools);            log.info(&quot;已注册 &#123;&#125; 个 MCP 工具&quot;, mcpTools.length);        &#125; else &#123;            log.warn(&quot;未发现 MCP 工具，请检查 MCP Server 是否正常运行&quot;);        &#125;        // 构建 ChatClient（本地工具 + Advisor 在 chat() 中动态传入）        this.chatClient = chatClientBuilder.defaultTools(writingTools)                .defaultAdvisors(List.of(MessageChatMemoryAdvisor.builder(chatMemory).build(), semanticMemoryAdvisor))                .build();    &#125;    public Flux&lt;String&gt; chat(String conversationId, String userInput, String userKey) &#123;        try &#123;            String systemPrompt = &quot;&quot;&quot;                    你是一个友好的智能助手。                    请用自然、亲切的语气回应用户，就像朋友聊天一样。                    不要分析用户的输入格式或来源，直接针对内容本身进行回应。                    例如：                    - 用户说&quot;你好&quot;，你直接回&quot;你好呀！今天想聊点什么呢？&quot;                    - 用户说&quot;帮我查个东西&quot;，你直接回&quot;好的，你想查什么？&quot;                    &quot;&quot;&quot;;            return chatClient.prompt()                    .system(systemPrompt)                    .user(userInput)                    .advisors(advisorSpec -&gt; &#123;                        advisorSpec.param(ChatMemory.CONVERSATION_ID, conversationId);                        advisorSpec.param(SemanticMemoryAdvisor.USER_KEY, userKey);                        advisorSpec.param(SemanticMemoryAdvisor.USER_INPUT_KEY, userInput);                    &#125;)                    .stream()                    .content();        &#125; catch (Exception e) &#123;            log.error(&quot;AI 调用失败, conversationId: &#123;&#125;&quot;, conversationId, e);            return Flux.just(&quot;抱歉，AI 服务暂时不可用，请稍后重试。&quot;);        &#125;    &#125;    /**     * 核心写作工作流     *     * @param userRequest    用户的写作需求     * @param conversationId 用于记忆隔离     * @return 最终文章     */    public Flux&lt;String&gt; writeArticle(String conversationId, String userRequest, String userKey) &#123;        try &#123;            // 将系统指令和用户需求分开            String systemPrompt = &quot;&quot;&quot;                    你是一位专业作家。接到写作任务后，请**自主规划**执行步骤。                    你可以使用以下工具：searchWeb（查资料）、analyzeText（查字数）、saveToFile（保存）、convertStyle（改风格）。                                        ## 工作流程要求：                    1. **先规划**：先列出你的写作大纲，告诉我你要分几步完成。                    2. **按需调用**：写之前如果涉及数据，必须调用 searchWeb 查资料；写完后必须调用 analyzeText 检查字数，如果不足800字，必须自动扩充。                    3. **最终交付**：字数达标后，调用 saveToFile 保存并告知我路径。                    &quot;&quot;&quot;;            return chatWithSystem(conversationId, systemPrompt, userRequest, userKey);        &#125; catch (Exception e) &#123;            log.error(&quot;写作工作流执行失败&quot;, e);            return Flux.just(&quot;写作过程中出现异常，请稍后重试。&quot;);        &#125;    &#125;    public Flux&lt;String&gt; chatWithSystem(String conversationId, String systemPrompt, String userInput, String userKey) &#123;        try &#123;            return chatClient.prompt()                    .system(systemPrompt)  // 设置系统提示                    .user(userInput)                    .advisors(advisorSpec -&gt; &#123;                        advisorSpec.param(ChatMemory.CONVERSATION_ID, conversationId);                        advisorSpec.param(SemanticMemoryAdvisor.USER_KEY, userKey);                        advisorSpec.param(SemanticMemoryAdvisor.USER_INPUT_KEY, userInput);                    &#125;)                    .stream()                    .content();        &#125; catch (Exception e) &#123;            log.error(&quot;AI 调用失败, conversationId: &#123;&#125;&quot;, conversationId, e);            return Flux.just(&quot;抱歉，AI 服务暂时不可用，请稍后重试。&quot;);        &#125;    &#125;&#125;
 
 5.测试启动应用之后，postman请求 localhost:8081/api/agent/interactV1?conversationId=test-user-009。这里我们看到返回值，已经变为了流式响应：
-![1786978228794](images&#x2F;2026-07-27-Spring AI-深入了解Agent&#x2F;1786978228794.png)
+
 查看redis，成功保存用户的短期记忆：
-![1786978295979](images&#x2F;2026-07-27-Spring AI-深入了解Agent&#x2F;1786978295979.png)
+
 查看milvus控制台，可以看见存储的向量数据：
-![1786978515551](images&#x2F;2026-07-27-Spring AI-深入了解Agent&#x2F;1786978515551.png)
+
 
 验证是否可以跨会话沟通
 
 test-user-009 继续追问我是谁，看是否能正确回复名字：
-![1787149325536](images&#x2F;2026-07-27-Spring AI-深入了解Agent&#x2F;1787149325536.png)
+
 更改会话Id，并访问 localhost:8081/api/agent/interactV1?conversationId=test-user-010。可以根据向量数据库拉取到历史上下文，实现夸会话沟通，不丢失数据。
-![1787149708425](images&#x2F;2026-07-27-Spring AI-深入了解Agent&#x2F;1787149708425.png)
+
 ]]></content>
       <categories>
         <category>AI</category>
